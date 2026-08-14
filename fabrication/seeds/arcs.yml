@@ -1,0 +1,166 @@
+# Généré par arcs_extract.py — arcs canoniques du manga, ordre chronologique.
+
+- slug: romance_dawn
+  nom: "Romance Dawn"
+  saga: "East Blue"
+  chapitres: [1, 7]
+
+- slug: orange_town
+  nom: "Orange Town"
+  saga: "East Blue"
+  chapitres: [8, 21]
+
+- slug: syrup_village
+  nom: "Syrup Village"
+  saga: "East Blue"
+  chapitres: [22, 41]
+
+- slug: baratie
+  nom: "Baratie"
+  saga: "East Blue"
+  chapitres: [42, 68]
+
+- slug: arlong_park
+  nom: "Arlong Park"
+  saga: "East Blue"
+  chapitres: [69, 95]
+
+- slug: loguetown
+  nom: "Loguetown"
+  saga: "East Blue"
+  chapitres: [96, 100]
+
+- slug: reverse_mountain
+  nom: "Reverse Mountain"
+  saga: "Arabasta"
+  chapitres: [101, 105]
+
+- slug: whisky_peak
+  nom: "Whisky Peak"
+  saga: "Arabasta"
+  chapitres: [106, 114]
+
+- slug: little_garden
+  nom: "Little Garden"
+  saga: "Arabasta"
+  chapitres: [115, 129]
+
+- slug: drum_island
+  nom: "Drum Island"
+  saga: "Arabasta"
+  chapitres: [130, 154]
+
+- slug: arabasta
+  nom: "Arabasta"
+  saga: "Arabasta"
+  chapitres: [155, 217]
+
+- slug: jaya
+  nom: "Jaya"
+  saga: "Sky Island"
+  chapitres: [218, 236]
+
+- slug: skypiea
+  nom: "Skypiea"
+  saga: "Sky Island"
+  chapitres: [237, 302]
+
+- slug: long_ring_long_land
+  nom: "Long Ring Long Land"
+  saga: "Water 7"
+  chapitres: [303, 321]
+
+- slug: water_7
+  nom: "Water 7"
+  saga: "Water 7"
+  chapitres: [322, 374]
+
+- slug: enies_lobby
+  nom: "Enies Lobby"
+  saga: "Water 7"
+  chapitres: [375, 430]
+
+- slug: post_enies_lobby
+  nom: "Post-Enies Lobby"
+  saga: "Water 7"
+  chapitres: [431, 441]
+
+- slug: thriller_bark
+  nom: "Thriller Bark"
+  saga: "Thriller Bark"
+  chapitres: [442, 489]
+
+- slug: sabaody_archipelago
+  nom: "Sabaody Archipelago"
+  saga: "Summit War"
+  chapitres: [490, 513]
+
+- slug: amazon_lily
+  nom: "Amazon Lily"
+  saga: "Summit War"
+  chapitres: [514, 524]
+
+- slug: impel_down
+  nom: "Impel Down"
+  saga: "Summit War"
+  chapitres: [525, 549]
+
+- slug: marineford
+  nom: "Marineford"
+  saga: "Summit War"
+  chapitres: [550, 580]
+
+- slug: post_war
+  nom: "Post-War"
+  saga: "Summit War"
+  chapitres: [581, 597]
+
+- slug: return_to_sabaody
+  nom: "Return to Sabaody"
+  saga: "Fish-Man Island"
+  chapitres: [598, 602]
+
+- slug: fish_man_island
+  nom: "Fish-Man Island"
+  saga: "Fish-Man Island"
+  chapitres: [603, 653]
+
+- slug: punk_hazard
+  nom: "Punk Hazard"
+  saga: "Dressrosa"
+  chapitres: [654, 699]
+
+- slug: dressrosa
+  nom: "Dressrosa"
+  saga: "Dressrosa"
+  chapitres: [700, 801]
+
+- slug: zou
+  nom: "Zou"
+  saga: "Whole Cake Island"
+  chapitres: [802, 824]
+
+- slug: whole_cake_island
+  nom: "Whole Cake Island"
+  saga: "Whole Cake Island"
+  chapitres: [825, 902]
+
+- slug: levely
+  nom: "Levely"
+  saga: "Whole Cake Island"
+  chapitres: [903, 908]
+
+- slug: wano_country
+  nom: "Wano Country"
+  saga: "Wano Country"
+  chapitres: [909, 1057]
+
+- slug: egghead
+  nom: "Egghead"
+  saga: "Final"
+  chapitres: [1058, 1125]
+
+- slug: elbaph
+  nom: "Elbaph"
+  saga: "Final"
+  chapitres: [1126, 1126]

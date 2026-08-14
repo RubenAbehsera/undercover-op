@@ -1,0 +1,659 @@
+# Généré par seeds_build.py — données propres pour le graphe.
+# arc_premiere_apparition résolu par chapitre ; groupes par catégories wiki.
+
+monkey_d_luffy:
+  nom: "Monkey D. Luffy"
+  chapitre_premiere_apparition: 1
+  arc_premiere_apparition: romance_dawn
+  equipages: ["straw_hat_pirates"]
+  factions: ["empereurs", "generation_terrible"]
+  fruit: { nom: "Gomu Gomu no Mi (Hito Hito no Mi, Model: Nika )", type: "Paramecia ( Mythical Zoan )" }
+
+roronoa_zoro:
+  nom: "Roronoa Zoro"
+  chapitre_premiere_apparition: 3
+  arc_premiere_apparition: romance_dawn
+  equipages: ["straw_hat_pirates"]
+  factions: ["generation_terrible"]
+
+nami:
+  nom: "Nami"
+  chapitre_premiere_apparition: 8
+  arc_premiere_apparition: orange_town
+  equipages: ["straw_hat_pirates"]
+  factions: []
+
+usopp:
+  nom: "Usopp"
+  chapitre_premiere_apparition: 23
+  arc_premiere_apparition: syrup_village
+  equipages: ["straw_hat_pirates"]
+  factions: []
+
+sanji:
+  nom: "Sanji"
+  chapitre_premiere_apparition: 43
+  arc_premiere_apparition: baratie
+  equipages: ["straw_hat_pirates"]
+  factions: []
+
+tony_tony_chopper:
+  nom: "Tony Tony Chopper"
+  chapitre_premiere_apparition: 134
+  arc_premiere_apparition: drum_island
+  equipages: ["straw_hat_pirates"]
+  factions: []
+  fruit: { nom: "Hito Hito no Mi", type: "Zoan" }
+
+nico_robin:
+  nom: "Nico Robin"
+  chapitre_premiere_apparition: 114
+  arc_premiere_apparition: whisky_peak
+  equipages: ["straw_hat_pirates"]
+  factions: []
+  fruit: { nom: "Hana Hana no Mi", type: "Paramecia" }
+
+franky:
+  nom: "Franky"
+  chapitre_premiere_apparition: 329
+  arc_premiere_apparition: water_7
+  equipages: ["straw_hat_pirates"]
+  factions: []
+
+brook:
+  nom: "Brook"
+  chapitre_premiere_apparition: 442
+  arc_premiere_apparition: thriller_bark
+  equipages: ["straw_hat_pirates"]
+  factions: []
+  fruit: { nom: "Yomi Yomi no Mi", type: "Paramecia" }
+
+jinbe:
+  nom: "Jinbe"
+  chapitre_premiere_apparition: 528
+  arc_premiere_apparition: impel_down
+  equipages: ["big_mom_pirates", "straw_hat_pirates", "sun_pirates", "whitebeard_pirates"]
+  factions: ["sept_capitaines"]
+
+zeff:
+  nom: "Zeff"
+  chapitre_premiere_apparition: 43
+  arc_premiere_apparition: baratie
+  equipages: []
+  factions: []
+
+kuina:
+  nom: "Shimotsuki Kuina"
+  chapitre_premiere_apparition: 5
+  arc_premiere_apparition: romance_dawn
+  equipages: []
+  factions: []
+
+bell_mère:
+  nom: "Bell-mère"
+  chapitre_premiere_apparition: 77
+  arc_premiere_apparition: arlong_park
+  equipages: []
+  factions: ["marines"]
+
+nojiko:
+  nom: "Nojiko"
+  chapitre_premiere_apparition: 70
+  arc_premiere_apparition: arlong_park
+  equipages: []
+  factions: []
+
+arlong:
+  nom: "Arlong"
+  chapitre_premiere_apparition: 69
+  arc_premiere_apparition: arlong_park
+  equipages: ["sun_pirates"]
+  factions: []
+
+yasopp:
+  nom: "Yasopp"
+  chapitre_premiere_apparition: 1
+  arc_premiere_apparition: romance_dawn
+  equipages: ["red_hair_pirates"]
+  factions: []
+
+koby:
+  nom: "Koby"
+  chapitre_premiere_apparition: 2
+  arc_premiere_apparition: romance_dawn
+  equipages: []
+  factions: ["marines"]
+
+smoker:
+  nom: "Smoker"
+  chapitre_premiere_apparition: 97
+  arc_premiere_apparition: loguetown
+  equipages: []
+  factions: ["marines"]
+  fruit: { nom: "Moku Moku no Mi", type: "Logia" }
+
+tashigi:
+  nom: "Tashigi"
+  chapitre_premiere_apparition: 96
+  arc_premiere_apparition: loguetown
+  equipages: []
+  factions: ["marines"]
+
+sakazuki:
+  nom: "Sakazuki"
+  chapitre_premiere_apparition: 397
+  arc_premiere_apparition: enies_lobby
+  equipages: []
+  factions: ["marines"]
+  fruit: { nom: "Magu Magu no Mi", type: "Logia" }
+
+borsalino:
+  nom: "Borsalino"
+  chapitre_premiere_apparition: 504
+  arc_premiere_apparition: sabaody_archipelago
+  equipages: []
+  factions: ["marines"]
+  fruit: { nom: "Pika Pika no Mi", type: "Logia" }
+
+kuzan:
+  nom: "Kuzan"
+  chapitre_premiere_apparition: 303
+  arc_premiere_apparition: long_ring_long_land
+  equipages: ["blackbeard_pirates"]
+  factions: ["marines"]
+  fruit: { nom: "Hie Hie no Mi", type: "Logia" }
+
+issho:
+  nom: "Issho"
+  chapitre_premiere_apparition: 701
+  arc_premiere_apparition: dressrosa
+  equipages: []
+  factions: ["marines"]
+  fruit: { nom: "Zushi Zushi no Mi", type: "Paramecia" }
+
+sengoku:
+  nom: "Sengoku"
+  chapitre_premiere_apparition: 234
+  arc_premiere_apparition: jaya
+  equipages: []
+  factions: ["marines"]
+  fruit: { nom: "Hito Hito no Mi, Model: Daibutsu", type: "Mythical Zoan" }
+
+vegapunk:
+  nom: "Vegapunk"
+  chapitre_premiere_apparition: 684
+  arc_premiere_apparition: punk_hazard
+  equipages: []
+  factions: ["marines"]
+  fruit: { nom: "Nomi Nomi no Mi", type: "Paramecia" }
+
+gol_d_roger:
+  nom: "Gol D. Roger"
+  chapitre_premiere_apparition: 1
+  arc_premiere_apparition: romance_dawn
+  equipages: ["roger_pirates"]
+  factions: []
+
+silvers_rayleigh:
+  nom: "Silvers Rayleigh"
+  chapitre_premiere_apparition: 19
+  arc_premiere_apparition: orange_town
+  equipages: ["roger_pirates"]
+  factions: []
+
+shanks:
+  nom: "Shanks"
+  chapitre_premiere_apparition: 1
+  arc_premiere_apparition: romance_dawn
+  equipages: ["red_hair_pirates", "roger_pirates"]
+  factions: ["empereurs"]
+
+edward_newgate:
+  nom: "Edward Newgate"
+  chapitre_premiere_apparition: 159
+  arc_premiere_apparition: arabasta
+  equipages: ["rocks_pirates", "whitebeard_pirates"]
+  factions: ["empereurs"]
+  fruit: { nom: "Gura Gura no Mi", type: "Paramecia" }
+
+marco:
+  nom: "Polo Marco"
+  chapitre_premiere_apparition: 234
+  arc_premiere_apparition: jaya
+  equipages: []
+  factions: []
+  fruit: { nom: "Tori Tori no Mi, Model: Phoenix", type: "Mythical Zoan" }
+
+portgas_d_ace:
+  nom: "Portgas D. Ace"
+  chapitre_premiere_apparition: 154
+  arc_premiere_apparition: drum_island
+  equipages: ["spade_pirates", "whitebeard_pirates"]
+  factions: []
+  fruit: { nom: "Mera Mera no Mi", type: "Logia" }
+
+kozuki_oden:
+  nom: "Kouzuki Oden"
+  chapitre_premiere_apparition: 920
+  arc_premiere_apparition: wano_country
+  equipages: []
+  factions: []
+
+monkey_d_garp:
+  nom: "Monkey D. Garp"
+  chapitre_premiere_apparition: 92
+  arc_premiere_apparition: arlong_park
+  equipages: []
+  factions: ["marines"]
+
+thatch:
+  nom: "Thatch"
+  chapitre_premiere_apparition: 440
+  arc_premiere_apparition: post_enies_lobby
+  equipages: ["whitebeard_pirates"]
+  factions: []
+
+monkey_d_dragon:
+  nom: "Monkey D. Dragon"
+  chapitre_premiere_apparition: 100
+  arc_premiere_apparition: loguetown
+  equipages: []
+  factions: ["marines", "revolutionnaires"]
+
+sabo:
+  nom: "Sabo"
+  chapitre_premiere_apparition: 583
+  arc_premiere_apparition: post_war
+  equipages: []
+  factions: ["revolutionnaires"]
+  fruit: { nom: "Mera Mera no Mi", type: "Logia" }
+
+emporio_ivankov:
+  nom: "Emporio Ivankov"
+  chapitre_premiere_apparition: 537
+  arc_premiere_apparition: impel_down
+  equipages: []
+  factions: ["revolutionnaires"]
+  fruit: { nom: "Horu Horu no Mi", type: "Paramecia" }
+
+dracule_mihawk:
+  nom: "Dracule Mihawk"
+  chapitre_premiere_apparition: 49
+  arc_premiere_apparition: baratie
+  equipages: ["cross_guild"]
+  factions: ["sept_capitaines"]
+
+crocodile:
+  nom: "Crocodile"
+  chapitre_premiere_apparition: 126
+  arc_premiere_apparition: little_garden
+  equipages: ["cross_guild"]
+  factions: ["sept_capitaines"]
+  fruit: { nom: "Suna Suna no Mi", type: "Logia" }
+
+donquixote_doflamingo:
+  nom: "Donquixote Doflamingo"
+  chapitre_premiere_apparition: 233
+  arc_premiere_apparition: jaya
+  equipages: []
+  factions: ["sept_capitaines"]
+  fruit: { nom: "Ito Ito no Mi", type: "Paramecia" }
+
+boa_hancock:
+  nom: "Boa Hancock"
+  chapitre_premiere_apparition: 516
+  arc_premiere_apparition: amazon_lily
+  equipages: ["kuja_pirates"]
+  factions: ["sept_capitaines"]
+  fruit: { nom: "Mero Mero no Mi", type: "Paramecia" }
+
+bartholomew_kuma:
+  nom: "Bartholomew Kuma"
+  chapitre_premiere_apparition: 233
+  arc_premiere_apparition: jaya
+  equipages: []
+  factions: ["revolutionnaires", "sept_capitaines"]
+  fruit: { nom: "Nikyu Nikyu no Mi", type: "Paramecia" }
+
+gecko_moria:
+  nom: "Gecko Moria"
+  chapitre_premiere_apparition: 449
+  arc_premiere_apparition: thriller_bark
+  equipages: []
+  factions: ["sept_capitaines"]
+  fruit: { nom: "Kage Kage no Mi", type: "Paramecia" }
+
+buggy:
+  nom: "Buggy"
+  chapitre_premiere_apparition: 9
+  arc_premiere_apparition: orange_town
+  equipages: ["buggy_pirates", "cross_guild", "roger_pirates"]
+  factions: ["empereurs", "sept_capitaines"]
+  fruit: { nom: "Bara Bara no Mi", type: "Paramecia" }
+
+boa_sandersonia:
+  nom: "Boa Sandersonia"
+  chapitre_premiere_apparition: 516
+  arc_premiere_apparition: amazon_lily
+  equipages: ["kuja_pirates"]
+  factions: []
+  fruit: { nom: "Hebi Hebi no Mi, Model: Anaconda", type: "Zoan" }
+
+shakuyaku:
+  nom: "Shakuyaku"
+  chapitre_premiere_apparition: 498
+  arc_premiere_apparition: sabaody_archipelago
+  equipages: ["kuja_pirates"]
+  factions: []
+
+eustass_kid:
+  nom: "Eustass Kid"
+  chapitre_premiere_apparition: 498
+  arc_premiere_apparition: sabaody_archipelago
+  equipages: ["kid_pirates"]
+  factions: ["generation_terrible"]
+  fruit: { nom: "Jiki Jiki no Mi", type: "Paramecia" }
+
+killer:
+  nom: "Killer"
+  chapitre_premiere_apparition: 498
+  arc_premiere_apparition: sabaody_archipelago
+  equipages: ["kid_pirates"]
+  factions: ["generation_terrible"]
+
+marshall_d_teach:
+  nom: "Marshall D. Teach"
+  chapitre_premiere_apparition: 223
+  arc_premiere_apparition: jaya
+  equipages: ["blackbeard_pirates", "whitebeard_pirates"]
+  factions: ["empereurs", "generation_terrible", "sept_capitaines"]
+  fruit: { nom: "Yami Yami no Mi", type: "Logia" }
+
+trafalgar_d_water_law:
+  nom: "Trafalgar D. Water Law"
+  chapitre_premiere_apparition: 498
+  arc_premiere_apparition: sabaody_archipelago
+  equipages: ["heart_pirates"]
+  factions: ["generation_terrible", "sept_capitaines"]
+  fruit: { nom: "Ope Ope no Mi", type: "Paramecia" }
+
+jewelry_bonney:
+  nom: "Jewelry Bonney"
+  chapitre_premiere_apparition: 498
+  arc_premiere_apparition: sabaody_archipelago
+  equipages: []
+  factions: ["generation_terrible"]
+  fruit: { nom: "Toshi Toshi no Mi", type: "Paramecia" }
+
+nefertari_vivi:
+  nom: "Nefertari Vivi"
+  chapitre_premiere_apparition: 103
+  arc_premiere_apparition: reverse_mountain
+  equipages: ["straw_hat_pirates"]
+  factions: []
+
+nefertari_cobra:
+  nom: "Nefertari Cobra"
+  chapitre_premiere_apparition: 142
+  arc_premiere_apparition: drum_island
+  equipages: []
+  factions: []
+
+bentham:
+  nom: "Bentham"
+  chapitre_premiere_apparition: 129
+  arc_premiere_apparition: little_garden
+  equipages: []
+  factions: []
+  fruit: { nom: "Mane Mane no Mi", type: "Paramecia" }
+
+daz_bones:
+  nom: "Daz Bonez"
+  chapitre_premiere_apparition: 160
+  arc_premiere_apparition: arabasta
+  equipages: []
+  factions: []
+  fruit: { nom: "Supa Supa no Mi", type: "Paramecia" }
+
+rob_lucci:
+  nom: "Rob Lucci"
+  chapitre_premiere_apparition: 323
+  arc_premiere_apparition: water_7
+  equipages: []
+  factions: []
+  fruit: { nom: "Neko Neko no Mi, Model: Leopard", type: "Zoan" }
+
+kaku:
+  nom: "Kaku"
+  chapitre_premiere_apparition: 323
+  arc_premiere_apparition: water_7
+  equipages: []
+  factions: []
+  fruit: { nom: "Ushi Ushi no Mi, Model: Giraffe", type: "Zoan" }
+
+iceburg:
+  nom: "Iceburg"
+  chapitre_premiere_apparition: 323
+  arc_premiere_apparition: water_7
+  equipages: []
+  factions: []
+
+enel:
+  nom: "Enel"
+  chapitre_premiere_apparition: 254
+  arc_premiere_apparition: skypiea
+  equipages: []
+  factions: []
+  fruit: { nom: "Goro Goro no Mi", type: "Logia" }
+
+wyper:
+  nom: "Wyper"
+  chapitre_premiere_apparition: 237
+  arc_premiere_apparition: skypiea
+  equipages: []
+  factions: []
+
+gan_fall:
+  nom: "Gan Fall"
+  chapitre_premiere_apparition: 237
+  arc_premiere_apparition: skypiea
+  equipages: []
+  factions: []
+
+perona:
+  nom: "Perona"
+  chapitre_premiere_apparition: 443
+  arc_premiere_apparition: thriller_bark
+  equipages: []
+  factions: []
+  fruit: { nom: "Horo Horo no Mi", type: "Paramecia" }
+
+shirahoshi:
+  nom: "Shirahoshi"
+  chapitre_premiere_apparition: 612
+  arc_premiere_apparition: fish_man_island
+  equipages: []
+  factions: []
+
+otohime:
+  nom: "Otohime"
+  chapitre_premiere_apparition: 621
+  arc_premiere_apparition: fish_man_island
+  equipages: []
+  factions: []
+
+neptune:
+  nom: "Neptune"
+  chapitre_premiere_apparition: 611
+  arc_premiere_apparition: fish_man_island
+  equipages: []
+  factions: []
+
+hody_jones:
+  nom: "Hody Jones"
+  chapitre_premiere_apparition: 608
+  arc_premiere_apparition: fish_man_island
+  equipages: []
+  factions: []
+
+fisher_tiger:
+  nom: "Fisher Tiger"
+  chapitre_premiere_apparition: 521
+  arc_premiere_apparition: amazon_lily
+  equipages: ["sun_pirates"]
+  factions: []
+
+hiriluk:
+  nom: "Hiriluk"
+  chapitre_premiere_apparition: 141
+  arc_premiere_apparition: drum_island
+  equipages: []
+  factions: []
+
+caesar_clown:
+  nom: "Caesar Clown"
+  chapitre_premiere_apparition: 658
+  arc_premiere_apparition: punk_hazard
+  equipages: []
+  factions: ["marines"]
+  fruit: { nom: "Gasu Gasu no Mi", type: "Logia" }
+
+donquixote_rosinante:
+  nom: "Donquixote Rosinante"
+  chapitre_premiere_apparition: 761
+  arc_premiere_apparition: dressrosa
+  equipages: []
+  factions: ["marines"]
+  fruit: { nom: "Nagi Nagi no Mi", type: "Paramecia" }
+
+rebecca:
+  nom: "Rebecca"
+  chapitre_premiere_apparition: 704
+  arc_premiere_apparition: dressrosa
+  equipages: []
+  factions: []
+
+kyros:
+  nom: "Kyros"
+  chapitre_premiere_apparition: 702
+  arc_premiere_apparition: dressrosa
+  equipages: []
+  factions: []
+
+monet:
+  nom: "Monet"
+  chapitre_premiere_apparition: 657
+  arc_premiere_apparition: punk_hazard
+  equipages: []
+  factions: []
+  fruit: { nom: "Yuki Yuki no Mi", type: "Logia" }
+
+charlotte_linlin:
+  nom: "Charlotte Linlin"
+  chapitre_premiere_apparition: 651
+  arc_premiere_apparition: fish_man_island
+  equipages: ["big_mom_pirates", "rocks_pirates"]
+  factions: ["empereurs"]
+  fruit: { nom: "Soru Soru no Mi", type: "Paramecia" }
+
+charlotte_katakuri:
+  nom: "Charlotte Katakuri"
+  chapitre_premiere_apparition: 860
+  arc_premiere_apparition: whole_cake_island
+  equipages: ["big_mom_pirates"]
+  factions: []
+  fruit: { nom: "Mochi Mochi no Mi", type: "Special Paramecia" }
+
+charlotte_pudding:
+  nom: "Charlotte Pudding"
+  chapitre_premiere_apparition: 651
+  arc_premiere_apparition: fish_man_island
+  equipages: ["big_mom_pirates"]
+  factions: []
+  fruit: { nom: "Memo Memo no Mi", type: "Paramecia" }
+
+charlotte_brûlée:
+  nom: "Charlotte Brûlée"
+  chapitre_premiere_apparition: 831
+  arc_premiere_apparition: whole_cake_island
+  equipages: ["big_mom_pirates"]
+  factions: []
+  fruit: { nom: "Mira Mira no Mi", type: "Paramecia" }
+
+kaidou:
+  nom: "Kaidou"
+  chapitre_premiere_apparition: 795
+  arc_premiere_apparition: dressrosa
+  equipages: ["beasts_pirates", "rocks_pirates"]
+  factions: ["empereurs"]
+  fruit: { nom: "Uo Uo no Mi, Model: Seiryu", type: "Mythical Zoan" }
+
+king:
+  nom: "King"
+  chapitre_premiere_apparition: 920
+  arc_premiere_apparition: wano_country
+  equipages: ["beasts_pirates"]
+  factions: []
+  fruit: { nom: "Ryu Ryu no Mi, Model: Pteranodon", type: "Ancient Zoan" }
+
+queen:
+  nom: "Queen"
+  chapitre_premiere_apparition: 920
+  arc_premiere_apparition: wano_country
+  equipages: ["beasts_pirates"]
+  factions: []
+  fruit: { nom: "Ryu Ryu no Mi, Model: Brachiosaurus", type: "Ancient Zoan" }
+
+yamato:
+  nom: "Yamato"
+  chapitre_premiere_apparition: 971
+  arc_premiere_apparition: wano_country
+  equipages: ["beasts_pirates"]
+  factions: []
+  fruit: { nom: "Inu Inu no Mi, Model: Okuchi no Makami", type: "Mythical Zoan" }
+
+kozuki_momonosuke:
+  nom: "Kouzuki Momonosuke"
+  chapitre_premiere_apparition: 684
+  arc_premiere_apparition: punk_hazard
+  equipages: []
+  factions: []
+  fruit: { nom: "Uo Uo no Mi, Model: Seiryu ( Artificial )", type: "Mythical Zoan ( Artificial )" }
+
+kinemon:
+  nom: "Kin'emon"
+  chapitre_premiere_apparition: 656
+  arc_premiere_apparition: punk_hazard
+  equipages: []
+  factions: []
+  fruit: { nom: "Fuku Fuku no Mi", type: "Paramecia" }
+
+x_drake:
+  nom: "X Drake"
+  chapitre_premiere_apparition: 498
+  arc_premiere_apparition: sabaody_archipelago
+  equipages: ["beasts_pirates"]
+  factions: ["generation_terrible", "marines"]
+  fruit: { nom: "Ryu Ryu no Mi, Model: Allosaurus", type: "Ancient Zoan" }
+
+vinsmoke_judge:
+  nom: "Vinsmoke Judge"
+  chapitre_premiere_apparition: 832
+  arc_premiere_apparition: whole_cake_island
+  equipages: []
+  factions: []
+
+vinsmoke_reiju:
+  nom: "Vinsmoke Reiju"
+  chapitre_premiere_apparition: 826
+  arc_premiere_apparition: whole_cake_island
+  equipages: []
+  factions: []
+
+magellan:
+  nom: "Magellan"
+  chapitre_premiere_apparition: 528
+  arc_premiere_apparition: impel_down
+  equipages: []
+  factions: []
+  fruit: { nom: "Doku Doku no Mi", type: "Paramecia" }

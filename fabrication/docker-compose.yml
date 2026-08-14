@@ -1,0 +1,27 @@
+# Neo4j local de la fabrication — `docker compose up -d`
+# Doc : https://neo4j.com/docs/operations-manual/current/docker/
+services:
+  neo4j:
+    # On suit la série courante pour que la base parle la même langue que le
+    # Cypher Manual « current » qu'on lit. Attention au décalage : le GROUP BY
+    # explicite, documenté sur le site, n'existe qu'à partir de 2026.07.0 — en
+    # 5.x comme en 2025.x, c'est une erreur de syntaxe.
+    image: neo4j:2026-community  # édition communautaire : gratuite, une seule base
+    container_name: undercover-neo4j
+    ports:
+      - "7474:7474"  # HTTP : Neo4j Browser (l'UI web où se font les exos)
+      - "7687:7687"  # Bolt : protocole binaire des clients (drivers Python…)
+    environment:
+      # Mot de passe initial, pris en compte au PREMIER démarrage uniquement —
+      # ensuite il vit dans le volume. Dev local only, jamais en prod.
+      NEO4J_AUTH: neo4j/mot-de-passe-supprime
+      # Les doubles underscores '__' se lisent '.' : server.memory.heap.max_size
+      NEO4J_server_memory_heap_max__size: 1G
+    volumes:
+      - neo4j_data:/data  # les données survivent aux recréations du conteneur
+      # /var/lib/neo4j/import est le SEUL dossier autorisé pour LOAD CSV —
+      # on y monte les seeds pour d'éventuels imports par fichier.
+      - ./seeds:/var/lib/neo4j/import
+
+volumes:
+  neo4j_data:

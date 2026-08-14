@@ -1,0 +1,105 @@
+# Périmètre v1 proposé (~80) — à pruner. Un titre wiki exact par ligne.
+# Chapeaux de Paille
+Monkey D. Luffy
+Roronoa Zoro
+Nami
+Usopp
+Sanji
+Tony Tony Chopper
+Nico Robin
+Franky
+Brook
+Jinbe
+# East Blue : mentors, famille, premiers ennemis
+Zeff
+Kuina
+Bell-mère
+Nojiko
+Arlong
+Yasopp
+# Marines
+Koby
+Smoker
+Tashigi
+Sakazuki
+Borsalino
+Kuzan
+Issho
+Sengoku
+Vegapunk
+# Légendes et ancienne génération
+Gol D. Roger
+Silvers Rayleigh
+Shanks
+Edward Newgate
+Marco
+Portgas D. Ace
+Kozuki Oden
+Monkey D. Garp
+Thatch
+# Révolutionnaires
+Monkey D. Dragon
+Sabo
+Emporio Ivankov
+# Anciens Corsaires
+Dracule Mihawk
+Crocodile
+Donquixote Doflamingo
+Boa Hancock
+Bartholomew Kuma
+Gecko Moria
+Buggy
+# Kuja
+Boa Sandersonia
+Shakuyaku
+# Génération Terrible
+Eustass Kid
+Killer
+Marshall D. Teach
+Trafalgar D. Water Law
+Jewelry Bonney
+# Arabasta / Baroque Works
+Nefertari Vivi
+Nefertari Cobra
+Bentham
+Daz Bones
+# Water 7 / CP9
+Rob Lucci
+Kaku
+Iceburg
+# Skypiea / Thriller Bark
+Enel
+Wyper
+Gan Fall
+Perona
+# Fish-Man Island
+Shirahoshi
+Otohime
+Neptune
+Hody Jones
+Fisher Tiger
+# Punk Hazard / Dressrosa
+Hiriluk
+Caesar Clown
+Donquixote Rosinante
+Rebecca
+Kyros
+Monet
+# Big Mom
+Charlotte Linlin
+Charlotte Katakuri
+Charlotte Pudding
+Charlotte Brûlée
+# Beasts Pirates / Wano
+Kaidou
+King
+Queen
+Yamato
+Kozuki Momonosuke
+Kin'emon
+X Drake
+# Vinsmoke
+Vinsmoke Judge
+Vinsmoke Reiju
+# Impel Down
+Magellan
