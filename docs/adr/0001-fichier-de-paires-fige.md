@@ -1,0 +1,3 @@
+# Pas de graphe en production — fichier de paires figé
+
+Le serveur de jeu ne connaît qu'un fichier de paires JSON figé, produit hors ligne par la chaîne de fabrication (Neo4j, requêtes par motifs, validation). Alternative rejetée : interroger le graphe à l'exécution pour tirer les paires en direct. Le fichier garantit un service minimal — pas de dépendance Neo4j en soirée, des paires validées une fois pour toutes (fourchette de poids, divergence, anti-spoil du lien, écart de notoriété) — et un étalon littéral pour le critère « le graphe retrouve les 20 paires main ». Conséquence assumée : de nouvelles paires exigent une repasse de fabrication et un redéploiement du fichier.
