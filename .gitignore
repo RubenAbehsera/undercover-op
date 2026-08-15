@@ -1,4 +1,5 @@
 fabrication/cache/
+fabrication/neo4j/import.cypher
 __pycache__/
 *.pyc
 .venv/
