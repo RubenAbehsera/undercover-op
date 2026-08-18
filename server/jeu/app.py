@@ -5,6 +5,7 @@ from pathlib import Path
 
 import socketio
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from jeu.contrat import Contrat, charger_contrat
 from jeu.evenements import enregistrer
@@ -30,9 +31,31 @@ def creer_app(
     def sante() -> dict:
         return {"etat": "ok"}
 
+    _servir_le_front(api)
+
     sio = socketio.AsyncServer(async_mode="asgi")
     enregistrer(sio, Rooms(contrat, signaux=signaux))
     return socketio.ASGIApp(sio, other_asgi_app=api)
+
+
+def _servir_le_front(api: FastAPI) -> None:
+    """Le bundle du front, servi par le serveur lui-même — un seul conteneur.
+
+    Monté à la racine, en dernier : les routes HTTP déjà déclarées gardent la
+    main, et socket.io détourne `/socket.io` avant d'en arriver ici. Sans
+    bundle construit, le serveur vit très bien — il ne sert que l'API.
+    """
+    dist = _dist_du_front()
+    if not (dist / "index.html").exists():
+        return
+    api.mount("/", StaticFiles(directory=dist, html=True), name="front")
+
+
+def _dist_du_front() -> Path:
+    variable = os.environ.get("FRONT_DIST")
+    if variable:
+        return Path(variable)
+    return Path(__file__).resolve().parents[2] / "front" / "dist"
 
 
 def _chemin_par_defaut() -> Path:

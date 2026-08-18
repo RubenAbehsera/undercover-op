@@ -21,7 +21,7 @@ Conventions :
 | Jalon 1 — l'étalon                    | **clos 2026-08-18** | 24 paires figées dans les seeds, arbitrées à l'œil (LLM drapeauteur uniquement) |
 | Jalon 3 — la validation par le graphe | **clos 2026-08-18** | score 7.2, classement 7.3 relu et validé, poids inchangés                       |
 | Contrat figé                          | **clos 2026-08-18** | `fabrication/paires.json` exporté, relu, committé (ADR 0001)                    |
-| Jeu                                   | **ouvert**          | le serveur consomme le contrat — Épic 5                                         |
+| Jeu                                   | **clos 2026-08-19** | serveur + front jouables de bout en bout — Épic 5                               |
 
 ---
 
@@ -108,7 +108,7 @@ production).
 
 ---
 
-## Epic 5 — Jeu : le serveur consomme le contrat (ouvert)
+## Epic 5 — Jeu : le serveur consomme le contrat (clos le 2026-08-19)
 
 Objectif : le serveur FastAPI ne connaît du domaine One Piece que
 `paires.json` (vocabulaire : `server/CONTEXT.md`). Stack et règles de jeu
@@ -157,11 +157,17 @@ fermer l'US :
       (partie, joueur), garanti par la clé primaire SQLite.
 - [x] 5.7 Room & partie — cycle de vie complet, règles ci-dessus, code de
       room, transfert d'hôte.
-- [ ] 5.8 Branchement front — socket.io-client, PWA minimale. Détaillé le
-      2026-08-18, le serveur tenant la partie de bout en bout : ticket
-      `07-branchement-front.md`, contrat socket figé (12 demandes,
-      6 diffusions), 6 écrans, ID opaque en `localStorage` clé par room,
-      bundle servi par le serveur.
+- [x] 5.8 Branchement front (2026-08-19) — `front/` en Vite + React +
+      TypeScript, `socket.io-client`, PWA à la main (manifest, service
+      worker, icônes générées). Le contrat socket a tenu tel quel : rien
+      d'ajouté côté serveur, hors le montage du bundle. Trois modules purs
+      testés (`etat.ts`, `identite.ts`, `motifs.ts`) sous six écrans
+      présentationnels — aucun état dérivé, aucune règle de jeu. Tranché à
+      l'implémentation : libellés du retour **Bof / Sympa / Excellent**, et
+      bundle servi par `StaticFiles(html=True)` monté à `/` après les routes
+      HTTP (`FRONT_DIST`, montage sauté si le bundle n'est pas construit).
+      Vérifié de bout en bout en navigateur headless mobile contre le serveur
+      réel, reconnexion comprise.
 
 Chaque US qui démarre → ticket dans `.scratch/epic-5/issues/` (commencer
 par 5.1, `01-chargement-contrat.md`).

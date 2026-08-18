@@ -51,6 +51,42 @@ def test_le_fichier_de_signaux_suit_la_variable_d_environnement(
     assert fichier.exists()
 
 
+def test_le_serveur_sert_le_bundle_du_front(chemin_contrat, tmp_path, monkeypatch):
+    dist = tmp_path / "dist"
+    dist.mkdir()
+    (dist / "index.html").write_text("<html>le jeu</html>", encoding="utf-8")
+    monkeypatch.setenv("FRONT_DIST", str(dist))
+
+    app = creer_app(chemin_contrat, ":memory:")
+
+    assert asyncio.run(_appeler(app, "/")).text == "<html>le jeu</html>"
+    assert asyncio.run(_appeler(app, "/sante")).json() == {"etat": "ok"}
+
+
+def test_le_bundle_ne_marche_pas_sur_le_chemin_socket_io(
+    chemin_contrat, tmp_path, monkeypatch
+):
+    dist = tmp_path / "dist"
+    dist.mkdir()
+    (dist / "index.html").write_text("<html>le jeu</html>", encoding="utf-8")
+    monkeypatch.setenv("FRONT_DIST", str(dist))
+
+    app = creer_app(chemin_contrat, ":memory:")
+
+    poignee = asyncio.run(_appeler(app, "/socket.io/?EIO=4&transport=polling"))
+
+    assert poignee.status_code == 200
+    assert "sid" in poignee.text
+
+
+def test_le_serveur_demarre_sans_bundle(chemin_contrat, tmp_path, monkeypatch):
+    monkeypatch.setenv("FRONT_DIST", str(tmp_path / "jamais_construit"))
+
+    app = creer_app(chemin_contrat, ":memory:")
+
+    assert asyncio.run(_appeler(app, "/sante")).status_code == 200
+
+
 async def _appeler(app, chemin: str) -> httpx.Response:
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:

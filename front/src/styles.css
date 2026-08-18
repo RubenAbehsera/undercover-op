@@ -1,0 +1,222 @@
+/* Une soirée, des téléphones, une pièce mal éclairée : gros, sombre, tapable. */
+
+:root {
+  --fond: #12131a;
+  --carte: #1c1e29;
+  --texte: #f2f2f5;
+  --discret: #9a9cb0;
+  --accent: #e8b04b;
+  --anneau: #7fd1c1;
+  --refus: #e06c6c;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+  -webkit-text-size-adjust: 100%;
+}
+
+main {
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem calc(2rem + env(safe-area-inset-bottom));
+}
+
+.ecran {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.titre {
+  margin: 0;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.etiquette {
+  margin: 0;
+  color: var(--discret);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.aide {
+  margin: 0;
+  color: var(--discret);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.personnage {
+  margin: 0;
+  font-size: 2.2rem;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--accent);
+}
+
+.code-room {
+  margin: 0;
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-indent: 0.35em;
+  text-align: center;
+  color: var(--accent);
+}
+
+.duo {
+  margin: 0;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.parole {
+  margin: 0;
+  text-align: center;
+}
+
+.carte {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--carte);
+  border-radius: 0.9rem;
+}
+
+.carte h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: var(--discret);
+  font-size: 0.9rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--fond);
+  color: var(--texte);
+  border: 1px solid #33364a;
+  border-radius: 0.6rem;
+  font: inherit;
+}
+
+input.code {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-align: center;
+}
+
+button {
+  min-height: 3rem;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: 0.7rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.principal {
+  width: 100%;
+  background: var(--accent);
+  color: #1a1408;
+}
+
+button.discret {
+  width: 100%;
+  background: transparent;
+  color: var(--discret);
+  border: 1px solid #33364a;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.joueurs li,
+.ordre li {
+  padding: 0.7rem 0.9rem;
+  background: var(--carte);
+  border-radius: 0.7rem;
+}
+
+.joueurs li:has(button) {
+  padding: 0;
+  background: none;
+}
+
+.ordre {
+  counter-reset: rang;
+}
+
+.ordre li::before {
+  counter-increment: rang;
+  content: counter(rang) ". ";
+  color: var(--discret);
+}
+
+.ordre li.parle {
+  border-left: 4px solid var(--anneau);
+  font-weight: 600;
+}
+
+.badge {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  background: var(--fond);
+  border-radius: 0.5rem;
+  color: var(--discret);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.niveaux {
+  flex-direction: row;
+}
+
+.niveaux li {
+  flex: 1;
+}
+
+.refus {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--refus);
+  border-radius: 0.7rem;
+  color: #2a0d0d;
+  font-weight: 600;
+  text-align: center;
+}

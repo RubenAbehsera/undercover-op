@@ -13,7 +13,7 @@ Issues du cadrage du 2026-08-14. Complète `docs/first-idea.md` ; en cas de sile
 - Paire tirée aléatoirement parmi les valides pour le calibrage, sans répétition dans la partie ; stock épuisé → réutilisation autorisée.
 - Écran de révélation : les deux personnages, le pseudo de l'imposteur, le libellé du lien. La difficulté n'est jamais affichée aux joueurs.
 - Drapeau « je ne connais pas » : strictement confidentiel, définitif pour la manche.
-- Retour de fin de partie : trois niveaux en un tap, commentaire optionnel.
+- Retour de fin de partie : trois niveaux en un tap, commentaire optionnel — libellés **« Bof » / « Sympa » / « Excellent »** pour les niveaux 1 / 2 / 3 (tranché le 2026-08-19).
 
 ## Cycle de vie
 
@@ -56,7 +56,7 @@ Schéma du fichier de paires (contrat partagé fabrication → jeu) :
 
 - Monorepo : `server/` (jeu), `fabrication/`, `front/` ; vocabulaire dans `CONTEXT-MAP.md`.
 - Serveur : Python 3.13, FastAPI, **python-socketio** (async), états de partie en mémoire, signaux en SQLite mono-fichier (stdlib, pas d'ORM), schéma Pydantic v2 partagé, sert le front buildé — un seul conteneur.
-- Front : Vite + React + TypeScript, socket.io-client, PWA minimale (manifest + service worker). Le serveur est l'unique source de vérité.
+- Front : Vite + React + TypeScript, socket.io-client, PWA minimale (manifest + service worker). Le serveur est l'unique source de vérité. Le bundle (`front/dist`, chemin réglable par `FRONT_DIST`) est servi par FastAPI, `StaticFiles(html=True)` monté à `/` après les routes HTTP — socket.io détourne `/socket.io` en amont ; sans bundle construit, le montage est sauté.
 - Fabrication : Neo4j Community en Docker local, driver Python officiel, seeds YAML versionnés, export validé. Passe LLM en amont (`llm_review.py`, par lots) : drapeaute les seeds, arbitrée par l'humain — jamais décideur.
 - Interface en français.
 - Déploiement : VPS Hostinger (`srv1791681.hstgr.cloud`, Dokploy) via Docker Compose — Traefik + TLS, SQLite sur volume, DNS Hostinger. Hébergement long terme non tranché.
