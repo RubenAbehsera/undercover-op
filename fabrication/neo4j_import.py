@@ -48,7 +48,14 @@ def parse_paires(path: Path) -> list[dict]:
     """Parse le sous-ensemble YAML de paires.candidates.yml (pas de PyYAML ici)."""
     paires = []
     cur = None
+    repliee = None  # clé (ex. lien) dont le formateur a mis la valeur à la ligne
     for line in path.read_text(encoding="utf-8").splitlines():
+        if repliee is not None:
+            valeur += " " + line.strip()
+            if not valeur.endswith("}"):
+                continue
+            line = f"  {repliee}: {valeur}"
+            repliee = None
         if line.startswith("- id: "):
             cur = {"id": line[6:].strip()}
             paires.append(cur)
@@ -63,6 +70,11 @@ def parse_paires(path: Path) -> list[dict]:
                     cur["libelle"] = json.loads(lm.group(2))
                 else:
                     cur[k] = v
+            else:
+                m = re.match(r"^  (\w+):$", line)
+                if m:
+                    repliee = m.group(1)
+                    valeur = ""
     return paires
 
 

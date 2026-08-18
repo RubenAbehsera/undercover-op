@@ -1,15 +1,13 @@
-# Lot de paires candidates — 32, à réduire à 20 pour paires.json.
+# Lot de paires — 24, figées pour paires.json (arbitrage 2026-08-18).
 # majorite = personnage le plus connu (celui de la majorité des joueurs).
-# Difficulté : lien direct = facile, nœud partagé (équipage/faction) = intermediaire.
+# Difficulté : ce que le grand public connaît du duo, pas l'encodage du
+# nouveau graphe. Un second emblématique (Kid/Killer) reste facile même si
+# le lien passe par un nœud partagé — le type n'est qu'un défaut.
 # arc_etablissement = anti-spoil : une paire n'est proposée qu'aux tables
 # calibrées au-delà de cet arc.
+# Types de lien : fraternite = fratrie (sang ou serment), parente =
+# parent-enfant, famille = au-delà (grand-parent, oncle, ...).
 
-- id: zoro-kuina
-  majorite: roronoa_zoro
-  imposteur: kuina
-  lien: { type: rivalite, libelle: "Rivalité d'enfance, promesse du plus grand sabreur" }
-  difficulte: facile
-  arc_etablissement: romance_dawn
 - id: luffy-shanks
   majorite: monkey_d_luffy
   imposteur: shanks
@@ -34,28 +32,23 @@
   lien: { type: rivalite, libelle: "Battre le plus grand sabreur du monde" }
   difficulte: facile
   arc_etablissement: baratie
-- id: nami-bell-mere
-  majorite: nami
-  imposteur: bell_mère
-  lien: { type: parente, libelle: "Mère adoptive, les clémentines" }
-  difficulte: facile
-  arc_etablissement: arlong_park
 - id: zoro-sanji
   majorite: roronoa_zoro
   imposteur: sanji
-  lien: { type: equipage, libelle: "Le duo qui ne s'entend jamais, même équipage" }
-  difficulte: intermediaire
-  arc_etablissement: arlong_park
+  lien:
+    { type: equipage, libelle: "Le duo qui ne s'entend jamais, même équipage" }
+  difficulte: facile
+  arc_etablissement: baratie
 - id: buggy-shanks
   majorite: shanks
   imposteur: buggy
-  lien: { type: fraternite, libelle: "Mousses ensemble sur l'Oro Jackson" }
+  lien: { type: equipage, libelle: "Mousses ensemble sur l'Oro Jackson" }
   difficulte: facile
   arc_etablissement: loguetown
 - id: luffy-ace
   majorite: monkey_d_luffy
   imposteur: portgas_d_ace
-  lien: { type: fraternite, libelle: "Frères par serment" }
+  lien: { type: fraternite, libelle: "Le grand frère de Luffy" }
   difficulte: facile
   arc_etablissement: arabasta
 - id: vivi-crocodile
@@ -64,46 +57,23 @@
   lien: { type: rivalite, libelle: "L'ennemi qui a mis Arabasta à genoux" }
   difficulte: facile
   arc_etablissement: arabasta
-- id: chopper-hiriluk
-  majorite: tony_tony_chopper
-  imposteur: hiriluk
-  lien: { type: mentorat, libelle: "Le médecin et son cerisier" }
-  difficulte: facile
-  arc_etablissement: drum_island
-- id: teach-thatch
-  majorite: marshall_d_teach
-  imposteur: thatch
-  lien: { type: rivalite, libelle: "Le meurtre qui a tout déclenché" }
-  difficulte: facile
-  arc_etablissement: jaya
 - id: enel-wyper
   majorite: enel
   imposteur: wyper
   lien: { type: rivalite, libelle: "Le dieu et le guerrier de Shandia" }
   difficulte: facile
   arc_etablissement: skypiea
-- id: franky-iceburg
-  majorite: franky
-  imposteur: iceburg
-  lien: { type: fraternite, libelle: "Disciples de Tom, frères de chantier" }
-  difficulte: facile
-  arc_etablissement: water_7
-- id: lucci-kaku
-  majorite: rob_lucci
-  imposteur: kaku
-  lien: { type: equipage, libelle: "Le duo inséparable de CP9" }
-  difficulte: intermediaire
-  arc_etablissement: enies_lobby
 - id: luffy-garp
   majorite: monkey_d_luffy
   imposteur: monkey_d_garp
-  lien: { type: parente, libelle: "Le petit-fils du héros de la Marine" }
+  lien: { type: famille, libelle: "Le petit-fils du héros de la Marine" }
   difficulte: facile
   arc_etablissement: post_enies_lobby
 - id: roger-garp
   majorite: gol_d_roger
   imposteur: monkey_d_garp
-  lien: { type: rivalite, libelle: "La rivalité fondatrice, pirate contre Marine" }
+  lien:
+    { type: rivalite, libelle: "La rivalité fondatrice, pirate contre Marine" }
   difficulte: facile
   arc_etablissement: post_enies_lobby
 - id: ace-teach
@@ -118,23 +88,17 @@
   lien: { type: fraternite, libelle: "Frères par serment, le second frère" }
   difficulte: facile
   arc_etablissement: post_war
-- id: hancock-sandersonia
-  majorite: boa_hancock
-  imposteur: boa_sandersonia
-  lien: { type: parente, libelle: "Sœurs Gorgon" }
-  difficulte: facile
-  arc_etablissement: amazon_lily
 - id: rayleigh-shakuyaku
   majorite: silvers_rayleigh
   imposteur: shakuyaku
-  lien: { type: alliance, libelle: "Le couple légendaire de Sabaody" }
+  lien: { type: couple, libelle: "Le couple légendaire de Sabaody" }
   difficulte: facile
   arc_etablissement: sabaody_archipelago
 - id: kid-killer
   majorite: eustass_kid
   imposteur: killer
-  lien: { type: equipage, libelle: "Équipage et Génération Terrible" }
-  difficulte: intermediaire
+  lien: { type: equipage, libelle: "Le bras droit masqué de Kid" }
+  difficulte: facile
   arc_etablissement: sabaody_archipelago
 - id: law-luffy
   majorite: monkey_d_luffy
@@ -145,7 +109,7 @@
 - id: doflamingo-rosinante
   majorite: donquixote_doflamingo
   imposteur: donquixote_rosinante
-  lien: { type: parente, libelle: "Frères ennemis, l'oiseau et la colombe" }
+  lien: { type: fraternite, libelle: "Frères ennemis, l'oiseau et la colombe" }
   difficulte: facile
   arc_etablissement: dressrosa
 - id: rebecca-kyros
@@ -155,17 +119,11 @@
   difficulte: facile
   arc_etablissement: dressrosa
 - id: kuma-dragon
-  majorite: monkey_d_dragon
-  imposteur: bartholomew_kuma
-  lien: { type: faction, libelle: "Le loyal silencieux et le chef révolutionnaire" }
-  difficulte: intermediaire
-  arc_etablissement: marineford
-- id: shirahoshi-otohime
-  majorite: shirahoshi
-  imposteur: otohime
-  lien: { type: parente, libelle: "Mère et fille, la voix des Poséidons" }
+  majorite: bartholomew_kuma
+  imposteur: monkey_d_dragon
+  lien: { type: faction, libelle: "Le révolutionnaire silencieux et son chef" }
   difficulte: facile
-  arc_etablissement: fish_man_island
+  arc_etablissement: egghead
 - id: arlong-fisher-tiger
   majorite: arlong
   imposteur: fisher_tiger
@@ -181,13 +139,14 @@
 - id: sanji-judge
   majorite: sanji
   imposteur: vinsmoke_judge
-  lien: { type: parente, libelle: "Le rejet du père, la cuisine contre la science" }
+  lien:
+    { type: parente, libelle: "Le rejet du père, la cuisine contre la science" }
   difficulte: facile
-  arc_etablissement: zou
+  arc_etablissement: whole_cake_island
 - id: kaidou-yamato
   majorite: kaidou
   imposteur: yamato
-  lien: { type: parente, libelle: "Père ogre, fille rebelle" }
+  lien: { type: parente, libelle: "Père ogre, enfant rebelle" }
   difficulte: facile
   arc_etablissement: wano_country
 - id: bonney-kuma
