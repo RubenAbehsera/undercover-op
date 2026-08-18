@@ -44,9 +44,21 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
             return
         code, joueur = presence
         await sio.leave_room(sid, code)
+        en_manche = _manche_en_cours(code)
         room = rooms.quitter(code, joueur)
-        if room is not None:
-            await diffuser(room)
+        if room is None:
+            return
+        await diffuser(room)
+        if en_manche:
+            await diffuser_manche(room)
+
+    def _manche_en_cours(code: str) -> bool:
+        """Le départ d'un joueur ne rebat les cartes que si une manche court."""
+        try:
+            room = rooms.room(code)
+        except ErreurRoom:
+            return False
+        return room.manche is not None and room.manche.en_cours()
 
     async def distribuer(code: str, manche: Manche) -> None:
         """À chacun son personnage, en privé.
@@ -132,8 +144,8 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
             return _refus("payload_invalide", "demande incomplète")
         return await _flux(sid, rooms.voter, suffrage.cible)
 
-    async def _flux(sid, demande, *arguments) -> dict:
-        """Un contrôle de flux : on agit, puis on republie l'état de la manche."""
+    async def _flux(sid, demande, *arguments, diffusion=None) -> dict:
+        """Un contrôle de flux : on agit, puis on republie l'état qui en découle."""
         presence = presences.get(sid)
         if presence is None:
             return _refus("hors_room", "aucune room pour ce client")
@@ -142,8 +154,15 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
             room = demande(code, joueur, *arguments)
         except ErreurRoom as err:
             return _refus(err.motif, str(err))
-        await diffuser_manche(room)
+        await (diffusion or diffuser_manche)(room)
         return {"ok": True}
+
+    @sio.on("terminer_partie")
+    async def terminer_partie(sid) -> dict:
+        return await _flux(sid, rooms.terminer_partie, diffusion=annoncer_fin)
+
+    async def annoncer_fin(room: Room) -> None:
+        await sio.emit("partie_terminee", {"code": room.code}, room=room.code)
 
     @sio.on("quitter_room")
     async def quitter_room(sid) -> dict:

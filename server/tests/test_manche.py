@@ -312,3 +312,62 @@ def test_les_tours_joues_comptent_les_passages_effectifs(manches):
 
     manche.passer(manche.orateur())
     assert manche.tours_joues() == 2
+
+
+def test_un_parti_est_saute_a_l_ordre_de_parole(manches):
+    manche = manches.lancer(JOUEURS)
+
+    manche.retirer(manche.ordre[1])
+
+    assert manche.orateur() == manche.ordre[0]
+    manche.passer(manche.ordre[0])
+    assert manche.orateur() == manche.ordre[2]
+
+
+def test_le_depart_de_l_orateur_passe_la_parole_au_suivant(manches):
+    manche = manches.lancer(JOUEURS)
+
+    manche.retirer(manche.ordre[0])
+
+    assert manche.orateur() == manche.ordre[1]
+
+
+def test_un_tour_se_boucle_meme_ampute(manches):
+    manche = manches.lancer(JOUEURS)
+    manche.retirer(manche.ordre[3])
+
+    for _ in range(3):
+        manche.passer(manche.orateur())
+
+    assert manche.tour == 2
+    assert manche.orateur() == manche.ordre[0]
+
+
+def test_le_vote_se_ferme_sans_attendre_les_partis(manches):
+    manche = _en_vote(manches)
+    manche.retirer("j-4")
+
+    for votant in ("j-1", "j-2", "j-3"):
+        manche.voter(votant, "j-1" if votant != "j-1" else "j-2")
+
+    assert manche.tous_ont_vote() is True
+
+
+def test_on_ne_vote_pas_pour_un_parti(manches):
+    manche = _en_vote(manches)
+    manche.retirer("j-4")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        manche.voter("j-1", "j-4")
+
+    assert excinfo.value.motif == "cible_inconnue"
+
+
+def test_le_suffrage_d_un_parti_reste_au_depouillement(manches):
+    manche = _en_vote(manches)
+    manche.voter("j-4", "j-1")
+
+    manche.retirer("j-4")
+
+    assert manche.votes == {"j-4": "j-1"}
+    assert manche.designe() == "j-1", "un suffrage exprimé le reste"

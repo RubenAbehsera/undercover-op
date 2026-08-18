@@ -36,10 +36,24 @@ class Manche:
     tour: int = 1
     position: int = 0
     votes: dict[str, str] = field(default_factory=dict)
+    partis: set[str] = field(default_factory=set)
 
     def en_cours(self) -> bool:
         """Tant que la révélation n'est pas là, la manche occupe la room."""
         return self.etat != "revelation"
+
+    def presents(self) -> list[str]:
+        return [joueur for joueur in self.joueurs if joueur not in self.partis]
+
+    def ordre_present(self) -> list[str]:
+        """L'ordre de parole tel qu'il tourne vraiment — sans les partis."""
+        return [joueur for joueur in self.ordre if joueur not in self.partis]
+
+    def retirer(self, joueur: str) -> None:
+        """Un départ en cours de manche : le joueur reste connu, mais sauté."""
+        self.partis.add(joueur)
+        if self.etat == "paroles":
+            self._sauter_les_partis()
 
     def orateur(self) -> str:
         return self.ordre[self.position]
@@ -48,10 +62,21 @@ class Manche:
         """L'orateur rend la parole ; le tour suivant s'ouvre au bout du cycle."""
         if joueur != self.orateur():
             raise ErreurRoom("pas_ton_tour", "ce n'est pas à vous de parler")
+        self._avancer()
+        self._sauter_les_partis()
+
+    def _avancer(self) -> None:
         self.position += 1
         if self.position == len(self.ordre):
             self.position = 0
             self.tour += 1
+
+    def _sauter_les_partis(self) -> None:
+        """Un absent ne retient pas la parole — on passe au suivant présent."""
+        for _ in range(len(self.ordre)):
+            if self.ordre[self.position] not in self.partis:
+                return
+            self._avancer()
 
     def tours_joues(self) -> int:
         """Les tours où l'on a parlé — le tour courant compte s'il est entamé."""
@@ -68,14 +93,15 @@ class Manche:
             raise ErreurRoom("pas_de_vote", "aucun vote en cours")
         if votant == cible:
             raise ErreurRoom("vote_pour_soi", "on ne vote pas pour soi")
-        if cible not in self.joueurs:
+        if cible not in self.presents():
             raise ErreurRoom("cible_inconnue", f"joueur hors manche : {cible}")
         if votant in self.votes:
             raise ErreurRoom("deja_vote", "vous avez déjà voté")
         self.votes[votant] = cible
 
     def tous_ont_vote(self) -> bool:
-        return len(self.votes) == len(self.joueurs)
+        """Les partis ne sont plus attendus — seuls les présents ferment le vote."""
+        return all(joueur in self.votes for joueur in self.presents())
 
     def fermer_vote(self) -> None:
         self.etat = "revelation"

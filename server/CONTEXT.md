@@ -39,7 +39,11 @@ L'écran qui clôt la manche : les deux personnages, le pseudo de l'imposteur, l
 _Avoid_: résultat, score.
 
 **Hôte**:
-Le joueur qui a créé la partie ; détient les contrôles de flux (lancer une manche, déclencher le vote, terminer la partie).
+Le joueur qui a créé la partie ; détient les contrôles de flux (lancer une manche, déclencher le vote, terminer la partie). S'il part, la main passe au joueur le plus ancien encore présent.
+
+**Parti**:
+Un joueur qui a quitté en cours de manche. Il reste dans l'état — son pseudo doit survivre jusqu'à la révélation — mais il est sauté à l'ordre de parole, sorti du bulletin de vote et plus attendu pour fermer la consultation. Il disparaît vraiment au lancement de la manche suivante.
+_Avoid_: déconnecté, absent.
 
 **Imposteur**:
 Joueur recevant le personnage alternatif ; non informé de son rôle.

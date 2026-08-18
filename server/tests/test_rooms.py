@@ -4,7 +4,7 @@ import pytest
 
 from jeu.contrat import charger_contrat
 from jeu.erreurs import ErreurRoom
-from jeu.rooms import PLAFOND, Rooms
+from jeu.rooms import INACTIVITE, PLAFOND, Rooms
 
 
 @pytest.fixture
@@ -52,18 +52,18 @@ def test_un_code_deja_pris_est_retire(rooms, chemin_contrat):
     assert (premiere.code, seconde.code) == ("AAAA", "BBBB")
 
 
-def test_le_depart_de_l_hote_laisse_la_salle_sans_hote(rooms):
-    """Comportement actuel — le transfert d'hôte relève du ticket 05."""
+def test_le_depart_de_l_hote_transmet_au_plus_ancien(rooms):
     room = rooms.creer("j-hote", "Nami", _premier_calibrage(rooms))
     rooms.rejoindre(room.code, "j-2", "Zoro")
+    rooms.rejoindre(room.code, "j-3", "Usopp")
 
     rooms.quitter(room.code, "j-hote")
 
     assert room.salle_attente() == {
         "code": room.code,
         "calibrage": room.calibrage,
-        "hote": None,
-        "joueurs": ["Zoro"],
+        "hote": "Zoro",
+        "joueurs": ["Zoro", "Usopp"],
     }
 
 
@@ -469,3 +469,217 @@ def test_le_vote_ne_s_ouvre_qu_une_fois(rooms):
         rooms.ouvrir_vote(room.code, "j-hote")
 
     assert excinfo.value.motif == "vote_impossible"
+
+
+def test_le_nouvel_hote_detient_les_controles(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.quitter(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom):
+        rooms.lancer_manche(room.code, "j-3")
+    rooms.rejoindre(room.code, "j-4", "Sanji")
+    manche = rooms.lancer_manche(room.code, "j-2")
+
+    assert room.hote == "j-2"
+    assert sorted(manche.joueurs) == ["j-2", "j-3", "j-4"]
+
+
+def test_un_depart_en_cours_de_manche_conserve_le_joueur(rooms):
+    room = _salle_de_trois(rooms)
+    manche = rooms.lancer_manche(room.code, "j-hote")
+
+    rooms.quitter(room.code, "j-2")
+
+    assert room.salle_attente()["joueurs"] == ["Nami", "Usopp"]
+    assert manche.presents() == ["j-hote", "j-3"]
+    assert "j-2" in manche.joueurs, "le parti reste connu de la manche"
+
+
+def test_le_pseudo_d_un_parti_survit_a_la_revelation(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.voter(room.code, "j-2", "Nami")
+    rooms.voter(room.code, "j-hote", "Zoro")
+
+    rooms.quitter(room.code, "j-2")
+    assert room.manche.etat == "vote", "Usopp n'a pas encore voté"
+    rooms.voter(room.code, "j-3", "Nami")
+
+    assert room.manche.etat == "revelation"
+    assert room.revelation()["votes"] == [
+        {"votant": "Zoro", "cible": "Nami"},
+        {"votant": "Nami", "cible": "Zoro"},
+        {"votant": "Usopp", "cible": "Nami"},
+    ]
+
+
+def test_le_depart_de_l_hote_en_cours_de_manche_transmet_aussi(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+
+    rooms.quitter(room.code, "j-hote")
+
+    assert room.hote == "j-2"
+    assert room.manche.presents() == ["j-2", "j-3"]
+
+
+def test_l_imposteur_parti_garde_son_pseudo_a_la_revelation(rooms):
+    room = _salle_de_trois(rooms)
+    manche = rooms.lancer_manche(room.code, "j-hote")
+    pseudos = _pseudos(rooms)
+
+    rooms.quitter(room.code, manche.imposteur)
+    if room.manche is not None:
+        rooms.ouvrir_vote(room.code, room.hote)
+        rooms.forcer_vote(room.code, room.hote)
+        assert room.revelation()["joueur_imposteur"] == pseudos[manche.imposteur]
+
+
+def test_la_manche_suivante_oublie_les_partis(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.quitter(room.code, "j-2")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.forcer_vote(room.code, "j-hote")
+    rooms.rejoindre(room.code, "j-4", "Sanji")
+
+    seconde = rooms.lancer_manche(room.code, "j-hote")
+
+    assert sorted(seconde.joueurs) == ["j-3", "j-4", "j-hote"]
+    assert [joueur.pseudo for joueur in room.joueurs] == ["Nami", "Usopp", "Sanji"]
+
+
+def test_entre_manches_un_depart_retire_vraiment_le_joueur(rooms):
+    room = _salle_de_trois(rooms)
+
+    rooms.quitter(room.code, "j-2")
+
+    assert [joueur.id for joueur in room.joueurs] == ["j-hote", "j-3"]
+
+
+def test_le_depart_du_dernier_attendu_ferme_le_vote(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.voter(room.code, "j-hote", "Usopp")
+    rooms.voter(room.code, "j-3", "Nami")
+
+    rooms.quitter(room.code, "j-2")
+
+    assert room.manche.etat == "revelation", "plus personne n'est attendu"
+    assert room.revelation()["designe"] is None
+
+
+def test_l_hote_termine_la_partie(rooms):
+    room = _salle_de_trois(rooms)
+
+    rooms.terminer_partie(room.code, "j-hote")
+
+    assert room.terminee is True
+
+
+def test_seul_l_hote_termine_la_partie(rooms):
+    room = _salle_de_trois(rooms)
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.terminer_partie(room.code, "j-2")
+
+    assert excinfo.value.motif == "pas_hote"
+    assert room.terminee is False
+
+
+def test_une_partie_terminee_ne_relance_pas_de_manche(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.terminer_partie(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.lancer_manche(room.code, "j-hote")
+
+    assert excinfo.value.motif == "partie_terminee"
+
+
+def test_on_ne_rejoint_pas_une_partie_terminee(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.terminer_partie(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.rejoindre(room.code, "j-4", "Sanji")
+
+    assert excinfo.value.motif == "partie_terminee"
+
+
+class Horloge:
+    """Une horloge de test — le temps n'avance que si on le pousse."""
+
+    def __init__(self):
+        self.instant = 1000.0
+
+    def __call__(self) -> float:
+        return self.instant
+
+    def avancer(self, secondes: float) -> None:
+        self.instant += secondes
+
+
+@pytest.fixture
+def horloge() -> Horloge:
+    return Horloge()
+
+
+@pytest.fixture
+def rooms_horlogees(chemin_contrat, horloge) -> Rooms:
+    return Rooms(charger_contrat(chemin_contrat), horloge=horloge)
+
+
+def test_une_room_inactive_deux_heures_disparait(rooms_horlogees, horloge):
+    room = rooms_horlogees.creer("j-hote", "Nami", _premier_calibrage(rooms_horlogees))
+
+    horloge.avancer(INACTIVITE + 1)
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms_horlogees.room(room.code)
+    assert excinfo.value.motif == "code_inconnu"
+
+
+def test_l_activite_repousse_la_suppression(rooms_horlogees, horloge):
+    room = rooms_horlogees.creer("j-hote", "Nami", _premier_calibrage(rooms_horlogees))
+
+    for _ in range(3):
+        horloge.avancer(INACTIVITE - 60)
+        assert rooms_horlogees.room(room.code) is room
+
+
+def test_la_purge_n_emporte_que_les_rooms_endormies(rooms_horlogees, horloge):
+    calibrage = _premier_calibrage(rooms_horlogees)
+    endormie = rooms_horlogees.creer("j-1", "Nami", calibrage)
+    horloge.avancer(INACTIVITE - 60)
+    vivante = rooms_horlogees.creer("j-2", "Zoro", calibrage)
+
+    horloge.avancer(120)
+
+    assert rooms_horlogees.room(vivante.code) is vivante
+    with pytest.raises(ErreurRoom):
+        rooms_horlogees.room(endormie.code)
+
+
+def test_le_bulletin_de_vote_ignore_les_partis(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.quitter(room.code, "j-2")
+
+    rooms.ouvrir_vote(room.code, "j-hote")
+
+    assert room.vote_ouvert() == {"joueurs": ["Nami", "Usopp"]}
+
+
+def test_une_room_videe_en_cours_de_manche_disparait(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+
+    for joueur in ("j-hote", "j-2", "j-3"):
+        dernier = rooms.quitter(room.code, joueur)
+
+    assert dernier is None
+    with pytest.raises(ErreurRoom):
+        rooms.room(room.code)

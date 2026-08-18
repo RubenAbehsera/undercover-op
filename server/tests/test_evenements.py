@@ -505,3 +505,78 @@ def test_rejoindre_pendant_une_manche_est_refuse(fil, calibrage):
 
     assert ack["motif"] == "manche_en_cours"
     assert fil.recus["eio-4"] == []
+
+
+PSEUDOS = {"j-1": "Nami", "j-2": "Zoro", "j-3": "Usopp"}
+
+
+def test_un_depart_en_cours_de_manche_republie_le_tour(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        joueurs = _par_joueur(sids)
+        await fil.envoyer(sids[0], "lancer_manche")
+        manche = fil.rooms.room(code).manche
+        await fil.deconnecter(joueurs[manche.ordre[0]])
+        return manche
+
+    manche = asyncio.run(scenario())
+
+    temoin = CLIENTS[int(manche.ordre[1][-1]) - 1]
+    tour = _dernier(fil, temoin, "tour")
+    assert tour["ordre"] == [PSEUDOS[joueur] for joueur in manche.ordre[1:]]
+    assert tour["orateur"] == PSEUDOS[manche.ordre[1]], "la parole a suivi"
+
+
+def test_le_depart_du_dernier_attendu_declenche_la_revelation(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        joueurs = _par_joueur(sids)
+        await fil.envoyer(sids[0], "lancer_manche")
+        await fil.envoyer(sids[0], "ouvrir_vote")
+        await fil.envoyer(joueurs["j-1"], "voter", {"cible": "Usopp"})
+        await fil.envoyer(joueurs["j-3"], "voter", {"cible": "Nami"})
+        await fil.deconnecter(joueurs["j-2"])
+
+    asyncio.run(scenario())
+
+    revelation = _dernier(fil, CLIENTS[2], "revelation")
+    assert revelation["votes"] == [
+        {"votant": "Nami", "cible": "Usopp"},
+        {"votant": "Usopp", "cible": "Nami"},
+    ]
+    assert revelation["designe"] is None
+
+
+def test_l_hote_deconnecte_transmet_la_main(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        await fil.deconnecter(sids[0])
+
+    asyncio.run(scenario())
+
+    salle = _dernier(fil, CLIENTS[1], "salle_attente")
+    assert salle["hote"] == "Zoro"
+    assert salle["joueurs"] == ["Zoro", "Usopp"]
+
+
+def test_l_hote_termine_la_partie(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        ack = await fil.envoyer(sids[0], "terminer_partie")
+        return ack, code
+
+    ack, code = asyncio.run(scenario())
+
+    assert ack == {"ok": True}
+    for client in CLIENTS:
+        assert _dernier(fil, client, "partie_terminee") == {"code": code}
+
+
+def test_seul_l_hote_termine_la_partie(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        return await fil.envoyer(sids[1], "terminer_partie")
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "pas_hote"

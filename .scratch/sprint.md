@@ -149,7 +149,7 @@ fermer l'US :
       tours, répartition des votes), drapeau « je ne connais pas »
       confidentiel (exclut la manche du calcul qualité des tirages),
       subjectif en fin de partie → SQLite.
-- [ ] 5.7 Room & partie — cycle de vie complet, règles ci-dessus, code de
+- [x] 5.7 Room & partie — cycle de vie complet, règles ci-dessus, code de
       room, transfert d'hôte.
 - [ ] 5.8 Branchement front — socket.io-client, PWA minimale ; à détailler
       quand le serveur tient une manche de bout en bout.
