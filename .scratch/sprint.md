@@ -129,7 +129,7 @@ fermer l'US :
       personnages / paires, validation immédiate, message d'erreur net sur
       fichier absent ou invalide. _Acceptance : le serveur démarre avec
       `paires.json`, plante proprement sans lui._
-- [ ] 5.2 Tirer une manche en anti-spoil — calibrage tranché le
+- [x] 5.2 Tirer une manche en anti-spoil — calibrage tranché le
       2026-08-18 : choisi **à la création de la room par l'hôte**, parmi
       la liste des arcs proposés ; l'arc retenu est la borne maximale
       **inclusive** (inscrit dans `docs/decisions.md`). Ne servir que des
@@ -137,11 +137,11 @@ fermer l'US :
       testée sur les 24 paires, aucune fuite au-delà du calibrage._
       (Note d'implémentation : la liste peut se limiter aux arcs qui
       changent réellement le pool — valeurs distinctes d'arc_etablissement.)
-- [ ] 5.3 Équilibrer les tirages — déjà tranché dans `docs/decisions.md` :
+- [x] 5.3 Équilibrer les tirages — déjà tranché dans `docs/decisions.md` :
       tirage aléatoire parmi les paires valides, sans répétition dans la
       partie, stock épuisé → réutilisation. Reste ouvert seulement si l'on
       veut piloter le mélange facile/intermediaire (rien de prévu en v1).
-- [ ] 5.4 Distribuer les rôles — majorité vs imposteur (sens du lien),
+- [x] 5.4 Distribuer les rôles — majorité vs imposteur (sens du lien),
       l'imposteur non informé ; rien ne fuit dans les payloads socket.
 - [ ] 5.5 La manche — machine à états distribution → tours de parole →
       vote(s) → révélation ; l'hôte détient les contrôles de flux.

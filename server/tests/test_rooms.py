@@ -197,3 +197,56 @@ def test_la_salle_attente_ne_publie_aucun_id_de_joueur(rooms):
 
     assert "j-secret" not in repr(room.salle_attente())
     assert "j-hote" not in repr(room.salle_attente())
+
+
+def test_l_hote_lance_une_manche(rooms):
+    room = rooms.creer("j-hote", "Nami", _premier_calibrage(rooms))
+    rooms.rejoindre(room.code, "j-2", "Zoro")
+    rooms.rejoindre(room.code, "j-3", "Usopp")
+
+    manche = rooms.lancer_manche(room.code, "j-hote")
+
+    assert room.manche is manche
+    assert manche.joueurs == ["j-hote", "j-2", "j-3"]
+    assert manche.imposteur in manche.joueurs
+
+
+def test_seul_l_hote_lance_une_manche(rooms):
+    room = rooms.creer("j-hote", "Nami", _premier_calibrage(rooms))
+    rooms.rejoindre(room.code, "j-2", "Zoro")
+    rooms.rejoindre(room.code, "j-3", "Usopp")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.lancer_manche(room.code, "j-2")
+
+    assert excinfo.value.motif == "pas_hote"
+    assert room.manche is None
+
+
+def test_une_manche_demande_au_moins_trois_joueurs(rooms):
+    room = rooms.creer("j-hote", "Nami", _premier_calibrage(rooms))
+    rooms.rejoindre(room.code, "j-2", "Zoro")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.lancer_manche(room.code, "j-hote")
+
+    assert excinfo.value.motif == "joueurs_insuffisants"
+    assert room.manche is None
+
+
+def test_chaque_manche_tire_une_paire_neuve(rooms):
+    room = rooms.creer("j-hote", "Nami", _premier_calibrage(rooms))
+    rooms.rejoindre(room.code, "j-2", "Zoro")
+    rooms.rejoindre(room.code, "j-3", "Usopp")
+
+    premiere = rooms.lancer_manche(room.code, "j-hote").paire.id
+    seconde = rooms.lancer_manche(room.code, "j-hote").paire.id
+
+    assert premiere != seconde
+
+
+def test_lancer_dans_une_room_inconnue_refuse(rooms):
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.lancer_manche("ZZZZ", "j-hote")
+
+    assert excinfo.value.motif == "code_inconnu"

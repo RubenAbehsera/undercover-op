@@ -10,8 +10,10 @@ from dataclasses import dataclass, field
 
 from jeu.calibrage import arcs_proposes
 from jeu.contrat import Contrat
+from jeu.manche import Manche, Manches
 
 PLAFOND = 12
+MINIMUM = 3
 ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 PSEUDO_MINIMUM = 2
 LONGUEUR_CODE = 4
@@ -36,7 +38,9 @@ class Room:
     code: str
     calibrage: str
     hote: str
+    manches: Manches
     joueurs: list[Joueur] = field(default_factory=list)
+    manche: Manche | None = None
 
     def salle_attente(self) -> dict:
         return {
@@ -58,6 +62,7 @@ class Rooms:
 
     def __init__(self, contrat: Contrat, generer_code=None):
         self.arcs_proposes = arcs_proposes(contrat)
+        self._contrat = contrat
         self._rooms: dict[str, Room] = {}
         self._generer_code = generer_code or _code_aleatoire
 
@@ -65,7 +70,12 @@ class Rooms:
         if calibrage not in self.arcs_proposes:
             raise ErreurRoom("calibrage_inconnu", f"calibrage inconnu : {calibrage}")
         hote = Joueur(id=joueur, pseudo=_pseudo_valide(pseudo))
-        room = Room(code=self._code_libre(), calibrage=calibrage, hote=joueur)
+        room = Room(
+            code=self._code_libre(),
+            calibrage=calibrage,
+            hote=joueur,
+            manches=Manches(self._contrat, calibrage),
+        )
         room.joueurs.append(hote)
         self._rooms[room.code] = room
         return room
@@ -92,6 +102,18 @@ class Rooms:
             del self._rooms[code]
             return None
         return room
+
+    def lancer_manche(self, code: str, joueur: str) -> Manche:
+        """L'hôte distribue les rôles ; le stock de la room fournit la paire."""
+        room = self.room(code)
+        if joueur != room.hote:
+            raise ErreurRoom("pas_hote", "seul l'hôte lance une manche")
+        if len(room.joueurs) < MINIMUM:
+            raise ErreurRoom(
+                "joueurs_insuffisants", f"il faut au moins {MINIMUM} joueurs"
+            )
+        room.manche = room.manches.lancer([present.id for present in room.joueurs])
+        return room.manche
 
     def room(self, code: str) -> Room:
         room = self._rooms.get(code)

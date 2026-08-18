@@ -6,6 +6,7 @@ qui laisse le routage par room faire son travail.
 
 import asyncio
 import json
+from collections import Counter
 
 import pytest
 import socketio
@@ -19,6 +20,7 @@ class Fil:
     """Un serveur réel, ses clients factices, et les paquets qu'ils reçoivent."""
 
     def __init__(self, rooms: Rooms):
+        self.rooms = rooms
         self.sio = socketio.AsyncServer(async_mode="asgi")
         enregistrer(self.sio, rooms)
         self.recus: dict[str, list[tuple[str, dict]]] = {}
@@ -232,3 +234,112 @@ def test_payload_incomplet_refuse(fil):
 
     assert ack["ok"] is False
     assert ack["motif"] == "payload_invalide"
+
+
+CLIENTS = ["eio-1", "eio-2", "eio-3"]
+
+
+async def _salle(fil: Fil, calibrage: str) -> tuple[list[str], str]:
+    """Une room de trois joueurs prête à lancer ; renvoie (sids, code), hôte en tête."""
+    hote = await fil.connecter(CLIENTS[0])
+    ack = await fil.envoyer(
+        hote, "creer_room", {"joueur": "j-1", "pseudo": "Nami", "calibrage": calibrage}
+    )
+    sids = [hote]
+    for rang, pseudo in ((2, "Zoro"), (3, "Usopp")):
+        sid = await fil.connecter(CLIENTS[rang - 1])
+        await fil.envoyer(
+            sid,
+            "rejoindre_room",
+            {"joueur": f"j-{rang}", "code": ack["code"], "pseudo": pseudo},
+        )
+        sids.append(sid)
+    return sids, ack["code"]
+
+
+def _derniers(fil: Fil) -> list[dict]:
+    return [fil.recus[client][-1][1] for client in CLIENTS]
+
+
+def test_l_hote_lance_la_manche_chacun_recoit_son_personnage(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        return await fil.envoyer(sids[0], "lancer_manche")
+
+    ack = asyncio.run(scenario())
+
+    assert ack == {"ok": True}
+    for client in CLIENTS:
+        evenement, charge = fil.recus[client][-1]
+        assert evenement == "personnage"
+        assert sorted(charge) == ["id", "nom"]
+    recus = Counter(charge["id"] for charge in _derniers(fil))
+    assert sorted(recus.values()) == [1, 2], "un imposteur, deux majorités"
+
+
+def test_aucun_evenement_de_distribution_ne_trahit_l_imposteur(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        for client in CLIENTS:
+            fil.recus[client].clear()
+        await fil.envoyer(sids[0], "lancer_manche")
+        return fil.rooms.room(code).manche
+
+    manche = asyncio.run(scenario())
+
+    emis = repr([fil.recus[client] for client in CLIENTS])
+    for secret in (
+        manche.paire.id,
+        manche.paire.lien.libelle,
+        manche.paire.lien.type,
+        manche.paire.difficulte,
+        manche.imposteur,
+        "imposteur",
+        "majorite",
+    ):
+        assert secret not in emis, f"fuite : {secret}"
+
+
+def test_un_joueur_qui_n_est_pas_l_hote_ne_lance_rien(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        for client in CLIENTS:
+            fil.recus[client].clear()
+        return await fil.envoyer(sids[1], "lancer_manche")
+
+    ack = asyncio.run(scenario())
+
+    assert ack["ok"] is False
+    assert ack["motif"] == "pas_hote"
+    assert all(fil.recus[client] == [] for client in CLIENTS)
+
+
+def test_lancer_a_deux_refuse(fil, calibrage):
+    async def scenario():
+        hote = await fil.connecter(CLIENTS[0])
+        ack = await fil.envoyer(
+            hote,
+            "creer_room",
+            {"joueur": "j-1", "pseudo": "Nami", "calibrage": calibrage},
+        )
+        invite = await fil.connecter(CLIENTS[1])
+        await fil.envoyer(
+            invite,
+            "rejoindre_room",
+            {"joueur": "j-2", "code": ack["code"], "pseudo": "Zoro"},
+        )
+        return await fil.envoyer(hote, "lancer_manche")
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "joueurs_insuffisants"
+
+
+def test_lancer_sans_room_refuse(fil):
+    async def scenario():
+        badaud = await fil.connecter("eio-badaud")
+        return await fil.envoyer(badaud, "lancer_manche")
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "hors_room"

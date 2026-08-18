@@ -8,6 +8,7 @@ part vers tous les présents, source unique de vérité pour les clients.
 import socketio
 from pydantic import BaseModel, ValidationError
 
+from jeu.manche import Manche
 from jeu.rooms import ErreurRoom, Room, Rooms
 
 
@@ -42,6 +43,16 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
         if room is not None:
             await diffuser(room)
 
+    async def distribuer(code: str, manche: Manche) -> None:
+        """À chacun son personnage, en privé.
+
+        Jamais deux payloads de forme différente, jamais un mot de plus pour
+        l'imposteur — un joueur ne sait que ce qu'il a tiré.
+        """
+        for present, (code_present, joueur) in list(presences.items()):
+            if code_present == code:
+                await sio.emit("personnage", manche.personnage(joueur), to=present)
+
     async def diffuser(room: Room) -> None:
         await sio.emit("salle_attente", room.salle_attente(), room=room.code)
 
@@ -55,9 +66,9 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
             demande = Creation.model_validate(donnees)
             room = rooms.creer(demande.joueur, demande.pseudo, demande.calibrage)
         except ValidationError:
-            return _refus_payload()
+            return _refus("payload_invalide", "demande incomplète")
         except ErreurRoom as err:
-            return _refus(err)
+            return _refus(err.motif, str(err))
         await entrer(sid, room, demande.joueur)
         return {"ok": True, "code": room.code}
 
@@ -67,11 +78,24 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
             demande = Adhesion.model_validate(donnees)
             room = rooms.rejoindre(demande.code, demande.joueur, demande.pseudo)
         except ValidationError:
-            return _refus_payload()
+            return _refus("payload_invalide", "demande incomplète")
         except ErreurRoom as err:
-            return _refus(err)
+            return _refus(err.motif, str(err))
         await entrer(sid, room, demande.joueur)
         return {"ok": True, "code": room.code}
+
+    @sio.on("lancer_manche")
+    async def lancer_manche(sid) -> dict:
+        presence = presences.get(sid)
+        if presence is None:
+            return _refus("hors_room", "aucune room pour ce client")
+        code, joueur = presence
+        try:
+            manche = rooms.lancer_manche(code, joueur)
+        except ErreurRoom as err:
+            return _refus(err.motif, str(err))
+        await distribuer(code, manche)
+        return {"ok": True}
 
     @sio.on("quitter_room")
     async def quitter_room(sid) -> dict:
@@ -83,9 +107,5 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
         await sortir(sid)
 
 
-def _refus(err: ErreurRoom) -> dict:
-    return {"ok": False, "motif": err.motif, "message": str(err)}
-
-
-def _refus_payload() -> dict:
-    return {"ok": False, "motif": "payload_invalide", "message": "demande incomplète"}
+def _refus(motif: str, message: str) -> dict:
+    return {"ok": False, "motif": motif, "message": message}
