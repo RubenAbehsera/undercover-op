@@ -1,0 +1,27 @@
+[project]
+name = "jeu"
+version = "0.1.0"
+description = "Service de jeu Undercover OP — rooms, manches, vote, signaux"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi",
+    "python-socketio",
+    "uvicorn",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "httpx",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["jeu*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
