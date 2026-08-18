@@ -102,9 +102,16 @@ class Room:
         return [joueur for joueur in self.joueurs if joueur.present]
 
     def absenter(self, id_joueur: str) -> None:
+        parti = self.joueur(id_joueur)
+        if parti is not None:
+            parti.present = False
+
+    def joueur(self, id_joueur: str) -> Joueur | None:
+        """Le joueur déjà connu de la room — parti compris : son pseudo tient."""
         for joueur in self.joueurs:
             if joueur.id == id_joueur:
-                joueur.present = False
+                return joueur
+        return None
 
     def id_de(self, pseudo: str) -> str:
         for joueur in self.presents():
@@ -113,10 +120,8 @@ class Room:
         raise ErreurRoom("cible_inconnue", f"pseudo hors room : {pseudo}")
 
     def _pseudo(self, id_joueur: str) -> str | None:
-        for joueur in self.joueurs:
-            if joueur.id == id_joueur:
-                return joueur.pseudo
-        return None
+        connu = self.joueur(id_joueur)
+        return connu.pseudo if connu else None
 
 
 class Rooms:
@@ -156,7 +161,9 @@ class Rooms:
     def rejoindre(self, code: str, joueur: str, pseudo: str) -> Room:
         room = self.room(code)
         pseudo = _pseudo_valide(pseudo)
-        if any(present.id == joueur for present in room.joueurs):
+        connu = room.joueur(joueur)
+        if connu is not None:
+            connu.present = True
             return room
         _verifier_partie_ouverte(room)
         if room.manche is not None and room.manche.en_cours():

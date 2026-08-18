@@ -831,3 +831,28 @@ def test_un_joueur_ne_donne_qu_un_retour(rooms):
         rooms.retour(room.code, "j-2", niveau=1, commentaire=None)
 
     assert excinfo.value.motif == "deja_repondu"
+
+
+def test_le_joueur_qui_revient_redevient_present(rooms):
+    """Reconnexion : le navigateur rejoue `rejoindre` avec le même ID."""
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.quitter(room.code, "j-2")
+
+    rooms.rejoindre(room.code, "j-2", "Zoro")
+
+    assert room.salle_attente()["joueurs"] == ["Nami", "Zoro", "Usopp"]
+    assert room.manche.presents() == ["j-hote", "j-3"], "parti pour la manche en cours"
+
+
+def test_le_parti_revenu_ne_vote_pas_dans_la_manche_qu_il_a_quittee(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.quitter(room.code, "j-2")
+    rooms.rejoindre(room.code, "j-2", "Zoro")
+    rooms.ouvrir_vote(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.voter(room.code, "j-2", "Usopp")
+
+    assert excinfo.value.motif == "hors_manche"

@@ -93,6 +93,8 @@ class Manche:
     def voter(self, votant: str, cible: str) -> None:
         if self.etat != "vote":
             raise ErreurRoom("pas_de_vote", "aucun vote en cours")
+        if votant not in self.presents():
+            raise ErreurRoom("hors_manche", "vous ne participez plus à cette manche")
         if votant == cible:
             raise ErreurRoom("vote_pour_soi", "on ne vote pas pour soi")
         if cible not in self.presents():
