@@ -16,12 +16,12 @@ Conventions :
 
 ## Où on en est
 
-| Jalon | État | Contenu |
-| --- | --- | --- |
-| Jalon 1 — l'étalon | **clos 2026-08-18** | 24 paires figées dans les seeds, arbitrées à l'œil (LLM drapeauteur uniquement) |
-| Jalon 3 — la validation par le graphe | **clos 2026-08-18** | score 7.2, classement 7.3 relu et validé, poids inchangés |
-| Contrat figé | **clos 2026-08-18** | `fabrication/paires.json` exporté, relu, committé (ADR 0001) |
-| Jeu | **ouvert** | le serveur consomme le contrat — Épic 5 |
+| Jalon                                 | État                | Contenu                                                                         |
+| ------------------------------------- | ------------------- | ------------------------------------------------------------------------------- |
+| Jalon 1 — l'étalon                    | **clos 2026-08-18** | 24 paires figées dans les seeds, arbitrées à l'œil (LLM drapeauteur uniquement) |
+| Jalon 3 — la validation par le graphe | **clos 2026-08-18** | score 7.2, classement 7.3 relu et validé, poids inchangés                       |
+| Contrat figé                          | **clos 2026-08-18** | `fabrication/paires.json` exporté, relu, committé (ADR 0001)                    |
+| Jeu                                   | **ouvert**          | le serveur consomme le contrat — Épic 5                                         |
 
 ---
 
@@ -56,20 +56,17 @@ arbitre, jamais l'inverse** (inscrite dans `docs/pipeline.md`).
       direct (GLM, route coding, stdlib seule), **revue par lots de 8** (sur
       le corpus entier, la réflexion consomme tout le budget de tokens) ;
       sortie `seeds/paires.review.yml`, régénérable
-- [x] 2.4 Arbitrage des drapeaux régénérés (2026-08-17) :
-      - appliqués — lucci-kaku `faction`, buggy-shanks `equipage`,
-        doflamingo-rosinante `fraternite`, zoro-sanji `baratie`,
-        teach-thatch `post_enies_lobby`, luffy-ace libellé neutre
-        (« Le grand frère de Luffy »), hancock-sandersonia `fraternite`,
-        luffy-garp `famille`, libellés otohime et yamato corrigés ;
-      - rejetés — toute la série D « facile → intermediaire » (le lot reste
-        facile), les inversions de sens, les 3 drapeaux kuma-dragon
-        (contredisaient l'arbitrage du 16) ;
-      - convention types figée dans les seeds : `fraternite` = fratrie
-        (sang ou serment) · `parente` = parent-enfant · `famille` =
-        au-delà (grand-parent, oncle…) ; vocabulaire complet : rivalite,
-        mentorat, parente, fraternite, famille, equipage, alliance, faction,
-        trahison, couple ; difficulté : facile | intermediaire
+- [x] 2.4 Arbitrage des drapeaux régénérés (2026-08-17) : - appliqués — lucci-kaku `faction`, buggy-shanks `equipage`,
+      doflamingo-rosinante `fraternite`, zoro-sanji `baratie`,
+      teach-thatch `post_enies_lobby`, luffy-ace libellé neutre
+      (« Le grand frère de Luffy »), hancock-sandersonia `fraternite`,
+      luffy-garp `famille`, libellés otohime et yamato corrigés ; - rejetés — toute la série D « facile → intermediaire » (le lot reste
+      facile), les inversions de sens, les 3 drapeaux kuma-dragon
+      (contredisaient l'arbitrage du 16) ; - convention types figée dans les seeds : `fraternite` = fratrie
+      (sang ou serment) · `parente` = parent-enfant · `famille` =
+      au-delà (grand-parent, oncle…) ; vocabulaire complet : rivalite,
+      mentorat, parente, fraternite, famille, equipage, alliance, faction,
+      trahison, couple ; difficulté : facile | intermediaire
 - [x] 2.5 Sélection finale (2026-08-18) : 8 sorties (zoro-kuina,
       nami-bell-mere, chopper-hiriluk, teach-thatch, franky-iceburg,
       lucci-kaku, hancock-sandersonia, shirahoshi-otohime), **les 24
@@ -128,16 +125,16 @@ Règles déjà tranchées, à implémenter telles quelles :
 User stories proposées — critère d'acceptation = la démonstration qui fait
 fermer l'US :
 
-- [ ] 5.1 Charger le contrat au démarrage — schéma Pydantic v2 d'arcs /
+- [x] 5.1 Charger le contrat au démarrage — schéma Pydantic v2 d'arcs /
       personnages / paires, validation immédiate, message d'erreur net sur
-      fichier absent ou invalide. *Acceptance : le serveur démarre avec
-      `paires.json`, plante proprement sans lui.*
+      fichier absent ou invalide. _Acceptance : le serveur démarre avec
+      `paires.json`, plante proprement sans lui._
 - [ ] 5.2 Tirer une manche en anti-spoil — calibrage tranché le
       2026-08-18 : choisi **à la création de la room par l'hôte**, parmi
       la liste des arcs proposés ; l'arc retenu est la borne maximale
       **inclusive** (inscrit dans `docs/decisions.md`). Ne servir que des
-      paires d'`arc_etablissement` ≤ calibrage. *Acceptance : propriété
-      testée sur les 24 paires, aucune fuite au-delà du calibrage.*
+      paires d'`arc_etablissement` ≤ calibrage. _Acceptance : propriété
+      testée sur les 24 paires, aucune fuite au-delà du calibrage._
       (Note d'implémentation : la liste peut se limiter aux arcs qui
       changent réellement le pool — valeurs distinctes d'arc_etablissement.)
 - [ ] 5.3 Équilibrer les tirages — déjà tranché dans `docs/decisions.md` :

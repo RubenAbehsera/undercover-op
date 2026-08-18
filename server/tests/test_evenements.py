@@ -1,0 +1,234 @@
+"""La couche socket : acks de refus et salle d'attente diffusée aux présents.
+
+Le serveur socket.io est réel — seuls les paquets sont interceptés au fil, ce
+qui laisse le routage par room faire son travail.
+"""
+
+import asyncio
+import json
+
+import pytest
+import socketio
+
+from jeu.contrat import charger_contrat
+from jeu.evenements import enregistrer
+from jeu.rooms import Rooms
+
+
+class Fil:
+    """Un serveur réel, ses clients factices, et les paquets qu'ils reçoivent."""
+
+    def __init__(self, rooms: Rooms):
+        self.sio = socketio.AsyncServer(async_mode="asgi")
+        enregistrer(self.sio, rooms)
+        self.recus: dict[str, list[tuple[str, dict]]] = {}
+        self.sio._send_eio_packet = self._capter
+
+    async def _capter(self, eio_sid, paquet) -> None:
+        brut = paquet.data
+        evenement, charge = json.loads(brut[brut.index("[") :])
+        self.recus[eio_sid].append((evenement, charge))
+
+    async def connecter(self, nom: str) -> str:
+        self.recus[nom] = []
+        return await self.sio.manager.connect(nom, "/")
+
+    async def envoyer(self, sid: str, evenement: str, *donnees):
+        return await self.sio._trigger_event(evenement, "/", sid, *donnees)
+
+    async def deconnecter(self, sid: str) -> None:
+        raison = self.sio.reason.CLIENT_DISCONNECT
+        await self.sio._trigger_event("disconnect", "/", sid, raison)
+
+
+@pytest.fixture
+def fil(chemin_contrat) -> Fil:
+    return Fil(Rooms(charger_contrat(chemin_contrat)))
+
+
+@pytest.fixture
+def calibrage(chemin_contrat) -> str:
+    from jeu.calibrage import arcs_proposes
+
+    return arcs_proposes(charger_contrat(chemin_contrat))[-1]
+
+
+def test_l_hote_demande_les_arcs_proposes(fil):
+    async def scenario():
+        hote = await fil.connecter("eio-hote")
+        return await fil.envoyer(hote, "arcs")
+
+    ack = asyncio.run(scenario())
+
+    assert ack["ok"] is True
+    assert "romance_dawn" in ack["arcs"]
+
+
+def test_creer_une_room_ouvre_la_salle_attente(fil, calibrage):
+    async def scenario():
+        hote = await fil.connecter("eio-hote")
+        return await fil.envoyer(
+            hote,
+            "creer_room",
+            {"joueur": "j-hote", "pseudo": "Nami", "calibrage": calibrage},
+        )
+
+    ack = asyncio.run(scenario())
+
+    assert ack["ok"] is True
+    assert len(ack["code"]) == 4
+    assert fil.recus["eio-hote"] == [
+        (
+            "salle_attente",
+            {
+                "code": ack["code"],
+                "calibrage": calibrage,
+                "hote": "Nami",
+                "joueurs": ["Nami"],
+            },
+        )
+    ]
+
+
+def test_rejoindre_synchronise_tous_les_presents(fil, calibrage):
+    async def scenario():
+        hote = await fil.connecter("eio-hote")
+        ack = await fil.envoyer(
+            hote,
+            "creer_room",
+            {"joueur": "j-hote", "pseudo": "Nami", "calibrage": calibrage},
+        )
+        invite = await fil.connecter("eio-invite")
+        return await fil.envoyer(
+            invite,
+            "rejoindre_room",
+            {"joueur": "j-2", "code": ack["code"], "pseudo": "Zoro"},
+        )
+
+    ack = asyncio.run(scenario())
+
+    assert ack["ok"] is True
+    for eio_sid in ("eio-hote", "eio-invite"):
+        evenement, charge = fil.recus[eio_sid][-1]
+        assert evenement == "salle_attente"
+        assert charge["joueurs"] == ["Nami", "Zoro"]
+
+
+def test_un_client_hors_de_la_room_ne_recoit_rien(fil, calibrage):
+    async def scenario():
+        hote = await fil.connecter("eio-hote")
+        await fil.envoyer(
+            hote,
+            "creer_room",
+            {"joueur": "j-hote", "pseudo": "Nami", "calibrage": calibrage},
+        )
+        await fil.connecter("eio-badaud")
+
+    asyncio.run(scenario())
+
+    assert fil.recus["eio-badaud"] == []
+
+
+def test_un_depart_est_diffuse_aux_restants(fil, calibrage):
+    async def scenario():
+        hote = await fil.connecter("eio-hote")
+        ack = await fil.envoyer(
+            hote,
+            "creer_room",
+            {"joueur": "j-hote", "pseudo": "Nami", "calibrage": calibrage},
+        )
+        invite = await fil.connecter("eio-invite")
+        await fil.envoyer(
+            invite,
+            "rejoindre_room",
+            {"joueur": "j-2", "code": ack["code"], "pseudo": "Zoro"},
+        )
+        await fil.envoyer(invite, "quitter_room")
+
+    asyncio.run(scenario())
+
+    assert fil.recus["eio-hote"][-1] == (
+        "salle_attente",
+        {
+            "code": fil.recus["eio-hote"][-1][1]["code"],
+            "calibrage": calibrage,
+            "hote": "Nami",
+            "joueurs": ["Nami"],
+        },
+    )
+
+
+def test_une_deconnexion_vaut_un_depart(fil, calibrage):
+    async def scenario():
+        hote = await fil.connecter("eio-hote")
+        ack = await fil.envoyer(
+            hote,
+            "creer_room",
+            {"joueur": "j-hote", "pseudo": "Nami", "calibrage": calibrage},
+        )
+        invite = await fil.connecter("eio-invite")
+        await fil.envoyer(
+            invite,
+            "rejoindre_room",
+            {"joueur": "j-2", "code": ack["code"], "pseudo": "Zoro"},
+        )
+        await fil.deconnecter(invite)
+
+    asyncio.run(scenario())
+
+    assert fil.recus["eio-hote"][-1][1]["joueurs"] == ["Nami"]
+
+
+def test_une_deconnexion_hors_room_ne_casse_rien(fil):
+    async def scenario():
+        badaud = await fil.connecter("eio-badaud")
+        await fil.deconnecter(badaud)
+
+    asyncio.run(scenario())
+
+    assert fil.recus["eio-badaud"] == []
+
+
+def test_code_inconnu_refuse_sans_rien_diffuser(fil):
+    async def scenario():
+        invite = await fil.connecter("eio-invite")
+        return await fil.envoyer(
+            invite, "rejoindre_room", {"joueur": "j-2", "code": "ZZZZ", "pseudo": "Zoro"}
+        )
+
+    ack = asyncio.run(scenario())
+
+    assert ack == {"ok": False, "motif": "code_inconnu", "message": "code inconnu : ZZZZ"}
+    assert fil.recus["eio-invite"] == []
+
+
+def test_pseudo_pris_refuse(fil, calibrage):
+    async def scenario():
+        hote = await fil.connecter("eio-hote")
+        ack = await fil.envoyer(
+            hote,
+            "creer_room",
+            {"joueur": "j-hote", "pseudo": "Nami", "calibrage": calibrage},
+        )
+        invite = await fil.connecter("eio-invite")
+        return await fil.envoyer(
+            invite,
+            "rejoindre_room",
+            {"joueur": "j-2", "code": ack["code"], "pseudo": "Nami"},
+        )
+
+    ack = asyncio.run(scenario())
+
+    assert ack["ok"] is False
+    assert ack["motif"] == "pseudo_pris"
+
+
+def test_payload_incomplet_refuse(fil):
+    async def scenario():
+        hote = await fil.connecter("eio-hote")
+        return await fil.envoyer(hote, "creer_room", {"pseudo": "Nami"})
+
+    ack = asyncio.run(scenario())
+
+    assert ack["ok"] is False
+    assert ack["motif"] == "payload_invalide"

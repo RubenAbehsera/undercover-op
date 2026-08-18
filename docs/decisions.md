@@ -18,6 +18,7 @@ Issues du cadrage du 2026-08-14. Complète `docs/first-idea.md` ; en cas de sile
 ## Cycle de vie
 
 - Identité sans compte : ID joueur opaque en localStorage, clé par room ; nouveau navigateur = nouveau joueur.
+- Pseudo saisi à l'entrée, à la Kahoot : l'hôte à la création de la room, les autres en la rejoignant ; unique dans la room. Le pseudo est l'affichage, l'ID opaque reste l'identité réelle.
 - Rejoindre uniquement entre manches (salle d'attente) ; plafond dur 12 joueurs.
 - Calibrage d'une room : choisi à la création par l'hôte parmi la liste des arcs proposés ; l'arc retenu est la borne maximale **inclusive** pour l'anti-spoil.
 - Départ en cours de manche : joueur conservé dans l'état, sauté à l'ordre de parole ; départ de l'hôte : transfert au joueur le plus ancien.

@@ -21,6 +21,13 @@ Un passage de tous les joueurs dans l'ordre, à l'intérieur d'une manche.
 La salle identifiée par son code, persiste le temps de la partie.
 _Avoid_: lobby, salon.
 
+**Salle d'attente**:
+L'état d'une room hors manche : pseudos présents, hôte, calibrage — visible de tous, diffusé par l'événement `salle_attente`. C'est le seul moment où l'on peut rejoindre.
+_Avoid_: lobby.
+
+**Calibrage**:
+L'arc choisi par l'hôte à la création de la room, borne maximale inclusive de l'anti-spoil. Ne sont proposés que les arcs qui changent réellement le pool de paires.
+
 **Hôte**:
 Le joueur qui a créé la partie ; détient les contrôles de flux (lancer une manche, déclencher le vote, terminer la partie).
 

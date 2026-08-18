@@ -7,6 +7,8 @@ import socketio
 from fastapi import FastAPI
 
 from jeu.contrat import Contrat, charger_contrat
+from jeu.evenements import enregistrer
+from jeu.rooms import Rooms
 
 
 def creer_app(chemin_contrat: Path | None = None):
@@ -25,6 +27,7 @@ def creer_app(chemin_contrat: Path | None = None):
         return {"etat": "ok"}
 
     sio = socketio.AsyncServer(async_mode="asgi")
+    enregistrer(sio, Rooms(contrat))
     return socketio.ASGIApp(sio, other_asgi_app=api)
 
 
