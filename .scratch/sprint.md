@@ -53,16 +53,21 @@ le classement structurel doit rester cohérent avec l'œil humain — duos
 évidents en tête, obscurs en queue. Si ça contredit, on corrige les poids,
 jamais les 24.
 
-- [ ] 3.1 Score v1 sur les 24 (corrigé 7.2 comme point de départ)
-- [ ] 3.2 Classement des 24 (7.3) relu par l'œil humain : cohérence du
-      haut et du bas de tableau
-- [ ] 3.3 Réglage des poids jusqu'au test passé ; consigner les coefficients
-      retenus
+- [x] 3.1 Score v1 sur les 24 (corrigé 7.2 comme point de départ)
+- [x] 3.2 Classement des 24 (7.3) relu par l'œil humain — cohérent
+      (équipages partagés en tête, liens minces en queue), validé le
+      2026-08-18
+- [x] 3.3 Aucun réglage nécessaire — coefficients 7.2 conservés
+      (écart 25/15/5, support ×15, précoce +10, calibrage dressrosa)
 
 ## Epic 4 — paires.json (contrat figé, ADR 0001)
 
-- [ ] 4.1 Script d'export : classement validé → fabrication/paires.json
-- [ ] 4.2 Relecture humaine du fichier figé avant tout branchement jeu
+- [x] 4.1 Script d'export : fabrication/paires_export.py → fabrication/
+      paires.json (33 arcs, 87 personnages avec notoriétés, 24 paires dans
+      l'ordre du classement ; recoupe graphe/seeds champ à champ — un graphe
+      pas régénéré fait échouer l'export)
+- [x] 4.2 Relecture humaine du fichier figé avant tout branchement jeu —
+      validé le 2026-08-18
 
 ## Epic 5 — Côté jeu
 

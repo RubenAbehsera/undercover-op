@@ -1,0 +1,827 @@
+{
+  "arcs": [
+    "romance_dawn",
+    "orange_town",
+    "syrup_village",
+    "baratie",
+    "arlong_park",
+    "loguetown",
+    "reverse_mountain",
+    "whisky_peak",
+    "little_garden",
+    "drum_island",
+    "arabasta",
+    "jaya",
+    "skypiea",
+    "long_ring_long_land",
+    "water_7",
+    "enies_lobby",
+    "post_enies_lobby",
+    "thriller_bark",
+    "sabaody_archipelago",
+    "amazon_lily",
+    "impel_down",
+    "marineford",
+    "post_war",
+    "return_to_sabaody",
+    "fish_man_island",
+    "punk_hazard",
+    "dressrosa",
+    "zou",
+    "whole_cake_island",
+    "levely",
+    "wano_country",
+    "egghead",
+    "elbaph"
+  ],
+  "personnages": [
+    {
+      "id": "gol_d_roger",
+      "nom": "Gol D. Roger",
+      "arc_premiere_apparition": "romance_dawn",
+      "notoriete": 3
+    },
+    {
+      "id": "monkey_d_luffy",
+      "nom": "Monkey D. Luffy",
+      "arc_premiere_apparition": "romance_dawn",
+      "notoriete": 9
+    },
+    {
+      "id": "shanks",
+      "nom": "Shanks",
+      "arc_premiere_apparition": "romance_dawn",
+      "notoriete": 6
+    },
+    {
+      "id": "yasopp",
+      "nom": "Yasopp",
+      "arc_premiere_apparition": "romance_dawn",
+      "notoriete": 3
+    },
+    {
+      "id": "koby",
+      "nom": "Koby",
+      "arc_premiere_apparition": "romance_dawn",
+      "notoriete": 2
+    },
+    {
+      "id": "roronoa_zoro",
+      "nom": "Roronoa Zoro",
+      "arc_premiere_apparition": "romance_dawn",
+      "notoriete": 5
+    },
+    {
+      "id": "kuina",
+      "nom": "Shimotsuki Kuina",
+      "arc_premiere_apparition": "romance_dawn",
+      "notoriete": 1
+    },
+    {
+      "id": "nami",
+      "nom": "Nami",
+      "arc_premiere_apparition": "orange_town",
+      "notoriete": 2
+    },
+    {
+      "id": "buggy",
+      "nom": "Buggy",
+      "arc_premiere_apparition": "orange_town",
+      "notoriete": 8
+    },
+    {
+      "id": "silvers_rayleigh",
+      "nom": "Silvers Rayleigh",
+      "arc_premiere_apparition": "orange_town",
+      "notoriete": 3
+    },
+    {
+      "id": "usopp",
+      "nom": "Usopp",
+      "arc_premiere_apparition": "syrup_village",
+      "notoriete": 3
+    },
+    {
+      "id": "sanji",
+      "nom": "Sanji",
+      "arc_premiere_apparition": "baratie",
+      "notoriete": 5
+    },
+    {
+      "id": "zeff",
+      "nom": "Zeff",
+      "arc_premiere_apparition": "baratie",
+      "notoriete": 2
+    },
+    {
+      "id": "dracule_mihawk",
+      "nom": "Dracule Mihawk",
+      "arc_premiere_apparition": "baratie",
+      "notoriete": 4
+    },
+    {
+      "id": "arlong",
+      "nom": "Arlong",
+      "arc_premiere_apparition": "arlong_park",
+      "notoriete": 3
+    },
+    {
+      "id": "nojiko",
+      "nom": "Nojiko",
+      "arc_premiere_apparition": "arlong_park",
+      "notoriete": 1
+    },
+    {
+      "id": "bell_mère",
+      "nom": "Bell-mère",
+      "arc_premiere_apparition": "arlong_park",
+      "notoriete": 2
+    },
+    {
+      "id": "monkey_d_garp",
+      "nom": "Monkey D. Garp",
+      "arc_premiere_apparition": "arlong_park",
+      "notoriete": 4
+    },
+    {
+      "id": "tashigi",
+      "nom": "Tashigi",
+      "arc_premiere_apparition": "loguetown",
+      "notoriete": 2
+    },
+    {
+      "id": "smoker",
+      "nom": "Smoker",
+      "arc_premiere_apparition": "loguetown",
+      "notoriete": 3
+    },
+    {
+      "id": "monkey_d_dragon",
+      "nom": "Monkey D. Dragon",
+      "arc_premiere_apparition": "loguetown",
+      "notoriete": 4
+    },
+    {
+      "id": "nefertari_vivi",
+      "nom": "Nefertari Vivi",
+      "arc_premiere_apparition": "reverse_mountain",
+      "notoriete": 3
+    },
+    {
+      "id": "nico_robin",
+      "nom": "Nico Robin",
+      "arc_premiere_apparition": "whisky_peak",
+      "notoriete": 3
+    },
+    {
+      "id": "crocodile",
+      "nom": "Crocodile",
+      "arc_premiere_apparition": "little_garden",
+      "notoriete": 5
+    },
+    {
+      "id": "bentham",
+      "nom": "Bentham",
+      "arc_premiere_apparition": "little_garden",
+      "notoriete": 2
+    },
+    {
+      "id": "tony_tony_chopper",
+      "nom": "Tony Tony Chopper",
+      "arc_premiere_apparition": "drum_island",
+      "notoriete": 3
+    },
+    {
+      "id": "hiriluk",
+      "nom": "Hiriluk",
+      "arc_premiere_apparition": "drum_island",
+      "notoriete": 1
+    },
+    {
+      "id": "nefertari_cobra",
+      "nom": "Nefertari Cobra",
+      "arc_premiere_apparition": "drum_island",
+      "notoriete": 1
+    },
+    {
+      "id": "portgas_d_ace",
+      "nom": "Portgas D. Ace",
+      "arc_premiere_apparition": "drum_island",
+      "notoriete": 7
+    },
+    {
+      "id": "edward_newgate",
+      "nom": "Edward Newgate",
+      "arc_premiere_apparition": "arabasta",
+      "notoriete": 5
+    },
+    {
+      "id": "daz_bones",
+      "nom": "Daz Bonez",
+      "arc_premiere_apparition": "arabasta",
+      "notoriete": 2
+    },
+    {
+      "id": "marshall_d_teach",
+      "nom": "Marshall D. Teach",
+      "arc_premiere_apparition": "jaya",
+      "notoriete": 8
+    },
+    {
+      "id": "bartholomew_kuma",
+      "nom": "Bartholomew Kuma",
+      "arc_premiere_apparition": "jaya",
+      "notoriete": 6
+    },
+    {
+      "id": "donquixote_doflamingo",
+      "nom": "Donquixote Doflamingo",
+      "arc_premiere_apparition": "jaya",
+      "notoriete": 4
+    },
+    {
+      "id": "marco",
+      "nom": "Polo Marco",
+      "arc_premiere_apparition": "jaya",
+      "notoriete": 2
+    },
+    {
+      "id": "sengoku",
+      "nom": "Sengoku",
+      "arc_premiere_apparition": "jaya",
+      "notoriete": 3
+    },
+    {
+      "id": "gan_fall",
+      "nom": "Gan Fall",
+      "arc_premiere_apparition": "skypiea",
+      "notoriete": 1
+    },
+    {
+      "id": "wyper",
+      "nom": "Wyper",
+      "arc_premiere_apparition": "skypiea",
+      "notoriete": 2
+    },
+    {
+      "id": "enel",
+      "nom": "Enel",
+      "arc_premiere_apparition": "skypiea",
+      "notoriete": 3
+    },
+    {
+      "id": "kuzan",
+      "nom": "Kuzan",
+      "arc_premiere_apparition": "long_ring_long_land",
+      "notoriete": 4
+    },
+    {
+      "id": "iceburg",
+      "nom": "Iceburg",
+      "arc_premiere_apparition": "water_7",
+      "notoriete": 1
+    },
+    {
+      "id": "kaku",
+      "nom": "Kaku",
+      "arc_premiere_apparition": "water_7",
+      "notoriete": 2
+    },
+    {
+      "id": "rob_lucci",
+      "nom": "Rob Lucci",
+      "arc_premiere_apparition": "water_7",
+      "notoriete": 2
+    },
+    {
+      "id": "franky",
+      "nom": "Franky",
+      "arc_premiere_apparition": "water_7",
+      "notoriete": 2
+    },
+    {
+      "id": "sakazuki",
+      "nom": "Sakazuki",
+      "arc_premiere_apparition": "enies_lobby",
+      "notoriete": 3
+    },
+    {
+      "id": "thatch",
+      "nom": "Thatch",
+      "arc_premiere_apparition": "post_enies_lobby",
+      "notoriete": 2
+    },
+    {
+      "id": "brook",
+      "nom": "Brook",
+      "arc_premiere_apparition": "thriller_bark",
+      "notoriete": 3
+    },
+    {
+      "id": "perona",
+      "nom": "Perona",
+      "arc_premiere_apparition": "thriller_bark",
+      "notoriete": 2
+    },
+    {
+      "id": "gecko_moria",
+      "nom": "Gecko Moria",
+      "arc_premiere_apparition": "thriller_bark",
+      "notoriete": 3
+    },
+    {
+      "id": "eustass_kid",
+      "nom": "Eustass Kid",
+      "arc_premiere_apparition": "sabaody_archipelago",
+      "notoriete": 5
+    },
+    {
+      "id": "jewelry_bonney",
+      "nom": "Jewelry Bonney",
+      "arc_premiere_apparition": "sabaody_archipelago",
+      "notoriete": 4
+    },
+    {
+      "id": "killer",
+      "nom": "Killer",
+      "arc_premiere_apparition": "sabaody_archipelago",
+      "notoriete": 4
+    },
+    {
+      "id": "shakuyaku",
+      "nom": "Shakuyaku",
+      "arc_premiere_apparition": "sabaody_archipelago",
+      "notoriete": 3
+    },
+    {
+      "id": "trafalgar_d_water_law",
+      "nom": "Trafalgar D. Water Law",
+      "arc_premiere_apparition": "sabaody_archipelago",
+      "notoriete": 6
+    },
+    {
+      "id": "x_drake",
+      "nom": "X Drake",
+      "arc_premiere_apparition": "sabaody_archipelago",
+      "notoriete": 5
+    },
+    {
+      "id": "borsalino",
+      "nom": "Borsalino",
+      "arc_premiere_apparition": "sabaody_archipelago",
+      "notoriete": 3
+    },
+    {
+      "id": "boa_hancock",
+      "nom": "Boa Hancock",
+      "arc_premiere_apparition": "amazon_lily",
+      "notoriete": 4
+    },
+    {
+      "id": "boa_sandersonia",
+      "nom": "Boa Sandersonia",
+      "arc_premiere_apparition": "amazon_lily",
+      "notoriete": 3
+    },
+    {
+      "id": "fisher_tiger",
+      "nom": "Fisher Tiger",
+      "arc_premiere_apparition": "amazon_lily",
+      "notoriete": 3
+    },
+    {
+      "id": "jinbe",
+      "nom": "Jinbe",
+      "arc_premiere_apparition": "impel_down",
+      "notoriete": 6
+    },
+    {
+      "id": "magellan",
+      "nom": "Magellan",
+      "arc_premiere_apparition": "impel_down",
+      "notoriete": 2
+    },
+    {
+      "id": "emporio_ivankov",
+      "nom": "Emporio Ivankov",
+      "arc_premiere_apparition": "impel_down",
+      "notoriete": 3
+    },
+    {
+      "id": "sabo",
+      "nom": "Sabo",
+      "arc_premiere_apparition": "post_war",
+      "notoriete": 4
+    },
+    {
+      "id": "hody_jones",
+      "nom": "Hody Jones",
+      "arc_premiere_apparition": "fish_man_island",
+      "notoriete": 1
+    },
+    {
+      "id": "neptune",
+      "nom": "Neptune",
+      "arc_premiere_apparition": "fish_man_island",
+      "notoriete": 1
+    },
+    {
+      "id": "shirahoshi",
+      "nom": "Shirahoshi",
+      "arc_premiere_apparition": "fish_man_island",
+      "notoriete": 1
+    },
+    {
+      "id": "otohime",
+      "nom": "Otohime",
+      "arc_premiere_apparition": "fish_man_island",
+      "notoriete": 1
+    },
+    {
+      "id": "charlotte_linlin",
+      "nom": "Charlotte Linlin",
+      "arc_premiere_apparition": "fish_man_island",
+      "notoriete": 6
+    },
+    {
+      "id": "charlotte_pudding",
+      "nom": "Charlotte Pudding",
+      "arc_premiere_apparition": "fish_man_island",
+      "notoriete": 3
+    },
+    {
+      "id": "kinemon",
+      "nom": "Kin'emon",
+      "arc_premiere_apparition": "punk_hazard",
+      "notoriete": 2
+    },
+    {
+      "id": "monet",
+      "nom": "Monet",
+      "arc_premiere_apparition": "punk_hazard",
+      "notoriete": 2
+    },
+    {
+      "id": "caesar_clown",
+      "nom": "Caesar Clown",
+      "arc_premiere_apparition": "punk_hazard",
+      "notoriete": 3
+    },
+    {
+      "id": "kozuki_momonosuke",
+      "nom": "Kouzuki Momonosuke",
+      "arc_premiere_apparition": "punk_hazard",
+      "notoriete": 2
+    },
+    {
+      "id": "vegapunk",
+      "nom": "Vegapunk",
+      "arc_premiere_apparition": "punk_hazard",
+      "notoriete": 3
+    },
+    {
+      "id": "issho",
+      "nom": "Issho",
+      "arc_premiere_apparition": "dressrosa",
+      "notoriete": 3
+    },
+    {
+      "id": "kyros",
+      "nom": "Kyros",
+      "arc_premiere_apparition": "dressrosa",
+      "notoriete": 2
+    },
+    {
+      "id": "rebecca",
+      "nom": "Rebecca",
+      "arc_premiere_apparition": "dressrosa",
+      "notoriete": 2
+    },
+    {
+      "id": "donquixote_rosinante",
+      "nom": "Donquixote Rosinante",
+      "arc_premiere_apparition": "dressrosa",
+      "notoriete": 4
+    },
+    {
+      "id": "kaidou",
+      "nom": "Kaidou",
+      "arc_premiere_apparition": "dressrosa",
+      "notoriete": 6
+    },
+    {
+      "id": "vinsmoke_reiju",
+      "nom": "Vinsmoke Reiju",
+      "arc_premiere_apparition": "whole_cake_island",
+      "notoriete": 1
+    },
+    {
+      "id": "charlotte_brûlée",
+      "nom": "Charlotte Brûlée",
+      "arc_premiere_apparition": "whole_cake_island",
+      "notoriete": 3
+    },
+    {
+      "id": "vinsmoke_judge",
+      "nom": "Vinsmoke Judge",
+      "arc_premiere_apparition": "whole_cake_island",
+      "notoriete": 2
+    },
+    {
+      "id": "charlotte_katakuri",
+      "nom": "Charlotte Katakuri",
+      "arc_premiere_apparition": "whole_cake_island",
+      "notoriete": 4
+    },
+    {
+      "id": "king",
+      "nom": "King",
+      "arc_premiere_apparition": "wano_country",
+      "notoriete": 3
+    },
+    {
+      "id": "kozuki_oden",
+      "nom": "Kouzuki Oden",
+      "arc_premiere_apparition": "wano_country",
+      "notoriete": 1
+    },
+    {
+      "id": "queen",
+      "nom": "Queen",
+      "arc_premiere_apparition": "wano_country",
+      "notoriete": 3
+    },
+    {
+      "id": "yamato",
+      "nom": "Yamato",
+      "arc_premiere_apparition": "wano_country",
+      "notoriete": 4
+    }
+  ],
+  "paires": [
+    {
+      "id": "kid-killer",
+      "majorite": "eustass_kid",
+      "imposteur": "killer",
+      "lien": {
+        "type": "equipage",
+        "libelle": "Le bras droit masqué de Kid"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "sabaody_archipelago"
+    },
+    {
+      "id": "buggy-shanks",
+      "majorite": "shanks",
+      "imposteur": "buggy",
+      "lien": {
+        "type": "equipage",
+        "libelle": "Mousses ensemble sur l'Oro Jackson"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "loguetown"
+    },
+    {
+      "id": "arlong-fisher-tiger",
+      "majorite": "arlong",
+      "imposteur": "fisher_tiger",
+      "lien": {
+        "type": "equipage",
+        "libelle": "L'équipage du Soleil et sa dérive"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "fish_man_island"
+    },
+    {
+      "id": "luffy-shanks",
+      "majorite": "monkey_d_luffy",
+      "imposteur": "shanks",
+      "lien": {
+        "type": "mentorat",
+        "libelle": "Le chapeau confié, la promesse"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "romance_dawn"
+    },
+    {
+      "id": "law-luffy",
+      "majorite": "monkey_d_luffy",
+      "imposteur": "trafalgar_d_water_law",
+      "lien": {
+        "type": "alliance",
+        "libelle": "L'alliance de Punk Hazard"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "punk_hazard"
+    },
+    {
+      "id": "ace-teach",
+      "majorite": "portgas_d_ace",
+      "imposteur": "marshall_d_teach",
+      "lien": {
+        "type": "rivalite",
+        "libelle": "Le duel de Banaro"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "post_enies_lobby"
+    },
+    {
+      "id": "zoro-sanji",
+      "majorite": "roronoa_zoro",
+      "imposteur": "sanji",
+      "lien": {
+        "type": "equipage",
+        "libelle": "Le duo qui ne s'entend jamais, même équipage"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "baratie"
+    },
+    {
+      "id": "luffy-garp",
+      "majorite": "monkey_d_luffy",
+      "imposteur": "monkey_d_garp",
+      "lien": {
+        "type": "famille",
+        "libelle": "Le petit-fils du héros de la Marine"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "post_enies_lobby"
+    },
+    {
+      "id": "kuma-dragon",
+      "majorite": "bartholomew_kuma",
+      "imposteur": "monkey_d_dragon",
+      "lien": {
+        "type": "faction",
+        "libelle": "Le révolutionnaire silencieux et son chef"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "egghead"
+    },
+    {
+      "id": "linlin-katakuri",
+      "majorite": "charlotte_linlin",
+      "imposteur": "charlotte_katakuri",
+      "lien": {
+        "type": "parente",
+        "libelle": "Mère et fils, le mur de Big Mom"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "whole_cake_island"
+    },
+    {
+      "id": "kaidou-yamato",
+      "majorite": "kaidou",
+      "imposteur": "yamato",
+      "lien": {
+        "type": "parente",
+        "libelle": "Père ogre, enfant rebelle"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "wano_country"
+    },
+    {
+      "id": "doflamingo-rosinante",
+      "majorite": "donquixote_doflamingo",
+      "imposteur": "donquixote_rosinante",
+      "lien": {
+        "type": "fraternite",
+        "libelle": "Frères ennemis, l'oiseau et la colombe"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "dressrosa"
+    },
+    {
+      "id": "enel-wyper",
+      "majorite": "enel",
+      "imposteur": "wyper",
+      "lien": {
+        "type": "rivalite",
+        "libelle": "Le dieu et le guerrier de Shandia"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "skypiea"
+    },
+    {
+      "id": "roger-garp",
+      "majorite": "gol_d_roger",
+      "imposteur": "monkey_d_garp",
+      "lien": {
+        "type": "rivalite",
+        "libelle": "La rivalité fondatrice, pirate contre Marine"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "post_enies_lobby"
+    },
+    {
+      "id": "luffy-ace",
+      "majorite": "monkey_d_luffy",
+      "imposteur": "portgas_d_ace",
+      "lien": {
+        "type": "fraternite",
+        "libelle": "Le grand frère de Luffy"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "arabasta"
+    },
+    {
+      "id": "vivi-crocodile",
+      "majorite": "nefertari_vivi",
+      "imposteur": "crocodile",
+      "lien": {
+        "type": "rivalite",
+        "libelle": "L'ennemi qui a mis Arabasta à genoux"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "arabasta"
+    },
+    {
+      "id": "ace-sabo",
+      "majorite": "portgas_d_ace",
+      "imposteur": "sabo",
+      "lien": {
+        "type": "fraternite",
+        "libelle": "Frères par serment, le second frère"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "post_war"
+    },
+    {
+      "id": "rebecca-kyros",
+      "majorite": "rebecca",
+      "imposteur": "kyros",
+      "lien": {
+        "type": "parente",
+        "libelle": "Le père gladiateur et sa fille"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "dressrosa"
+    },
+    {
+      "id": "zoro-mihawk",
+      "majorite": "roronoa_zoro",
+      "imposteur": "dracule_mihawk",
+      "lien": {
+        "type": "rivalite",
+        "libelle": "Battre le plus grand sabreur du monde"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "baratie"
+    },
+    {
+      "id": "sanji-zeff",
+      "majorite": "sanji",
+      "imposteur": "zeff",
+      "lien": {
+        "type": "mentorat",
+        "libelle": "La jambe donnée, la dette du cuisinier"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "baratie"
+    },
+    {
+      "id": "rayleigh-shakuyaku",
+      "majorite": "silvers_rayleigh",
+      "imposteur": "shakuyaku",
+      "lien": {
+        "type": "couple",
+        "libelle": "Le couple légendaire de Sabaody"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "sabaody_archipelago"
+    },
+    {
+      "id": "usopp-yasopp",
+      "majorite": "usopp",
+      "imposteur": "yasopp",
+      "lien": {
+        "type": "parente",
+        "libelle": "Père et fils tireurs d'élite"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "syrup_village"
+    },
+    {
+      "id": "bonney-kuma",
+      "majorite": "jewelry_bonney",
+      "imposteur": "bartholomew_kuma",
+      "lien": {
+        "type": "parente",
+        "libelle": "Père et fille, la vérité d'Egghead"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "egghead"
+    },
+    {
+      "id": "sanji-judge",
+      "majorite": "sanji",
+      "imposteur": "vinsmoke_judge",
+      "lien": {
+        "type": "parente",
+        "libelle": "Le rejet du père, la cuisine contre la science"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "whole_cake_island"
+    }
+  ]
+}
