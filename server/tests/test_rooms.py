@@ -3,7 +3,8 @@
 import pytest
 
 from jeu.contrat import charger_contrat
-from jeu.rooms import PLAFOND, ErreurRoom, Rooms
+from jeu.erreurs import ErreurRoom
+from jeu.rooms import PLAFOND, Rooms
 
 
 @pytest.fixture
@@ -240,6 +241,8 @@ def test_chaque_manche_tire_une_paire_neuve(rooms):
     rooms.rejoindre(room.code, "j-3", "Usopp")
 
     premiere = rooms.lancer_manche(room.code, "j-hote").paire.id
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.forcer_vote(room.code, "j-hote")
     seconde = rooms.lancer_manche(room.code, "j-hote").paire.id
 
     assert premiere != seconde
@@ -250,3 +253,219 @@ def test_lancer_dans_une_room_inconnue_refuse(rooms):
         rooms.lancer_manche("ZZZZ", "j-hote")
 
     assert excinfo.value.motif == "code_inconnu"
+
+
+def _salle_de_trois(rooms) -> "Room":
+    room = rooms.creer("j-hote", "Nami", _premier_calibrage(rooms))
+    rooms.rejoindre(room.code, "j-2", "Zoro")
+    rooms.rejoindre(room.code, "j-3", "Usopp")
+    return room
+
+
+def _pseudos(rooms) -> dict:
+    return {"j-hote": "Nami", "j-2": "Zoro", "j-3": "Usopp"}
+
+
+def test_le_tour_publie_l_ordre_en_pseudos(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+
+    tour = room.tour()
+
+    assert sorted(tour["ordre"]) == ["Nami", "Usopp", "Zoro"]
+    assert tour["orateur"] == tour["ordre"][0]
+    assert tour["tour"] == 1
+
+
+def test_la_parole_rendue_avance_l_ordre(rooms):
+    room = _salle_de_trois(rooms)
+    manche = rooms.lancer_manche(room.code, "j-hote")
+    premier = manche.orateur()
+
+    rooms.passer_parole(room.code, premier)
+
+    assert room.tour()["orateur"] == _pseudos(rooms)[manche.ordre[1]]
+
+
+def test_un_autre_joueur_ne_rend_pas_la_parole(rooms):
+    room = _salle_de_trois(rooms)
+    manche = rooms.lancer_manche(room.code, "j-hote")
+    autre = next(j for j in manche.ordre if j != manche.orateur())
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.passer_parole(room.code, autre)
+
+    assert excinfo.value.motif == "pas_ton_tour"
+
+
+def test_seul_l_hote_ouvre_le_vote(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.ouvrir_vote(room.code, "j-2")
+
+    assert excinfo.value.motif == "pas_hote"
+    assert room.manche.etat == "paroles"
+
+
+def test_on_vote_par_pseudo(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+
+    rooms.voter(room.code, "j-hote", "Zoro")
+
+    assert room.manche.votes == {"j-hote": "j-2"}
+
+
+def test_un_pseudo_inconnu_n_est_pas_une_cible(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.voter(room.code, "j-hote", "Sanji")
+
+    assert excinfo.value.motif == "cible_inconnue"
+
+
+def test_le_dernier_vote_ferme_la_consultation(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+
+    rooms.voter(room.code, "j-hote", "Zoro")
+    rooms.voter(room.code, "j-2", "Nami")
+    assert room.manche.etat == "vote"
+
+    rooms.voter(room.code, "j-3", "Zoro")
+    assert room.manche.etat == "revelation"
+
+
+def test_l_hote_force_la_fermeture_du_vote(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.voter(room.code, "j-hote", "Zoro")
+
+    rooms.forcer_vote(room.code, "j-hote")
+
+    assert room.manche.etat == "revelation"
+    assert room.revelation()["designe"] == "Zoro"
+
+
+def test_seul_l_hote_force_le_vote(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.forcer_vote(room.code, "j-2")
+
+    assert excinfo.value.motif == "pas_hote"
+
+
+def test_la_revelation_dit_le_duo_le_lien_et_le_verdict(rooms):
+    room = _salle_de_trois(rooms)
+    manche = rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.forcer_vote(room.code, "j-hote")
+
+    revelation = room.revelation()
+
+    assert revelation["majorite"] == {
+        "id": manche.personnage_majorite.id,
+        "nom": manche.personnage_majorite.nom,
+    }
+    assert revelation["imposteur"] == {
+        "id": manche.personnage_imposteur.id,
+        "nom": manche.personnage_imposteur.nom,
+    }
+    assert revelation["joueur_imposteur"] == _pseudos(rooms)[manche.imposteur]
+    assert revelation["lien"] == manche.paire.lien.libelle
+    assert revelation["tours"] == 0, "le vote a coupé avant le premier tour"
+    assert manche.paire.difficulte not in repr(revelation)
+
+
+def test_la_revelation_depouille_nominativement(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.voter(room.code, "j-hote", "Zoro")
+    rooms.voter(room.code, "j-2", "Usopp")
+    rooms.voter(room.code, "j-3", "Zoro")
+
+    revelation = room.revelation()
+
+    assert revelation["votes"] == [
+        {"votant": "Nami", "cible": "Zoro"},
+        {"votant": "Zoro", "cible": "Usopp"},
+        {"votant": "Usopp", "cible": "Zoro"},
+    ]
+    assert revelation["designe"] == "Zoro"
+
+
+def test_rejoindre_est_refuse_pendant_une_manche(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.rejoindre(room.code, "j-4", "Sanji")
+
+    assert excinfo.value.motif == "manche_en_cours"
+    assert room.salle_attente()["joueurs"] == ["Nami", "Zoro", "Usopp"]
+
+
+def test_on_rejoint_de_nouveau_apres_la_revelation(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.forcer_vote(room.code, "j-hote")
+
+    rooms.rejoindre(room.code, "j-4", "Sanji")
+
+    assert room.salle_attente()["joueurs"] == ["Nami", "Zoro", "Usopp", "Sanji"]
+
+
+def test_les_controles_de_flux_exigent_une_manche(rooms):
+    room = _salle_de_trois(rooms)
+
+    for appel in (rooms.passer_parole, rooms.ouvrir_vote, rooms.forcer_vote):
+        with pytest.raises(ErreurRoom) as excinfo:
+            appel(room.code, "j-hote")
+        assert excinfo.value.motif == "pas_de_manche"
+
+
+def test_on_ne_relance_pas_une_manche_en_cours(rooms):
+    room = _salle_de_trois(rooms)
+    premiere = rooms.lancer_manche(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.lancer_manche(room.code, "j-hote")
+
+    assert excinfo.value.motif == "manche_en_cours"
+    assert room.manche is premiere
+
+
+def test_la_manche_suivante_se_lance_apres_la_revelation(rooms):
+    room = _salle_de_trois(rooms)
+    premiere = rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.forcer_vote(room.code, "j-hote")
+
+    seconde = rooms.lancer_manche(room.code, "j-hote")
+
+    assert seconde is not premiere
+    assert seconde.etat == "paroles"
+
+
+def test_le_vote_ne_s_ouvre_qu_une_fois(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.ouvrir_vote(room.code, "j-hote")
+
+    assert excinfo.value.motif == "vote_impossible"

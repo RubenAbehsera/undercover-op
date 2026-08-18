@@ -8,8 +8,9 @@ part vers tous les présents, source unique de vérité pour les clients.
 import socketio
 from pydantic import BaseModel, ValidationError
 
+from jeu.erreurs import ErreurRoom
 from jeu.manche import Manche
-from jeu.rooms import ErreurRoom, Room, Rooms
+from jeu.rooms import Room, Rooms
 
 
 class Creation(BaseModel):
@@ -22,6 +23,10 @@ class Adhesion(BaseModel):
     joueur: str
     code: str
     pseudo: str
+
+
+class Suffrage(BaseModel):
+    cible: str
 
 
 def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
@@ -55,6 +60,15 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
 
     async def diffuser(room: Room) -> None:
         await sio.emit("salle_attente", room.salle_attente(), room=room.code)
+
+    async def diffuser_manche(room: Room) -> None:
+        """L'état public de la manche : le tour de parole, ou la révélation."""
+        if room.manche.etat == "revelation":
+            await sio.emit("revelation", room.revelation(), room=room.code)
+        elif room.manche.etat == "vote":
+            await sio.emit("vote_ouvert", room.vote_ouvert(), room=room.code)
+        else:
+            await sio.emit("tour", room.tour(), room=room.code)
 
     @sio.on("arcs")
     async def arcs(sid) -> dict:
@@ -95,6 +109,40 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
         except ErreurRoom as err:
             return _refus(err.motif, str(err))
         await distribuer(code, manche)
+        await diffuser_manche(rooms.room(code))
+        return {"ok": True}
+
+    @sio.on("passer")
+    async def passer(sid) -> dict:
+        return await _flux(sid, rooms.passer_parole)
+
+    @sio.on("ouvrir_vote")
+    async def ouvrir_vote(sid) -> dict:
+        return await _flux(sid, rooms.ouvrir_vote)
+
+    @sio.on("forcer_vote")
+    async def forcer_vote(sid) -> dict:
+        return await _flux(sid, rooms.forcer_vote)
+
+    @sio.on("voter")
+    async def voter(sid, donnees) -> dict:
+        try:
+            suffrage = Suffrage.model_validate(donnees)
+        except ValidationError:
+            return _refus("payload_invalide", "demande incomplète")
+        return await _flux(sid, rooms.voter, suffrage.cible)
+
+    async def _flux(sid, demande, *arguments) -> dict:
+        """Un contrôle de flux : on agit, puis on republie l'état de la manche."""
+        presence = presences.get(sid)
+        if presence is None:
+            return _refus("hors_room", "aucune room pour ce client")
+        code, joueur = presence
+        try:
+            room = demande(code, joueur, *arguments)
+        except ErreurRoom as err:
+            return _refus(err.motif, str(err))
+        await diffuser_manche(room)
         return {"ok": True}
 
     @sio.on("quitter_room")

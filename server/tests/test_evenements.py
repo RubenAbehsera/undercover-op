@@ -257,8 +257,14 @@ async def _salle(fil: Fil, calibrage: str) -> tuple[list[str], str]:
     return sids, ack["code"]
 
 
-def _derniers(fil: Fil) -> list[dict]:
-    return [fil.recus[client][-1][1] for client in CLIENTS]
+def _personnages(fil: Fil) -> list[dict]:
+    """Le personnage reçu par chacun — un seul par manche, en privé."""
+    return [
+        charge
+        for client in CLIENTS
+        for evenement, charge in fil.recus[client]
+        if evenement == "personnage"
+    ]
 
 
 def test_l_hote_lance_la_manche_chacun_recoit_son_personnage(fil, calibrage):
@@ -269,11 +275,11 @@ def test_l_hote_lance_la_manche_chacun_recoit_son_personnage(fil, calibrage):
     ack = asyncio.run(scenario())
 
     assert ack == {"ok": True}
-    for client in CLIENTS:
-        evenement, charge = fil.recus[client][-1]
-        assert evenement == "personnage"
+    personnages = _personnages(fil)
+    assert len(personnages) == len(CLIENTS)
+    for charge in personnages:
         assert sorted(charge) == ["id", "nom"]
-    recus = Counter(charge["id"] for charge in _derniers(fil))
+    recus = Counter(charge["id"] for charge in personnages)
     assert sorted(recus.values()) == [1, 2], "un imposteur, deux majorités"
 
 
@@ -343,3 +349,159 @@ def test_lancer_sans_room_refuse(fil):
     ack = asyncio.run(scenario())
 
     assert ack["motif"] == "hors_room"
+
+
+def _par_joueur(sids: list[str]) -> dict:
+    return {f"j-{rang}": sid for rang, sid in enumerate(sids, start=1)}
+
+
+def _dernier(fil: Fil, client: str, evenement: str) -> dict:
+    charges = [c for e, c in fil.recus[client] if e == evenement]
+    assert charges, f"{client} n'a reçu aucun {evenement}"
+    return charges[-1]
+
+
+def test_le_deroule_complet_lancer_parler_voter_reveler(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        joueurs = _par_joueur(sids)
+        await fil.envoyer(sids[0], "lancer_manche")
+        manche = fil.rooms.room(code).manche
+
+        for _ in range(len(joueurs)):
+            await fil.envoyer(joueurs[manche.orateur()], "passer")
+        await fil.envoyer(sids[0], "ouvrir_vote")
+        for joueur, cible in (("j-1", "Zoro"), ("j-2", "Nami"), ("j-3", "Zoro")):
+            await fil.envoyer(joueurs[joueur], "voter", {"cible": cible})
+        return manche
+
+    manche = asyncio.run(scenario())
+
+    for client in CLIENTS:
+        assert _dernier(fil, client, "tour")["tour"] == 2
+        assert _dernier(fil, client, "vote_ouvert") == {
+            "joueurs": ["Nami", "Zoro", "Usopp"]
+        }
+        revelation = _dernier(fil, client, "revelation")
+        assert revelation["designe"] == "Zoro"
+        assert revelation["lien"] == manche.paire.lien.libelle
+        assert revelation["votes"] == [
+            {"votant": "Nami", "cible": "Zoro"},
+            {"votant": "Zoro", "cible": "Nami"},
+            {"votant": "Usopp", "cible": "Zoro"},
+        ]
+        assert manche.paire.difficulte not in repr(revelation)
+
+
+def test_l_ordre_de_parole_est_public_des_le_lancement(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "lancer_manche")
+        return fil.rooms.room(code).manche
+
+    manche = asyncio.run(scenario())
+
+    tours = [_dernier(fil, client, "tour") for client in CLIENTS]
+    assert all(tour == tours[0] for tour in tours), "l'ordre est le même pour tous"
+    assert sorted(tours[0]["ordre"]) == ["Nami", "Usopp", "Zoro"]
+    assert tours[0]["tour"] == 1
+    assert len(manche.ordre) == 3
+
+
+def test_rien_ne_trahit_l_imposteur_avant_la_revelation(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        joueurs = _par_joueur(sids)
+        for client in CLIENTS:
+            fil.recus[client].clear()
+        await fil.envoyer(sids[0], "lancer_manche")
+        manche = fil.rooms.room(code).manche
+        for _ in range(len(joueurs)):
+            await fil.envoyer(joueurs[manche.orateur()], "passer")
+        await fil.envoyer(sids[0], "ouvrir_vote")
+        await fil.envoyer(joueurs["j-1"], "voter", {"cible": "Zoro"})
+        return manche
+
+    manche = asyncio.run(scenario())
+
+    emis = repr([fil.recus[client] for client in CLIENTS])
+    for secret in (
+        manche.paire.id,
+        manche.paire.lien.libelle,
+        manche.paire.lien.type,
+        manche.paire.difficulte,
+        manche.imposteur,
+        "imposteur",
+        "majorite",
+    ):
+        assert secret not in emis, f"fuite : {secret}"
+
+
+def test_un_autre_joueur_ne_rend_pas_la_parole(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        joueurs = _par_joueur(sids)
+        await fil.envoyer(sids[0], "lancer_manche")
+        manche = fil.rooms.room(code).manche
+        autre = next(j for j in manche.ordre if j != manche.orateur())
+        return await fil.envoyer(joueurs[autre], "passer")
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "pas_ton_tour"
+
+
+def test_on_ne_vote_pas_pour_soi_par_socket(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "lancer_manche")
+        await fil.envoyer(sids[0], "ouvrir_vote")
+        return await fil.envoyer(sids[0], "voter", {"cible": "Nami"})
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "vote_pour_soi"
+
+
+def test_l_hote_force_la_fermeture_du_vote(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "lancer_manche")
+        await fil.envoyer(sids[0], "ouvrir_vote")
+        await fil.envoyer(sids[1], "voter", {"cible": "Nami"})
+        return await fil.envoyer(sids[0], "forcer_vote")
+
+    ack = asyncio.run(scenario())
+
+    assert ack == {"ok": True}
+    revelation = _dernier(fil, CLIENTS[2], "revelation")
+    assert revelation["votes"] == [{"votant": "Zoro", "cible": "Nami"}]
+    assert revelation["designe"] == "Nami", "les abstentions ne comptent pas"
+
+
+def test_seul_l_hote_ouvre_le_vote_par_socket(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "lancer_manche")
+        return await fil.envoyer(sids[1], "ouvrir_vote")
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "pas_hote"
+
+
+def test_rejoindre_pendant_une_manche_est_refuse(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "lancer_manche")
+        retardataire = await fil.connecter("eio-4")
+        return await fil.envoyer(
+            retardataire,
+            "rejoindre_room",
+            {"joueur": "j-4", "code": code, "pseudo": "Sanji"},
+        )
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "manche_en_cours"
+    assert fil.recus["eio-4"] == []

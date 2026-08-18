@@ -6,10 +6,20 @@ ni le lien ni la difficulté ne quittent le serveur avant la révélation.
 """
 
 import random
-from dataclasses import dataclass
+from collections import Counter
+from dataclasses import dataclass, field
+from typing import Literal
 
 from jeu.calibrage import pool
 from jeu.contrat import Contrat, Paire, Personnage
+from jeu.erreurs import ErreurRoom
+
+Etat = Literal["paroles", "vote", "revelation"]
+
+
+def fiche(personnage: Personnage) -> dict:
+    """Un personnage tel que le client le voit — son nom, et rien de plus."""
+    return {"id": personnage.id, "nom": personnage.nom}
 
 
 @dataclass
@@ -21,6 +31,67 @@ class Manche:
     personnage_imposteur: Personnage
     imposteur: str
     joueurs: list[str]
+    ordre: list[str] = field(default_factory=list)
+    etat: Etat = "paroles"
+    tour: int = 1
+    position: int = 0
+    votes: dict[str, str] = field(default_factory=dict)
+
+    def en_cours(self) -> bool:
+        """Tant que la révélation n'est pas là, la manche occupe la room."""
+        return self.etat != "revelation"
+
+    def orateur(self) -> str:
+        return self.ordre[self.position]
+
+    def passer(self, joueur: str) -> None:
+        """L'orateur rend la parole ; le tour suivant s'ouvre au bout du cycle."""
+        if joueur != self.orateur():
+            raise ErreurRoom("pas_ton_tour", "ce n'est pas à vous de parler")
+        self.position += 1
+        if self.position == len(self.ordre):
+            self.position = 0
+            self.tour += 1
+
+    def tours_joues(self) -> int:
+        """Les tours où l'on a parlé — le tour courant compte s'il est entamé."""
+        return self.tour if self.position else self.tour - 1
+
+    def ouvrir_vote(self) -> None:
+        """L'hôte arrête les tours de parole et ouvre la consultation."""
+        if self.etat != "paroles":
+            raise ErreurRoom("vote_impossible", "le vote a déjà eu lieu")
+        self.etat = "vote"
+
+    def voter(self, votant: str, cible: str) -> None:
+        if self.etat != "vote":
+            raise ErreurRoom("pas_de_vote", "aucun vote en cours")
+        if votant == cible:
+            raise ErreurRoom("vote_pour_soi", "on ne vote pas pour soi")
+        if cible not in self.joueurs:
+            raise ErreurRoom("cible_inconnue", f"joueur hors manche : {cible}")
+        if votant in self.votes:
+            raise ErreurRoom("deja_vote", "vous avez déjà voté")
+        self.votes[votant] = cible
+
+    def tous_ont_vote(self) -> bool:
+        return len(self.votes) == len(self.joueurs)
+
+    def fermer_vote(self) -> None:
+        self.etat = "revelation"
+
+    def designe(self) -> str | None:
+        """Le joueur qui réunit la majorité stricte des suffrages exprimés.
+
+        Sans majorité stricte, personne n'est désigné — et l'imposteur l'emporte.
+        """
+        if not self.votes:
+            return None
+        cible, voix = Counter(self.votes.values()).most_common(1)[0]
+        return cible if voix * 2 > len(self.votes) else None
+
+    def demasque(self) -> bool:
+        return self.designe() == self.imposteur
 
     def personnage(self, joueur: str) -> dict:
         """Ce que voit un joueur — identique en forme pour tous."""
@@ -29,7 +100,7 @@ class Manche:
             if joueur == self.imposteur
             else self.personnage_majorite
         )
-        return {"id": vu.id, "nom": vu.nom}
+        return fiche(vu)
 
 
 class Manches:
@@ -52,6 +123,7 @@ class Manches:
             personnage_imposteur=self._personnages[paire.imposteur],
             imposteur=random.choice(joueurs),
             joueurs=list(joueurs),
+            ordre=random.sample(joueurs, k=len(joueurs)),
         )
 
     def _tirer(self) -> Paire:

@@ -143,7 +143,7 @@ fermer l'US :
       veut piloter le mélange facile/intermediaire (rien de prévu en v1).
 - [x] 5.4 Distribuer les rôles — majorité vs imposteur (sens du lien),
       l'imposteur non informé ; rien ne fuit dans les payloads socket.
-- [ ] 5.5 La manche — machine à états distribution → tours de parole →
+- [x] 5.5 La manche — machine à états distribution → tours de parole →
       vote(s) → révélation ; l'hôte détient les contrôles de flux.
 - [ ] 5.6 Les signaux — objectif par manche (démasqué ou non, nombre de
       tours, répartition des votes), drapeau « je ne connais pas »

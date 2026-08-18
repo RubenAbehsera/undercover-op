@@ -10,21 +10,14 @@ from dataclasses import dataclass, field
 
 from jeu.calibrage import arcs_proposes
 from jeu.contrat import Contrat
-from jeu.manche import Manche, Manches
+from jeu.erreurs import ErreurRoom
+from jeu.manche import Manche, Manches, fiche
 
 PLAFOND = 12
 MINIMUM = 3
 ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 PSEUDO_MINIMUM = 2
 LONGUEUR_CODE = 4
-
-
-class ErreurRoom(Exception):
-    """Une demande refusée, avec le motif que le client doit pouvoir afficher."""
-
-    def __init__(self, motif: str, message: str):
-        super().__init__(message)
-        self.motif = motif
 
 
 @dataclass
@@ -42,6 +35,36 @@ class Room:
     joueurs: list[Joueur] = field(default_factory=list)
     manche: Manche | None = None
 
+    def tour(self) -> dict:
+        """Qui parle, dans quel ordre, à quel tour — public, en pseudos."""
+        return {
+            "ordre": [self._pseudo(joueur) for joueur in self.manche.ordre],
+            "orateur": self._pseudo(self.manche.orateur()),
+            "tour": self.manche.tour,
+        }
+
+    def vote_ouvert(self) -> dict:
+        """Le bulletin : pour qui l'on peut voter — chacun s'y trouve aussi."""
+        return {"joueurs": [self._pseudo(joueur) for joueur in self.manche.joueurs]}
+
+    def revelation(self) -> dict:
+        """Tout ce que la manche avait caché — sauf la difficulté de la paire."""
+        manche = self.manche
+        designe = manche.designe()
+        return {
+            "majorite": fiche(manche.personnage_majorite),
+            "imposteur": fiche(manche.personnage_imposteur),
+            "joueur_imposteur": self._pseudo(manche.imposteur),
+            "lien": manche.paire.lien.libelle,
+            "votes": [
+                {"votant": self._pseudo(votant), "cible": self._pseudo(cible)}
+                for votant, cible in manche.votes.items()
+            ],
+            "designe": self._pseudo(designe) if designe else None,
+            "demasque": manche.demasque(),
+            "tours": manche.tours_joues(),
+        }
+
     def salle_attente(self) -> dict:
         return {
             "code": self.code,
@@ -49,6 +72,12 @@ class Room:
             "hote": self._pseudo(self.hote),
             "joueurs": [joueur.pseudo for joueur in self.joueurs],
         }
+
+    def id_de(self, pseudo: str) -> str:
+        for joueur in self.joueurs:
+            if joueur.pseudo == pseudo:
+                return joueur.id
+        raise ErreurRoom("cible_inconnue", f"pseudo hors room : {pseudo}")
 
     def _pseudo(self, id_joueur: str) -> str | None:
         for joueur in self.joueurs:
@@ -85,6 +114,8 @@ class Rooms:
         pseudo = _pseudo_valide(pseudo)
         if any(present.id == joueur for present in room.joueurs):
             return room
+        if room.manche is not None and room.manche.en_cours():
+            raise ErreurRoom("manche_en_cours", "on ne rejoint qu'entre les manches")
         if len(room.joueurs) >= PLAFOND:
             raise ErreurRoom("room_pleine", f"la room est pleine ({PLAFOND} joueurs)")
         if any(present.pseudo.casefold() == pseudo.casefold() for present in room.joueurs):
@@ -106,14 +137,47 @@ class Rooms:
     def lancer_manche(self, code: str, joueur: str) -> Manche:
         """L'hôte distribue les rôles ; le stock de la room fournit la paire."""
         room = self.room(code)
-        if joueur != room.hote:
-            raise ErreurRoom("pas_hote", "seul l'hôte lance une manche")
+        _verifier_hote(room, joueur)
+        if room.manche is not None and room.manche.en_cours():
+            raise ErreurRoom("manche_en_cours", "une manche est déjà en cours")
         if len(room.joueurs) < MINIMUM:
             raise ErreurRoom(
                 "joueurs_insuffisants", f"il faut au moins {MINIMUM} joueurs"
             )
         room.manche = room.manches.lancer([present.id for present in room.joueurs])
         return room.manche
+
+    def passer_parole(self, code: str, joueur: str) -> Room:
+        """L'orateur rend la parole — les tours ne sont pas un contrôle d'hôte."""
+        room = self._en_manche(code)
+        room.manche.passer(joueur)
+        return room
+
+    def ouvrir_vote(self, code: str, joueur: str) -> Room:
+        room = self._en_manche(code)
+        _verifier_hote(room, joueur)
+        room.manche.ouvrir_vote()
+        return room
+
+    def voter(self, code: str, joueur: str, cible: str) -> Room:
+        """La cible est désignée par son pseudo — les ID restent au serveur."""
+        room = self._en_manche(code)
+        room.manche.voter(joueur, room.id_de(cible))
+        if room.manche.tous_ont_vote():
+            room.manche.fermer_vote()
+        return room
+
+    def forcer_vote(self, code: str, joueur: str) -> Room:
+        room = self._en_manche(code)
+        _verifier_hote(room, joueur)
+        room.manche.fermer_vote()
+        return room
+
+    def _en_manche(self, code: str) -> Room:
+        room = self.room(code)
+        if room.manche is None:
+            raise ErreurRoom("pas_de_manche", "aucune manche en cours")
+        return room
 
     def room(self, code: str) -> Room:
         room = self._rooms.get(code)
@@ -126,6 +190,11 @@ class Rooms:
             code = self._generer_code()
             if code not in self._rooms:
                 return code
+
+
+def _verifier_hote(room: Room, joueur: str) -> None:
+    if joueur != room.hote:
+        raise ErreurRoom("pas_hote", "réservé à l'hôte")
 
 
 def _pseudo_valide(pseudo: str) -> str:

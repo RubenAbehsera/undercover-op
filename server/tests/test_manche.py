@@ -8,6 +8,7 @@ import pytest
 
 from jeu.calibrage import arcs_proposes, pool
 from jeu.contrat import charger_contrat
+from jeu.erreurs import ErreurRoom
 from jeu.manche import Manches
 
 JOUEURS = ["j-1", "j-2", "j-3", "j-4"]
@@ -119,3 +120,195 @@ def test_le_payload_ne_laisse_fuir_ni_le_lien_ni_la_difficulte_ni_le_role(manche
             assert manche.paire.difficulte not in texte
             assert manche.paire.id not in texte
             assert manche.imposteur not in texte
+
+
+def test_l_ordre_de_parole_contient_tous_les_joueurs(manches):
+    manche = manches.lancer(JOUEURS)
+
+    assert sorted(manche.ordre) == sorted(JOUEURS)
+
+
+def test_l_ordre_de_parole_change_d_une_manche_a_l_autre(manches):
+    ordres = {tuple(manches.lancer(JOUEURS).ordre) for _ in range(30)}
+
+    assert len(ordres) > 1
+
+
+def test_la_parole_tourne_en_cycle(manches):
+    manche = manches.lancer(JOUEURS)
+
+    orateurs = []
+    for _ in range(2 * len(JOUEURS) + 1):
+        orateurs.append(manche.orateur())
+        manche.passer(manche.orateur())
+
+    assert orateurs == manche.ordre * 2 + [manche.ordre[0]]
+    assert manche.tour == 3
+
+
+def test_seul_l_orateur_rend_la_parole(manches):
+    manche = manches.lancer(JOUEURS)
+    autre = next(j for j in manche.ordre if j != manche.orateur())
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        manche.passer(autre)
+
+    assert excinfo.value.motif == "pas_ton_tour"
+    assert manche.orateur() == manche.ordre[0]
+
+
+def _en_vote(manches):
+    manche = manches.lancer(JOUEURS)
+    manche.ouvrir_vote()
+    return manche
+
+
+def test_le_vote_s_ouvre_puis_la_revelation_ferme_la_manche(manches):
+    manche = manches.lancer(JOUEURS)
+    assert manche.etat == "paroles"
+
+    manche.ouvrir_vote()
+    assert manche.etat == "vote"
+
+    manche.fermer_vote()
+    assert manche.etat == "revelation"
+
+
+def test_on_ne_vote_pas_avant_l_ouverture(manches):
+    manche = manches.lancer(JOUEURS)
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        manche.voter("j-1", "j-2")
+
+    assert excinfo.value.motif == "pas_de_vote"
+
+
+def test_on_ne_vote_pas_pour_soi(manches):
+    manche = _en_vote(manches)
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        manche.voter("j-1", "j-1")
+
+    assert excinfo.value.motif == "vote_pour_soi"
+    assert manche.votes == {}
+
+
+def test_on_ne_vote_pas_pour_qui_n_est_pas_dans_la_manche(manches):
+    manche = _en_vote(manches)
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        manche.voter("j-1", "j-inconnu")
+
+    assert excinfo.value.motif == "cible_inconnue"
+
+
+def test_on_ne_vote_qu_une_fois(manches):
+    manche = _en_vote(manches)
+    manche.voter("j-1", "j-2")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        manche.voter("j-1", "j-3")
+
+    assert excinfo.value.motif == "deja_vote"
+    assert manche.votes == {"j-1": "j-2"}
+
+
+def test_le_vote_est_complet_quand_tous_ont_vote(manches):
+    manche = _en_vote(manches)
+
+    for votant in JOUEURS[:-1]:
+        manche.voter(votant, "j-2" if votant != "j-2" else "j-1")
+        assert manche.tous_ont_vote() is False
+
+    manche.voter(JOUEURS[-1], "j-1")
+    assert manche.tous_ont_vote() is True
+
+
+def test_la_majorite_stricte_designe_un_joueur(manches):
+    manche = _en_vote(manches)
+
+    manche.voter("j-1", "j-4")
+    manche.voter("j-2", "j-4")
+    manche.voter("j-3", "j-4")
+    manche.voter("j-4", "j-1")
+
+    assert manche.designe() == "j-4"
+
+
+def test_sans_majorite_stricte_personne_n_est_designe(manches):
+    manche = _en_vote(manches)
+
+    manche.voter("j-1", "j-2")
+    manche.voter("j-2", "j-1")
+    manche.voter("j-3", "j-4")
+    manche.voter("j-4", "j-3")
+
+    assert manche.designe() is None
+
+
+def test_une_pluralite_sans_majorite_ne_designe_personne(manches):
+    manche = _en_vote(manches)
+
+    manche.voter("j-1", "j-4")
+    manche.voter("j-2", "j-4")
+    manche.voter("j-3", "j-1")
+    manche.voter("j-4", "j-2")
+
+    assert manche.designe() is None
+
+
+def test_l_imposteur_est_demasque_quand_c_est_lui_le_designe(manches):
+    manche = _en_vote(manches)
+    autres = [joueur for joueur in JOUEURS if joueur != manche.imposteur]
+
+    for votant in autres:
+        manche.voter(votant, manche.imposteur)
+    manche.voter(manche.imposteur, autres[0])
+
+    assert manche.designe() == manche.imposteur
+    assert manche.demasque() is True
+
+
+def test_l_imposteur_l_emporte_quand_le_vote_se_trompe(manches):
+    manche = _en_vote(manches)
+    innocent = next(joueur for joueur in JOUEURS if joueur != manche.imposteur)
+
+    for votant in JOUEURS:
+        manche.voter(votant, innocent if votant != innocent else manche.imposteur)
+
+    assert manche.designe() == innocent
+    assert manche.demasque() is False
+
+
+def test_le_forcage_ne_compte_que_les_suffrages_exprimes(manches):
+    """Un seul votant, un seul suffrage : c'est une majorité stricte des exprimés."""
+    manche = _en_vote(manches)
+    manche.voter("j-1", "j-2")
+
+    manche.fermer_vote()
+
+    assert manche.designe() == "j-2"
+
+
+def test_un_vote_sans_aucun_suffrage_ne_designe_personne(manches):
+    manche = _en_vote(manches)
+
+    manche.fermer_vote()
+
+    assert manche.designe() is None
+    assert manche.demasque() is False
+
+
+def test_les_tours_joues_comptent_les_passages_effectifs(manches):
+    manche = manches.lancer(JOUEURS)
+    assert manche.tours_joues() == 0
+
+    manche.passer(manche.orateur())
+    assert manche.tours_joues() == 1
+
+    for _ in range(len(JOUEURS) - 1):
+        manche.passer(manche.orateur())
+    assert manche.tours_joues() == 1, "le tour suivant n'est pas entamé"
+
+    manche.passer(manche.orateur())
+    assert manche.tours_joues() == 2
