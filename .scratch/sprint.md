@@ -145,14 +145,23 @@ fermer l'US :
       l'imposteur non informé ; rien ne fuit dans les payloads socket.
 - [x] 5.5 La manche — machine à états distribution → tours de parole →
       vote(s) → révélation ; l'hôte détient les contrôles de flux.
-- [ ] 5.6 Les signaux — objectif par manche (démasqué ou non, nombre de
+- [x] 5.6 Les signaux — objectif par manche (démasqué ou non, nombre de
       tours, répartition des votes), drapeau « je ne connais pas »
       confidentiel (exclut la manche du calcul qualité des tirages),
-      subjectif en fin de partie → SQLite.
+      subjectif en fin de partie → SQLite. Tranché à l'implémentation
+      (2026-08-18) : **le signal objectif est anonyme** — la répartition
+      part en base comme une suite d'effectifs (`[2, 1]`) plus les voix de
+      l'imposteur, le drapeau ne laisse qu'un décompte ; aucune donnée
+      nominative n'est persistée. La partie porte son propre identifiant
+      (le code de room est recyclable). Retour subjectif unique par
+      (partie, joueur), garanti par la clé primaire SQLite.
 - [x] 5.7 Room & partie — cycle de vie complet, règles ci-dessus, code de
       room, transfert d'hôte.
-- [ ] 5.8 Branchement front — socket.io-client, PWA minimale ; à détailler
-      quand le serveur tient une manche de bout en bout.
+- [ ] 5.8 Branchement front — socket.io-client, PWA minimale. Détaillé le
+      2026-08-18, le serveur tenant la partie de bout en bout : ticket
+      `07-branchement-front.md`, contrat socket figé (12 demandes,
+      6 diffusions), 6 écrans, ID opaque en `localStorage` clé par room,
+      bundle servi par le serveur.
 
 Chaque US qui démarre → ticket dans `.scratch/epic-5/issues/` (commencer
 par 5.1, `01-chargement-contrat.md`).

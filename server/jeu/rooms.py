@@ -7,12 +7,14 @@ dans la room, ils suffisent à désigner qui que ce soit sans divulguer d'ID.
 
 import random
 import time
+import uuid
 from dataclasses import dataclass, field
 
 from jeu.calibrage import arcs_proposes
 from jeu.contrat import Contrat
 from jeu.erreurs import ErreurRoom
 from jeu.manche import Manche, Manches, fiche
+from jeu.signaux import SignalManche, Signaux
 
 PLAFOND = 12
 MINIMUM = 3
@@ -32,6 +34,7 @@ class Joueur:
 @dataclass
 class Room:
     code: str
+    partie: str
     calibrage: str
     hote: str
     manches: Manches
@@ -70,6 +73,22 @@ class Room:
             "tours": manche.tours_joues(),
         }
 
+    def signal(self) -> SignalManche:
+        """Ce que la manche laisse à la mesure — des effectifs, aucun nom."""
+        manche = self.manche
+        return SignalManche(
+            partie=self.partie,
+            calibrage=self.calibrage,
+            paire=manche.paire.id,
+            joueurs=len(manche.joueurs),
+            tours=manche.tours_joues(),
+            demasque=manche.demasque(),
+            suffrages=len(manche.votes),
+            voix_imposteur=manche.voix_imposteur(),
+            repartition=manche.repartition(),
+            drapeaux=len(manche.meconnaissances),
+        )
+
     def salle_attente(self) -> dict:
         return {
             "code": self.code,
@@ -103,8 +122,15 @@ class Room:
 class Rooms:
     """Les rooms vivantes, en mémoire — le serveur est l'unique source de vérité."""
 
-    def __init__(self, contrat: Contrat, generer_code=None, horloge=time.monotonic):
+    def __init__(
+        self,
+        contrat: Contrat,
+        generer_code=None,
+        horloge=time.monotonic,
+        signaux: Signaux | None = None,
+    ):
         self.arcs_proposes = arcs_proposes(contrat)
+        self.signaux = signaux or Signaux()
         self._contrat = contrat
         self._rooms: dict[str, Room] = {}
         self._generer_code = generer_code or _code_aleatoire
@@ -117,6 +143,7 @@ class Rooms:
         hote = Joueur(id=joueur, pseudo=_pseudo_valide(pseudo))
         room = Room(
             code=self._code_libre(),
+            partie=uuid.uuid4().hex,
             calibrage=calibrage,
             hote=joueur,
             manches=Manches(self._contrat, calibrage),
@@ -155,6 +182,7 @@ class Rooms:
             room.manche.retirer(joueur)
             if room.manche.etat == "vote" and room.manche.tous_ont_vote():
                 room.manche.fermer_vote()
+                self._consigner(room)
         else:
             room.joueurs = [reste for reste in room.joueurs if reste.id != joueur]
         if not room.presents():
@@ -200,13 +228,39 @@ class Rooms:
         room.manche.voter(joueur, room.id_de(cible))
         if room.manche.tous_ont_vote():
             room.manche.fermer_vote()
+            self._consigner(room)
         return room
 
     def forcer_vote(self, code: str, joueur: str) -> Room:
         room = self._en_manche(code)
         _verifier_hote(room, joueur)
         room.manche.fermer_vote()
+        self._consigner(room)
         return room
+
+    def signaler_meconnaissance(self, code: str, joueur: str) -> Room:
+        """Le drapeau « je ne connais pas » — rien ne se diffuse, rien ne remonte."""
+        room = self._en_manche(code)
+        room.manche.signaler_meconnaissance(joueur)
+        return room
+
+    def retour(
+        self, code: str, joueur: str, niveau: int, commentaire: str | None
+    ) -> Room:
+        """Le signal subjectif : une fois la partie close, un geste par joueur."""
+        room = self.room(code)
+        if not room.terminee:
+            raise ErreurRoom("partie_en_cours", "la partie n'est pas terminée")
+        self.signaux.enregistrer_retour(room.partie, joueur, niveau, commentaire)
+        return room
+
+    def _consigner(self, room: Room) -> None:
+        """La manche révélée laisse sa ligne — une seule, quel que soit le chemin."""
+        manche = room.manche
+        if manche.consignee:
+            return
+        manche.consignee = True
+        self.signaux.enregistrer_manche(room.signal())
 
     def terminer_partie(self, code: str, joueur: str) -> Room:
         """L'hôte clôt la partie — la room survit le temps du feedback."""

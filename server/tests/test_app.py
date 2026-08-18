@@ -9,7 +9,7 @@ from jeu.contrat import ErreurContrat
 
 
 def test_le_serveur_demarre_avec_le_contrat(chemin_contrat):
-    app = creer_app(chemin_contrat)
+    app = creer_app(chemin_contrat, ":memory:")
 
     reponse = asyncio.run(_appeler(app, "/sante"))
 
@@ -30,6 +30,25 @@ def test_le_process_plante_proprement_sans_contrat(tmp_path, monkeypatch, capsys
 
     assert excinfo.value.code == 1
     assert "introuvable" in capsys.readouterr().err
+
+
+def test_le_serveur_ouvre_le_fichier_de_signaux(chemin_contrat, tmp_path):
+    fichier = tmp_path / "signaux.db"
+
+    creer_app(chemin_contrat, fichier)
+
+    assert fichier.exists()
+
+
+def test_le_fichier_de_signaux_suit_la_variable_d_environnement(
+    chemin_contrat, tmp_path, monkeypatch
+):
+    fichier = tmp_path / "ailleurs.db"
+    monkeypatch.setenv("SIGNAUX_SQLITE", str(fichier))
+
+    creer_app(chemin_contrat)
+
+    assert fichier.exists()
 
 
 async def _appeler(app, chemin: str) -> httpx.Response:

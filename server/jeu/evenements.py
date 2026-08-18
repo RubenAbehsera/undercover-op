@@ -6,7 +6,7 @@ part vers tous les présents, source unique de vérité pour les clients.
 """
 
 import socketio
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, Field, ValidationError
 
 from jeu.erreurs import ErreurRoom
 from jeu.manche import Manche
@@ -27,6 +27,13 @@ class Adhesion(BaseModel):
 
 class Suffrage(BaseModel):
     cible: str
+
+
+class Retour(BaseModel):
+    """Le geste de fin de partie : trois niveaux, un commentaire s'il vient."""
+
+    niveau: int = Field(ge=1, le=3)
+    commentaire: str | None = None
 
 
 def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
@@ -155,6 +162,31 @@ def enregistrer(sio: socketio.AsyncServer, rooms: Rooms) -> None:
         except ErreurRoom as err:
             return _refus(err.motif, str(err))
         await (diffusion or diffuser_manche)(room)
+        return {"ok": True}
+
+    @sio.on("je_ne_connais_pas")
+    async def je_ne_connais_pas(sid) -> dict:
+        """Confidentiel : un ack au demandeur, et rien d'autre nulle part."""
+        return await _muet(sid, rooms.signaler_meconnaissance)
+
+    @sio.on("retour")
+    async def retour(sid, donnees) -> dict:
+        try:
+            demande = Retour.model_validate(donnees)
+        except ValidationError:
+            return _refus("payload_invalide", "retour incomplet ou hors barème")
+        return await _muet(sid, rooms.retour, demande.niveau, demande.commentaire)
+
+    async def _muet(sid, demande, *arguments) -> dict:
+        """Un signal : on enregistre, on répond au seul demandeur, on ne diffuse pas."""
+        presence = presences.get(sid)
+        if presence is None:
+            return _refus("hors_room", "aucune room pour ce client")
+        code, joueur = presence
+        try:
+            demande(code, joueur, *arguments)
+        except ErreurRoom as err:
+            return _refus(err.motif, str(err))
         return {"ok": True}
 
     @sio.on("terminer_partie")

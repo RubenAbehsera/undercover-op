@@ -683,3 +683,151 @@ def test_une_room_videe_en_cours_de_manche_disparait(rooms):
     assert dernier is None
     with pytest.raises(ErreurRoom):
         rooms.room(room.code)
+
+
+def _manche_bouclee(rooms) -> "Room":
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    return room
+
+
+def test_la_revelation_ecrit_le_signal_objectif(rooms):
+    room = _manche_bouclee(rooms)
+    rooms.voter(room.code, "j-hote", "Zoro")
+    rooms.voter(room.code, "j-2", "Usopp")
+    rooms.voter(room.code, "j-3", "Zoro")
+    manche = room.manche
+
+    (signal,) = rooms.signaux.manches()
+
+    assert signal["partie"] == room.partie
+    assert signal["calibrage"] == room.calibrage
+    assert signal["paire"] == manche.paire.id
+    assert signal["joueurs"] == 3
+    assert signal["tours"] == manche.tours_joues()
+    assert signal["demasque"] is manche.demasque()
+    assert signal["suffrages"] == 3
+    assert signal["voix_imposteur"] == manche.voix_imposteur()
+    assert signal["repartition"] == [2, 1]
+    assert signal["drapeaux"] == 0
+
+
+def test_le_forcage_du_vote_ecrit_aussi_le_signal(rooms):
+    room = _manche_bouclee(rooms)
+
+    rooms.forcer_vote(room.code, "j-hote")
+
+    assert len(rooms.signaux.manches()) == 1
+
+
+def test_une_manche_ne_s_ecrit_qu_une_fois(rooms):
+    room = _manche_bouclee(rooms)
+
+    rooms.forcer_vote(room.code, "j-hote")
+    rooms.forcer_vote(room.code, "j-hote")
+
+    assert len(rooms.signaux.manches()) == 1
+
+
+def test_le_depart_du_dernier_attendu_ecrit_le_signal(rooms):
+    room = _manche_bouclee(rooms)
+    rooms.voter(room.code, "j-hote", "Zoro")
+    rooms.voter(room.code, "j-2", "Usopp")
+
+    rooms.quitter(room.code, "j-3")
+
+    assert len(rooms.signaux.manches()) == 1
+
+
+def test_chaque_manche_laisse_sa_ligne(rooms):
+    room = _manche_bouclee(rooms)
+    rooms.forcer_vote(room.code, "j-hote")
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.forcer_vote(room.code, "j-hote")
+
+    lignes = rooms.signaux.manches()
+
+    assert len(lignes) == 2
+    assert {ligne["partie"] for ligne in lignes} == {room.partie}
+
+
+def test_deux_parties_ont_deux_identifiants(rooms):
+    premiere = rooms.creer("j-1", "Nami", _premier_calibrage(rooms))
+    seconde = rooms.creer("j-2", "Zoro", _premier_calibrage(rooms))
+
+    assert premiere.partie != seconde.partie
+
+
+def test_le_drapeau_leve_est_consigne_en_nombre(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    rooms.signaler_meconnaissance(room.code, "j-2")
+    rooms.signaler_meconnaissance(room.code, "j-3")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    rooms.forcer_vote(room.code, "j-hote")
+
+    (signal,) = rooms.signaux.manches()
+
+    assert signal["drapeaux"] == 2
+
+
+def test_le_drapeau_ne_transparait_dans_aucun_payload(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.lancer_manche(room.code, "j-hote")
+    avant = (room.tour(), room.salle_attente())
+
+    rooms.signaler_meconnaissance(room.code, "j-2")
+    rooms.ouvrir_vote(room.code, "j-hote")
+    bulletin = room.vote_ouvert()
+    rooms.forcer_vote(room.code, "j-hote")
+    revelation = room.revelation()
+
+    assert (room.tour(), room.salle_attente()) == avant
+    for payload in (bulletin, revelation, *avant):
+        assert "meconnaissance" not in repr(payload)
+        assert "drapeau" not in repr(payload)
+
+
+def test_le_drapeau_hors_manche_est_refuse(rooms):
+    room = _salle_de_trois(rooms)
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.signaler_meconnaissance(room.code, "j-2")
+
+    assert excinfo.value.motif == "pas_de_manche"
+
+
+def test_le_retour_de_fin_de_partie_est_enregistre(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.terminer_partie(room.code, "j-hote")
+
+    rooms.retour(room.code, "j-2", niveau=3, commentaire="on a bien ri")
+
+    (retour,) = rooms.signaux.retours()
+    assert retour["partie"] == room.partie
+    assert retour["joueur"] == "j-2"
+    assert retour["niveau"] == 3
+    assert retour["commentaire"] == "on a bien ri"
+
+
+def test_le_retour_n_est_ouvert_qu_une_fois_la_partie_terminee(rooms):
+    room = _salle_de_trois(rooms)
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.retour(room.code, "j-2", niveau=3, commentaire=None)
+
+    assert excinfo.value.motif == "partie_en_cours"
+    assert rooms.signaux.retours() == []
+
+
+def test_un_joueur_ne_donne_qu_un_retour(rooms):
+    room = _salle_de_trois(rooms)
+    rooms.terminer_partie(room.code, "j-hote")
+    rooms.retour(room.code, "j-2", niveau=3, commentaire=None)
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        rooms.retour(room.code, "j-2", niveau=1, commentaire=None)
+
+    assert excinfo.value.motif == "deja_repondu"

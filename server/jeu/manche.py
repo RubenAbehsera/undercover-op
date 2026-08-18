@@ -37,6 +37,8 @@ class Manche:
     position: int = 0
     votes: dict[str, str] = field(default_factory=dict)
     partis: set[str] = field(default_factory=set)
+    meconnaissances: set[str] = field(default_factory=set)
+    consignee: bool = False
 
     def en_cours(self) -> bool:
         """Tant que la révélation n'est pas là, la manche occupe la room."""
@@ -118,6 +120,29 @@ class Manche:
 
     def demasque(self) -> bool:
         return self.designe() == self.imposteur
+
+    def repartition(self) -> list[int]:
+        """Comment les suffrages se sont massés — des effectifs, pas des noms.
+
+        La mesure veut savoir si le groupe s'est rangé derrière une cible ou
+        s'est éparpillé ; qui a voté pour qui ne la regarde pas.
+        """
+        return sorted(Counter(self.votes.values()).values(), reverse=True)
+
+    def voix_imposteur(self) -> int:
+        return sum(1 for cible in self.votes.values() if cible == self.imposteur)
+
+    def signaler_meconnaissance(self, joueur: str) -> None:
+        """« Je ne connais pas ce personnage » — confidentiel et sans retour.
+
+        Rien n'en sort : ni diffusion, ni trace dans un payload. La manche qui
+        en porte un sera écartée du calcul de qualité des tirages.
+        """
+        if self.etat == "revelation":
+            raise ErreurRoom("manche_terminee", "la manche est terminée")
+        if joueur in self.meconnaissances:
+            raise ErreurRoom("deja_signale", "le drapeau est déjà levé")
+        self.meconnaissances.add(joueur)
 
     def personnage(self, joueur: str) -> dict:
         """Ce que voit un joueur — identique en forme pour tous."""

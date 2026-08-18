@@ -46,6 +46,8 @@ Schéma du fichier de paires (contrat partagé fabrication → jeu) :
 }
 ```
 
+**Signaux persistés** (SQLite, tranché à l'implémentation le 2026-08-18) : le signal objectif est **anonyme** — la répartition des votes part en base comme une suite d'effectifs décroissants (`[2, 1]`) accompagnée du nombre de voix portées sur l'imposteur, et le drapeau « je ne connais pas » ne laisse qu'un décompte. Aucune donnée nominative n'est persistée : l'identité des joueurs meurt avec la room. La ligne est rattachée à un identifiant de **partie** propre (le code de room est recyclable). Le retour subjectif est unique par (partie, joueur), garanti par la clé primaire.
+
 - Slugs d'arcs en anglais, granularité arc canonique (pas saga), orthographe du wiki (« arabasta »).
 - Les paires main du jalon 1 sont écrites d'emblée dans ce schéma (24 retenues à l'issue de la sélection).
 - **Alimentation des fiches par le wiki** onepiece.fandom.com (API MediaWiki `api.php`) : infobox rendue en priorité, repli sur le `{{Char Box}}` wikitext, cache local sous `fabrication/cache/`. Sorties brutes (`personnages.brut.yml`, `arcs.yml`) relues par un humain avant tout usage — le wiki alimente les faits, jamais le jugement des paires. Les arcs sans plage de chapitres manga (anime-only) sont écartés d'office.

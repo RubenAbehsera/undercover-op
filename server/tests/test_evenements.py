@@ -580,3 +580,113 @@ def test_seul_l_hote_termine_la_partie(fil, calibrage):
     ack = asyncio.run(scenario())
 
     assert ack["motif"] == "pas_hote"
+
+
+def test_le_drapeau_je_ne_connais_pas_ne_diffuse_rien(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "lancer_manche")
+        for client in CLIENTS:
+            fil.recus[client] = []
+        ack = await fil.envoyer(sids[1], "je_ne_connais_pas")
+        return ack, code
+
+    ack, code = asyncio.run(scenario())
+
+    assert ack == {"ok": True}
+    for client in CLIENTS:
+        assert fil.recus[client] == [], "le drapeau ne se voit de personne"
+    assert fil.rooms.room(code).manche.meconnaissances == {"j-2"}
+
+
+def test_le_drapeau_ne_parait_pas_a_la_revelation(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "lancer_manche")
+        await fil.envoyer(sids[1], "je_ne_connais_pas")
+        await fil.envoyer(sids[0], "ouvrir_vote")
+        await fil.envoyer(sids[0], "forcer_vote")
+
+    asyncio.run(scenario())
+
+    for client in CLIENTS:
+        trace = repr(fil.recus[client])
+        assert "meconnaissance" not in trace
+        assert "drapeau" not in trace
+        assert "connais" not in trace
+
+
+def test_le_drapeau_est_definitif_par_socket(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "lancer_manche")
+        await fil.envoyer(sids[1], "je_ne_connais_pas")
+        return await fil.envoyer(sids[1], "je_ne_connais_pas")
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "deja_signale"
+
+
+def test_le_drapeau_hors_manche_est_refuse_par_socket(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        return await fil.envoyer(sids[1], "je_ne_connais_pas")
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "pas_de_manche"
+
+
+def test_le_retour_de_fin_de_partie_se_donne_en_un_geste(fil, calibrage):
+    async def scenario():
+        sids, code = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "terminer_partie")
+        for client in CLIENTS:
+            fil.recus[client] = []
+        ack = await fil.envoyer(sids[1], "retour", {"niveau": 3})
+        return ack, code
+
+    ack, code = asyncio.run(scenario())
+
+    assert ack == {"ok": True}
+    for client in CLIENTS:
+        assert fil.recus[client] == [], "un retour ne regarde que le serveur"
+    (retour,) = fil.rooms.signaux.retours()
+    assert retour["partie"] == fil.rooms.room(code).partie
+    assert retour["joueur"] == "j-2"
+    assert retour["niveau"] == 3
+    assert retour["commentaire"] is None
+
+
+def test_le_retour_accepte_un_commentaire(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "terminer_partie")
+        await fil.envoyer(sids[0], "retour", {"niveau": 2, "commentaire": "trop long"})
+
+    asyncio.run(scenario())
+
+    assert fil.rooms.signaux.retours()[0]["commentaire"] == "trop long"
+
+
+def test_un_retour_hors_des_trois_niveaux_est_refuse(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        await fil.envoyer(sids[0], "terminer_partie")
+        return await fil.envoyer(sids[1], "retour", {"niveau": 7})
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "payload_invalide"
+    assert fil.rooms.signaux.retours() == []
+
+
+def test_le_retour_avant_la_fin_de_partie_est_refuse(fil, calibrage):
+    async def scenario():
+        sids, _ = await _salle(fil, calibrage)
+        return await fil.envoyer(sids[1], "retour", {"niveau": 3})
+
+    ack = asyncio.run(scenario())
+
+    assert ack["motif"] == "partie_en_cours"

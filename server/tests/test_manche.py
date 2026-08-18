@@ -371,3 +371,77 @@ def test_le_suffrage_d_un_parti_reste_au_depouillement(manches):
 
     assert manche.votes == {"j-4": "j-1"}
     assert manche.designe() == "j-1", "un suffrage exprimé le reste"
+
+
+def test_le_drapeau_je_ne_connais_pas_se_leve_pendant_la_manche(manches):
+    manche = manches.lancer(JOUEURS)
+
+    manche.signaler_meconnaissance("j-2")
+
+    assert manche.meconnaissances == {"j-2"}
+
+
+def test_le_drapeau_est_definitif_pour_la_manche(manches):
+    manche = manches.lancer(JOUEURS)
+    manche.signaler_meconnaissance("j-2")
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        manche.signaler_meconnaissance("j-2")
+
+    assert excinfo.value.motif == "deja_signale"
+    assert manche.meconnaissances == {"j-2"}
+
+
+def test_le_drapeau_se_leve_encore_pendant_le_vote(manches):
+    manche = _en_vote(manches)
+
+    manche.signaler_meconnaissance("j-2")
+
+    assert manche.meconnaissances == {"j-2"}
+
+
+def test_le_drapeau_ne_se_leve_plus_apres_la_revelation(manches):
+    manche = _en_vote(manches)
+    manche.fermer_vote()
+
+    with pytest.raises(ErreurRoom) as excinfo:
+        manche.signaler_meconnaissance("j-2")
+
+    assert excinfo.value.motif == "manche_terminee"
+    assert manche.meconnaissances == set()
+
+
+def test_le_drapeau_ne_change_rien_a_ce_que_voit_le_joueur(manches):
+    manche = manches.lancer(JOUEURS)
+    avant = [manche.personnage(joueur) for joueur in JOUEURS]
+
+    manche.signaler_meconnaissance("j-2")
+
+    assert [manche.personnage(joueur) for joueur in JOUEURS] == avant
+
+
+def test_la_repartition_des_votes_est_anonyme_et_decroissante(manches):
+    manche = _en_vote(manches)
+    manche.voter("j-1", "j-2")
+    manche.voter("j-3", "j-2")
+    manche.voter("j-4", "j-1")
+
+    assert manche.repartition() == [2, 1]
+
+
+def test_les_voix_portees_sur_l_imposteur_se_comptent(manches):
+    manche = _en_vote(manches)
+    autre = next(joueur for joueur in JOUEURS if joueur != manche.imposteur)
+    for votant in JOUEURS:
+        if votant != manche.imposteur:
+            manche.voter(votant, manche.imposteur)
+    manche.voter(manche.imposteur, autre)
+
+    assert manche.voix_imposteur() == 3
+
+
+def test_un_vote_vide_ne_repartit_rien(manches):
+    manche = _en_vote(manches)
+
+    assert manche.repartition() == []
+    assert manche.voix_imposteur() == 0
