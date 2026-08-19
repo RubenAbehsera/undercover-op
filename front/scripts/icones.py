@@ -1,34 +1,42 @@
-"""Les icônes de la PWA, sans dépendance : deux disques, un fond, un PNG.
+"""Les icones de la PWA, sans dependance : un chapeau de paille, un ciel, un PNG.
 
     python scripts/icones.py
 
-Regénère `public/icone-192.png` et `public/icone-512.png`.
+Regenere `public/icone-192.png` et `public/icone-512.png`.
 """
 
 import struct
 import zlib
 from pathlib import Path
 
-FOND = (0x12, 0x13, 0x1A)
-PLEIN = (0xE8, 0xB0, 0x4B)
-ANNEAU = (0x7F, 0xD1, 0xC1)
-RAYON = 0.22
-EPAISSEUR = 0.035
-CENTRES = ((0.40, 0.5), (0.60, 0.5))
+CIEL = (0x7C, 0xC6, 0xEA)
+PAILLE = (0xF6, 0xDD, 0xA6)
+PAILLE_BORD = (0xEB, 0xCB, 0x84)
+LISERE = (0xA8, 0x7C, 0x2A)
+RUBAN = (0xD6, 0x40, 0x2C)
 ECHANTILLONS = 3
+
+CALOTTE = (0.5, 0.615, 0.235, 0.305)  # centre x, y, demi-largeur, demi-hauteur
+BORD = (0.5, 0.625, 0.445, 0.135)
+RUBAN_HAUT, RUBAN_BAS = 0.505, 0.592
 
 
 def couleur(x: float, y: float) -> tuple[int, int, int]:
-    """Le duo : un disque plein, un anneau — l'un ne dit rien de l'autre."""
-    if _distance(x, y, CENTRES[0]) <= RAYON:
-        return PLEIN
-    if abs(_distance(x, y, CENTRES[1]) - RAYON) <= EPAISSEUR / 2:
-        return ANNEAU
-    return FOND
+    """Le chapeau de paille : une calotte, un ruban, un bord — sur le ciel."""
+    if _dans(x, y, CALOTTE) <= 1 and y <= CALOTTE[1]:
+        if _dans(x, y, CALOTTE) >= 0.86:
+            return LISERE
+        return RUBAN if RUBAN_HAUT <= y <= RUBAN_BAS else PAILLE
+    rayon = _dans(x, y, BORD)
+    if rayon <= 1:
+        return LISERE if rayon >= 0.9 else PAILLE_BORD
+    return CIEL
 
 
-def _distance(x: float, y: float, centre: tuple[float, float]) -> float:
-    return ((x - centre[0]) ** 2 + (y - centre[1]) ** 2) ** 0.5
+def _dans(x: float, y: float, ellipse: tuple[float, float, float, float]) -> float:
+    """La distance normalisee au centre d'une ellipse : 1 sur son contour."""
+    centre_x, centre_y, demi_x, demi_y = ellipse
+    return ((x - centre_x) / demi_x) ** 2 + ((y - centre_y) / demi_y) ** 2
 
 
 def pixels(taille: int) -> bytes:

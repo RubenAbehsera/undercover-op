@@ -20,7 +20,10 @@ export function Accueil({ arcs, occupe, creer, rejoindre }: Props) {
 
   return (
     <section className="ecran">
-      <h1 className="titre">Undercover OP</h1>
+      <h1 className="enseigne">
+        Undercover OP
+        <Chapeau />
+      </h1>
 
       <div className="carte">
         <label>
@@ -91,5 +94,30 @@ export function Accueil({ arcs, occupe, creer, rejoindre }: Props) {
         </button>
       </form>
     </section>
+  );
+}
+
+/** Le chapeau de paille, posé de travers sur la dernière lettre du nom. */
+function Chapeau() {
+  return (
+    <svg className="chapeau" viewBox="0 0 120 72" aria-hidden="true">
+      <ellipse
+        cx="60"
+        cy="52"
+        rx="56"
+        ry="17"
+        fill="#ebcb84"
+        stroke="#b0862f"
+        strokeWidth="2.5"
+      />
+      <path
+        d="M26 50c0-19 15-35 34-35s34 16 34 35z"
+        fill="#f6dda6"
+        stroke="#b0862f"
+        strokeWidth="2.5"
+      />
+      <path d="M27 43c9 6 57 6 66 0l2.5 8c-10 6-61 6-71 0z" fill="#d6402c" />
+      <path d="M26 50h68" stroke="#b0862f" strokeWidth="2" strokeLinecap="round" />
+    </svg>
   );
 }

@@ -1,8 +1,9 @@
-/* Une soirée, des téléphones, une pièce mal éclairée : sombre, gros, tapable.
+/* Une soirée, des téléphones, une table : clair, gros, tapable.
  *
- * Le fond reste la nuit en mer ; ce sont les avis de recherche qui éclairent.
- * Tout le thème tient dans trois objets — le parchemin, la typo d'affiche et
- * le tampon encreur — posés sur une coque sobre.
+ * Le décor est celui d'East Blue — ciel, nuages, mer — et les avis de recherche
+ * y flottent comme du papier au soleil. Le thème tient dans quatre objets : le
+ * ciel, le parchemin, la typo d'affiche et le tampon encreur. Tout le texte vit
+ * sur du blanc ou du parchemin : le bleu ne porte jamais de mot à lire.
  */
 
 @font-face {
@@ -14,23 +15,27 @@
 }
 
 :root {
-  --nuit: #0b1220;
-  --pont: #16202f;
-  --bord: #26354a;
-  --parchemin: #efe2c2;
+  --ciel: #eaf6fd;
+  --ciel-vif: #7cc6ea;
+  --mer: #b9dff3;
+  --ecume: #ffffff;
+  --bord: #cbe2ef;
+  --encre: #0f3550;
+  --discret: #476a80;
+  --profond: #0a6395;
+  --or: #f0c264;
+  --or-creux: #d3a133;
+  --or-fort: #dd9b12;
+  --parchemin: #f4e9cf;
   --parchemin-creux: #c9b184;
-  --encre: #2b2013;
-  --encre-pale: #6b5942;
-  --or: #e8b04b;
-  --mer: #4fb8a8;
-  --texte: #f2ece0;
-  --discret: #93a1b5;
-  --gagne: #4f9d5d;
-  --perdu: #c04128;
+  --encre-affiche: #2b2013;
+  --encre-affiche-pale: #6b5942;
+  --gagne: #1f7a45;
+  --perdu: #c03a26;
 
   --affiche: "Graduate", "Rockwell", Georgia, serif;
-  --rayon: 0.5rem;
-  color-scheme: dark;
+  --rayon: 0.9rem;
+  color-scheme: light;
 }
 
 * {
@@ -39,8 +44,16 @@
 
 body {
   margin: 0;
-  background: var(--nuit);
-  color: var(--texte);
+  min-block-size: 100dvh;
+  /* Les nuages en haut, la houle en bas, le ciel derrière — trois calques de
+     fond, aucun élément dans le DOM. */
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 260'%3E%3Cg fill='%23ffffff' opacity='.8'%3E%3Cellipse cx='170' cy='70' rx='95' ry='38'/%3E%3Cellipse cx='252' cy='58' rx='70' ry='30'/%3E%3Cellipse cx='104' cy='84' rx='62' ry='26'/%3E%3Cellipse cx='612' cy='30' rx='84' ry='28'/%3E%3Cellipse cx='690' cy='22' rx='58' ry='22'/%3E%3Cellipse cx='956' cy='122' rx='108' ry='42'/%3E%3Cellipse cx='1044' cy='108' rx='74' ry='32'/%3E%3Cellipse cx='880' cy='136' rx='66' ry='28'/%3E%3C/g%3E%3C/svg%3E")
+      no-repeat bottom 96px center / 1200px 200px fixed,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 58c150 46 300-38 450 4s300 42 450 0 240-16 300-6v64H0z' fill='%237cc6ea'/%3E%3Cpath d='M0 84c180 32 320-26 480 6s310 32 450-4c60-16 200-8 270 4v30H0z' fill='%235bb2df'/%3E%3C/svg%3E")
+      repeat-x bottom center / 1200px 118px fixed,
+    linear-gradient(180deg, #c7e6f8 0%, var(--ciel) 34%, #e4f3fc 68%, var(--mer) 100%) fixed;
+  color: var(--encre);
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 18px;
   line-height: 1.45;
@@ -50,7 +63,7 @@ body {
 main {
   max-width: 30rem;
   margin: 0 auto;
-  padding: 1.5rem 1.25rem calc(2rem + env(safe-area-inset-bottom));
+  padding: 1.5rem 1.25rem calc(2.5rem + env(safe-area-inset-bottom));
 }
 
 .ecran {
@@ -69,7 +82,32 @@ main {
   letter-spacing: 0.02em;
   text-align: center;
   text-transform: uppercase;
-  color: var(--or);
+  color: var(--profond);
+}
+
+/* L'enseigne du jeu : le chapeau de paille posé de travers sur le nom. */
+.enseigne {
+  position: relative;
+  margin: 2.2rem 0 0.4rem;
+  padding: 0;
+  font-family: var(--affiche);
+  font-size: clamp(1.9rem, 10vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--encre);
+}
+
+.chapeau {
+  position: absolute;
+  inset-block-start: -0.74em;
+  inset-inline-end: -0.16em;
+  inline-size: 1.72em;
+  rotate: 32deg;
+  filter: drop-shadow(0 3px 4px rgb(15 53 80 / 0.28));
+  pointer-events: none;
 }
 
 .etiquette {
@@ -90,6 +128,11 @@ main {
 
 .parole {
   margin: 0;
+  padding: 0.55rem 0.85rem;
+  background: var(--ecume);
+  border: 1px solid var(--bord);
+  border-radius: 0.7rem;
+  box-shadow: 0 1px 2px rgb(15 53 80 / 0.06);
   text-align: center;
 }
 
@@ -97,10 +140,11 @@ main {
 .code-room {
   margin: 0;
   padding: 0.5rem 1rem 0.7rem;
-  background: linear-gradient(180deg, var(--parchemin), #ddc99f);
+  background: linear-gradient(180deg, var(--parchemin), #e2cfa5);
+  border: 1px solid rgb(15 53 80 / 0.18);
   border-radius: var(--rayon);
-  box-shadow: 0 2px 0 rgb(0 0 0 / 0.35), 0 10px 24px -12px rgb(0 0 0 / 0.8);
-  color: var(--encre);
+  box-shadow: 0 1px 2px rgb(15 53 80 / 0.16), 0 12px 22px -16px rgb(15 53 80 / 0.6);
+  color: var(--encre-affiche);
   font-family: var(--affiche);
   font-size: 3.4rem;
   letter-spacing: 0.22em;
@@ -115,9 +159,10 @@ main {
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  background: var(--pont);
+  background: var(--ecume);
   border: 1px solid var(--bord);
   border-radius: var(--rayon);
+  box-shadow: 0 1px 2px rgb(15 53 80 / 0.06), 0 12px 28px -22px rgb(15 53 80 / 0.55);
 }
 
 .carte h2 {
@@ -127,7 +172,7 @@ main {
   font-weight: 400;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--or);
+  color: var(--profond);
 }
 
 label {
@@ -143,10 +188,10 @@ select,
 textarea {
   width: 100%;
   padding: 0.75rem;
-  background: var(--nuit);
-  color: var(--texte);
+  background: #f6fbfe;
+  color: var(--encre);
   border: 1px solid var(--bord);
-  border-radius: 0.45rem;
+  border-radius: 0.6rem;
   font: inherit;
 }
 
@@ -156,11 +201,11 @@ input.code {
   letter-spacing: 0.28em;
   text-indent: 0.28em;
   text-align: center;
-  color: var(--or);
+  color: var(--profond);
 }
 
 :focus-visible {
-  outline: 3px solid var(--mer);
+  outline: 3px solid var(--profond);
   outline-offset: 2px;
 }
 
@@ -170,7 +215,7 @@ button {
   min-height: 3rem;
   padding: 0.75rem 1rem;
   border: 0;
-  border-radius: 0.45rem;
+  border-radius: 0.7rem;
   font: inherit;
   font-weight: 600;
   cursor: pointer;
@@ -185,17 +230,18 @@ button.principal {
   gap: 0.5rem;
   width: 100%;
   background: var(--or);
-  border-bottom: 3px solid #b1802c;
-  color: #221703;
+  border-bottom: 3px solid var(--or-creux);
+  color: #3a2a05;
   font-family: var(--affiche);
   font-size: 1.05rem;
   font-weight: 400;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+  box-shadow: 0 10px 20px -14px rgb(150 105 20 / 0.85);
 }
 
 button.principal:active {
-  filter: brightness(0.92);
+  filter: brightness(0.94);
 }
 
 /* Voter n'est pas trois actions principales : c'est un choix dans une liste. */
@@ -203,10 +249,10 @@ button.candidat {
   display: flex;
   align-items: center;
   width: 100%;
-  background: var(--pont);
+  background: var(--ecume);
   border: 1px solid var(--bord);
-  border-inline-start: 4px solid var(--or);
-  color: var(--texte);
+  border-inline-start: 4px solid var(--or-fort);
+  color: var(--encre);
   font-family: var(--affiche);
   font-size: 1rem;
   font-weight: 400;
@@ -216,12 +262,12 @@ button.candidat {
 }
 
 button.candidat:active {
-  background: var(--bord);
+  background: var(--ciel);
 }
 
 button.discret {
   width: 100%;
-  background: transparent;
+  background: var(--ecume);
   color: var(--discret);
   border: 1px solid var(--bord);
 }
@@ -245,7 +291,7 @@ button.lien:disabled {
 }
 
 button:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: default;
 }
 
@@ -263,9 +309,9 @@ ol {
 
 .joueurs li {
   padding: 0.7rem 0.9rem;
-  background: var(--pont);
+  background: var(--ecume);
   border: 1px solid var(--bord);
-  border-radius: 0.45rem;
+  border-radius: 0.7rem;
 }
 
 .joueurs li:has(button) {
@@ -277,10 +323,10 @@ ol {
 .badge {
   margin-left: 0.5rem;
   padding: 0.1rem 0.45rem;
-  background: var(--nuit);
+  background: var(--ciel);
   border: 1px solid var(--bord);
-  border-radius: 0.35rem;
-  color: var(--or);
+  border-radius: 0.5rem;
+  color: var(--profond);
   font-size: 0.7rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -301,15 +347,15 @@ ol {
   display: flex;
   flex-direction: column;
   padding: 0.3rem 0.3rem 0;
-  background: linear-gradient(180deg, var(--parchemin), #ddc99f);
-  border: 1px solid rgb(43 32 19 / 0.35);
-  border-radius: 0.2rem;
-  box-shadow: 0 2px 0 rgb(0 0 0 / 0.35), 0 10px 22px -14px rgb(0 0 0 / 0.9);
+  background: linear-gradient(180deg, var(--parchemin), #e2cfa5);
+  border: 1px solid rgb(15 53 80 / 0.22);
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 2px rgb(15 53 80 / 0.18), 0 12px 20px -14px rgb(15 53 80 / 0.7);
   overflow: hidden;
 }
 
 .affiche-bandeau {
-  color: var(--encre-pale);
+  color: var(--encre-affiche-pale);
   font-family: var(--affiche);
   font-size: 0.4rem;
   letter-spacing: 0.16em;
@@ -322,7 +368,7 @@ ol {
   place-items: center;
   aspect-ratio: 1;
   overflow: hidden;
-  border: 1px solid rgb(43 32 19 / 0.3);
+  border: 1px solid rgb(43 32 19 / 0.32);
   background: #d5c096;
 }
 
@@ -366,7 +412,7 @@ ol {
 .affiche-nom {
   margin: 0;
   padding: 0.3rem 0.15rem;
-  color: var(--encre);
+  color: var(--encre-affiche);
   font-family: var(--affiche);
   font-size: 0.62rem;
   font-weight: 400;
@@ -422,21 +468,21 @@ ol {
 }
 
 .tablee .pseudo {
-  color: var(--discret);
+  color: var(--encre);
   font-size: 0.82rem;
   text-align: center;
   overflow-wrap: anywhere;
 }
 
 .tablee li.moi .pseudo {
-  color: var(--or);
-  font-weight: 600;
+  color: var(--profond);
+  font-weight: 700;
 }
 
 /* Celui qui parle se redresse. */
 .tablee li.parle .affiche {
   rotate: 0deg;
-  outline: 3px solid var(--or);
+  outline: 3px solid var(--or-fort);
   outline-offset: 2px;
 }
 
@@ -449,7 +495,7 @@ ol {
   inset-inline: 3%;
   rotate: -9deg;
   padding: 0.12em 0.15em;
-  background: rgb(240 228 198 / 0.9);
+  background: rgb(244 233 207 / 0.92);
   border: 0.13em solid currentColor;
   border-radius: 0.12em;
   font-family: var(--affiche);
@@ -483,6 +529,7 @@ ol {
   margin: 0;
   padding: 0.8rem 1rem;
   border-radius: var(--rayon);
+  color: #ffffff;
   font-family: var(--affiche);
   font-size: 1.2rem;
   letter-spacing: 0.04em;
@@ -492,12 +539,12 @@ ol {
 
 .verdict.gagne {
   background: var(--gagne);
-  color: #06180a;
+  box-shadow: 0 12px 24px -18px rgb(31 122 69 / 0.95);
 }
 
 .verdict.perdu {
   background: var(--perdu);
-  color: #220703;
+  box-shadow: 0 12px 24px -18px rgb(192 58 38 / 0.95);
 }
 
 /* --- L'en-tete de manche et le coin de l'hote ------------------------ */
@@ -520,14 +567,15 @@ button.pastille {
   align-items: center;
   gap: 0.35rem;
   min-height: 2.75rem;
-  padding: 0.4rem 0.7rem;
-  background: transparent;
+  padding: 0.4rem 0.8rem;
+  background: var(--ecume);
   border: 1px solid var(--bord);
   border-radius: 999px;
-  color: var(--discret);
+  color: var(--profond);
   font-size: 0.82rem;
   font-weight: 600;
   white-space: nowrap;
+  box-shadow: 0 1px 2px rgb(15 53 80 / 0.08);
 }
 
 button.pastille svg {
@@ -537,14 +585,15 @@ button.pastille svg {
 .confirmation {
   max-inline-size: 20rem;
   padding: 1.25rem;
-  background: var(--pont);
+  background: var(--ecume);
   border: 1px solid var(--bord);
   border-radius: var(--rayon);
-  color: var(--texte);
+  box-shadow: 0 26px 50px -30px rgb(15 53 80 / 0.95);
+  color: var(--encre);
 }
 
 .confirmation::backdrop {
-  background: rgb(4 8 15 / 0.75);
+  background: rgb(15 53 80 / 0.42);
 }
 
 .confirmation h2 {
@@ -553,7 +602,7 @@ button.pastille svg {
   font-size: 1.15rem;
   font-weight: 400;
   text-transform: uppercase;
-  color: var(--or);
+  color: var(--profond);
 }
 
 .confirmation p {
@@ -574,8 +623,8 @@ button.pastille svg {
   margin: 0 0 1rem;
   padding: 0.75rem 1rem;
   background: var(--perdu);
-  border-radius: 0.45rem;
-  color: #220703;
+  border-radius: 0.7rem;
+  color: #ffffff;
   font-weight: 600;
   text-align: center;
 }

@@ -207,3 +207,13 @@ rien de neuf côté contrat socket — de l'affichage, et un artefact de plus
       écartée. _Acceptance : un seul primaire à l'écran au plus, l'irréversible
       confirmé, l'anti-fuite intacte, aucune dépendance ajoutée._
       (`.scratch/epic-6/issues/03-hierarchie-manche-et-theme.md`)
+- [x] 6.4 Le thème clair « East Blue » — l'habillage sombre du 6.3 ne tenait pas
+      avec les avis de recherche. Les affiches ne bougent pas ; tout le reste
+      passe au clair d'après les planches de référence : ciel, nuages à
+      l'horizon, houle en bas, le tout en calques de fond SVG inline (aucun
+      fichier, aucune requête). Règle qui tient l'écran : **le bleu ne porte
+      jamais un mot à lire** — chaque texte vit sur du blanc ou du parchemin.
+      Un chapeau de paille penché se pose sur le « O » du nom, et devient
+      l'icône de la PWA. _Acceptance : contraste ≥ 4,5:1 partout, affiches
+      inchangées, aucune image ajoutée._
+      (`.scratch/epic-6/issues/04-theme-clair-east-blue.md`)

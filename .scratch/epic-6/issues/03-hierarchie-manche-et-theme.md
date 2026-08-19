@@ -24,6 +24,10 @@ Le défaut le plus concret : quand l'hôte est aussi l'orateur, deux boutons pri
 
 ## Le thème
 
+> **Remplacé** par le ticket 04 : l'habillage sombre décrit ci-dessous a
+> laissé place au thème clair « East Blue ». La hiérarchie des contrôles, elle,
+> est inchangée.
+
 L'avis de recherche est l'objet le plus identifiable de One Piece, et c'est **exactement** la disposition demandée au ticket 02 : un portrait encadré, un nom dessous. Le thème ne contrarie pas la mise en page, il lui donne un sens.
 
 - Coque sombre et plate (« la nuit en mer »), ce sont les affiches qui éclairent : `--nuit` `#0b1220`, `--pont` `#16202f`, parchemin `#efe2c2` sur encre `#2b2013`, l'or `#e8b04b` conservé de l'ancien thème.
