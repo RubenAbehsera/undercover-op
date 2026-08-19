@@ -23,8 +23,5 @@ ENV CONTRAT_PAIRES=/app/fabrication/paires.json \
     FRONT_DIST=/app/front/dist \
     SIGNAUX_SQLITE=/donnees/signaux.db
 
-# Le point de montage du volume, pour que SQLite trouve son dossier même sans.
-RUN mkdir -p /donnees
-
 EXPOSE 8000
 CMD ["python", "-m", "jeu"]
