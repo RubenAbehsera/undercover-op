@@ -13,3 +13,8 @@ export function libelleArc(slug: string): string {
     .map((mot) => mot.charAt(0).toUpperCase() + mot.slice(1))
     .join(" ");
 }
+
+/** Le portrait d'un personnage — le même chemin pour tous, quel qu'il soit. */
+export function portrait(id: string): string {
+  return `/personnages/${id}.webp`;
+}

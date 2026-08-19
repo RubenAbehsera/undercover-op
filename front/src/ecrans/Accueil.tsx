@@ -11,15 +11,28 @@ type Props = {
 
 const LONGUEUR_CODE = 4;
 
-/** L'entrée : on crée une partie, ou on en rejoint une avec son code. */
+/** L'entrée : son pseudo une fois, puis rejoindre une partie ou en créer une. */
 export function Accueil({ arcs, occupe, creer, rejoindre }: Props) {
   const [pseudo, setPseudo] = useState("");
   const [calibrage, setCalibrage] = useState("");
   const [code, setCode] = useState("");
+  const sansPseudo = !pseudo.trim();
 
   return (
     <section className="ecran">
       <h1 className="titre">Undercover OP</h1>
+
+      <div className="carte">
+        <label>
+          Votre pseudo
+          <input
+            value={pseudo}
+            onChange={(evenement) => setPseudo(evenement.target.value)}
+            maxLength={16}
+          />
+        </label>
+        <p className="aide">Le même, que vous rejoigniez une partie ou que vous en créiez une.</p>
+      </div>
 
       <form
         className="carte"
@@ -43,16 +56,7 @@ export function Accueil({ arcs, occupe, creer, rejoindre }: Props) {
             required
           />
         </label>
-        <label>
-          Votre pseudo
-          <input
-            value={pseudo}
-            onChange={(evenement) => setPseudo(evenement.target.value)}
-            maxLength={16}
-            required
-          />
-        </label>
-        <button type="submit" className="principal" disabled={occupe}>
+        <button type="submit" className="principal" disabled={occupe || sansPseudo}>
           Rejoindre
         </button>
       </form>
@@ -78,10 +82,13 @@ export function Accueil({ arcs, occupe, creer, rejoindre }: Props) {
             ))}
           </select>
         </label>
-        <button type="submit" className="principal" disabled={occupe || !arcs.length}>
+        <button
+          type="submit"
+          className="principal"
+          disabled={occupe || sansPseudo || !arcs.length}
+        >
           Créer
         </button>
-        <p className="aide">Le pseudo saisi ci-dessus sera le vôtre.</p>
       </form>
     </section>
   );

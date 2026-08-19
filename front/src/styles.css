@@ -1,13 +1,35 @@
-/* Une soirée, des téléphones, une pièce mal éclairée : gros, sombre, tapable. */
+/* Une soirée, des téléphones, une pièce mal éclairée : sombre, gros, tapable.
+ *
+ * Le fond reste la nuit en mer ; ce sont les avis de recherche qui éclairent.
+ * Tout le thème tient dans trois objets — le parchemin, la typo d'affiche et
+ * le tampon encreur — posés sur une coque sobre.
+ */
+
+@font-face {
+  font-family: "Graduate";
+  src: url("/polices/graduate-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
-  --fond: #12131a;
-  --carte: #1c1e29;
-  --texte: #f2f2f5;
-  --discret: #9a9cb0;
-  --accent: #e8b04b;
-  --anneau: #7fd1c1;
-  --refus: #e06c6c;
+  --nuit: #0b1220;
+  --pont: #16202f;
+  --bord: #26354a;
+  --parchemin: #efe2c2;
+  --parchemin-creux: #c9b184;
+  --encre: #2b2013;
+  --encre-pale: #6b5942;
+  --or: #e8b04b;
+  --mer: #4fb8a8;
+  --texte: #f2ece0;
+  --discret: #93a1b5;
+  --gagne: #4f9d5d;
+  --perdu: #c04128;
+
+  --affiche: "Graduate", "Rockwell", Georgia, serif;
+  --rayon: 0.5rem;
   color-scheme: dark;
 }
 
@@ -17,11 +39,11 @@
 
 body {
   margin: 0;
-  background: var(--fond);
+  background: var(--nuit);
   color: var(--texte);
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 18px;
-  line-height: 1.4;
+  line-height: 1.45;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -37,18 +59,25 @@ main {
   gap: 1rem;
 }
 
+/* --- Titres et libelles --------------------------------------------- */
+
 .titre {
   margin: 0;
-  font-size: 1.6rem;
+  font-family: var(--affiche);
+  font-size: 1.7rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   text-align: center;
+  text-transform: uppercase;
+  color: var(--or);
 }
 
 .etiquette {
   margin: 0;
   color: var(--discret);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-align: center;
 }
 
@@ -59,47 +88,46 @@ main {
   text-align: center;
 }
 
-.personnage {
-  margin: 0;
-  font-size: 2.2rem;
-  line-height: 1.1;
-  text-align: center;
-  color: var(--accent);
-}
-
-.code-room {
-  margin: 0;
-  font-size: 4rem;
-  font-weight: 700;
-  letter-spacing: 0.35em;
-  text-indent: 0.35em;
-  text-align: center;
-  color: var(--accent);
-}
-
-.duo {
-  margin: 0;
-  font-size: 1.3rem;
-  text-align: center;
-}
-
 .parole {
   margin: 0;
   text-align: center;
 }
+
+/* Le code se dicte a voix haute : c'est la prime affichee sur le parchemin. */
+.code-room {
+  margin: 0;
+  padding: 0.5rem 1rem 0.7rem;
+  background: linear-gradient(180deg, var(--parchemin), #ddc99f);
+  border-radius: var(--rayon);
+  box-shadow: 0 2px 0 rgb(0 0 0 / 0.35), 0 10px 24px -12px rgb(0 0 0 / 0.8);
+  color: var(--encre);
+  font-family: var(--affiche);
+  font-size: 3.4rem;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-align: center;
+}
+
+/* --- Cartes et formulaires ------------------------------------------ */
 
 .carte {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  background: var(--carte);
-  border-radius: 0.9rem;
+  background: var(--pont);
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon);
 }
 
 .carte h2 {
   margin: 0;
-  font-size: 1.1rem;
+  font-family: var(--affiche);
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--or);
 }
 
 label {
@@ -115,46 +143,113 @@ select,
 textarea {
   width: 100%;
   padding: 0.75rem;
-  background: var(--fond);
+  background: var(--nuit);
   color: var(--texte);
-  border: 1px solid #33364a;
-  border-radius: 0.6rem;
+  border: 1px solid var(--bord);
+  border-radius: 0.45rem;
   font: inherit;
 }
 
 input.code {
+  font-family: var(--affiche);
   font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
   text-align: center;
+  color: var(--or);
 }
+
+:focus-visible {
+  outline: 3px solid var(--mer);
+  outline-offset: 2px;
+}
+
+/* --- Boutons --------------------------------------------------------- */
 
 button {
   min-height: 3rem;
   padding: 0.75rem 1rem;
   border: 0;
-  border-radius: 0.7rem;
+  border-radius: 0.45rem;
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+  touch-action: manipulation;
+  transition: filter 0.15s ease, background-color 0.15s ease;
 }
 
 button.principal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   width: 100%;
-  background: var(--accent);
-  color: #1a1408;
+  background: var(--or);
+  border-bottom: 3px solid #b1802c;
+  color: #221703;
+  font-family: var(--affiche);
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+button.principal:active {
+  filter: brightness(0.92);
+}
+
+/* Voter n'est pas trois actions principales : c'est un choix dans une liste. */
+button.candidat {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: var(--pont);
+  border: 1px solid var(--bord);
+  border-inline-start: 4px solid var(--or);
+  color: var(--texte);
+  font-family: var(--affiche);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-align: start;
+  text-transform: uppercase;
+}
+
+button.candidat:active {
+  background: var(--bord);
 }
 
 button.discret {
   width: 100%;
   background: transparent;
   color: var(--discret);
-  border: 1px solid #33364a;
+  border: 1px solid var(--bord);
+}
+
+/* L'aveu se glisse sous le personnage : pas une action, un mot. */
+button.lien {
+  min-height: 2.25rem;
+  padding: 0.25rem;
+  background: none;
+  border: 0;
+  color: var(--discret);
+  font-size: 0.85rem;
+  font-weight: 400;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+button.lien:disabled {
+  text-decoration: none;
+  font-style: italic;
 }
 
 button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
+  cursor: default;
 }
+
+/* --- Listes de pseudos ----------------------------------------------- */
 
 ul,
 ol {
@@ -166,40 +261,28 @@ ol {
   gap: 0.5rem;
 }
 
-.joueurs li,
-.ordre li {
+.joueurs li {
   padding: 0.7rem 0.9rem;
-  background: var(--carte);
-  border-radius: 0.7rem;
+  background: var(--pont);
+  border: 1px solid var(--bord);
+  border-radius: 0.45rem;
 }
 
 .joueurs li:has(button) {
   padding: 0;
   background: none;
-}
-
-.ordre {
-  counter-reset: rang;
-}
-
-.ordre li::before {
-  counter-increment: rang;
-  content: counter(rang) ". ";
-  color: var(--discret);
-}
-
-.ordre li.parle {
-  border-left: 4px solid var(--anneau);
-  font-weight: 600;
+  border: 0;
 }
 
 .badge {
   margin-left: 0.5rem;
   padding: 0.1rem 0.45rem;
-  background: var(--fond);
-  border-radius: 0.5rem;
-  color: var(--discret);
-  font-size: 0.75rem;
+  background: var(--nuit);
+  border: 1px solid var(--bord);
+  border-radius: 0.35rem;
+  color: var(--or);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -211,12 +294,297 @@ ol {
   flex: 1;
 }
 
+/* --- L'avis de recherche --------------------------------------------- */
+
+.affiche {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0.3rem 0.3rem 0;
+  background: linear-gradient(180deg, var(--parchemin), #ddc99f);
+  border: 1px solid rgb(43 32 19 / 0.35);
+  border-radius: 0.2rem;
+  box-shadow: 0 2px 0 rgb(0 0 0 / 0.35), 0 10px 22px -14px rgb(0 0 0 / 0.9);
+  overflow: hidden;
+}
+
+.affiche-bandeau {
+  color: var(--encre-pale);
+  font-family: var(--affiche);
+  font-size: 0.4rem;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.affiche-vue {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgb(43 32 19 / 0.3);
+  background: #d5c096;
+}
+
+.portrait {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Le pirate qu'on n'a pas encore vu : la silhouette de l'avis vierge. */
+.silhouette {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.silhouette::before,
+.silhouette::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  background: var(--parchemin-creux);
+}
+
+.silhouette::before {
+  inset-block-start: 20%;
+  inline-size: 28%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.silhouette::after {
+  inset-block-end: 6%;
+  inline-size: 56%;
+  block-size: 32%;
+  border-radius: 50% 50% 10% 10% / 75% 75% 10% 10%;
+}
+
+.affiche-nom {
+  margin: 0;
+  padding: 0.3rem 0.15rem;
+  color: var(--encre);
+  font-family: var(--affiche);
+  font-size: 0.62rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+/* La grande affiche : la sienne, celle qu'on lit d'un coup d'oeil. */
+.affiche.grande {
+  inline-size: 62%;
+  max-inline-size: 13rem;
+  margin-inline: auto;
+  padding: 0.5rem 0.5rem 0;
+}
+
+.affiche.grande .affiche-bandeau {
+  font-size: 0.62rem;
+}
+
+.affiche.grande .affiche-nom {
+  padding: 0.5rem 0.2rem 0.6rem;
+  font-size: 1.15rem;
+}
+
+/* --- La tablee ------------------------------------------------------- */
+
+.tablee {
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.tablee li {
+  flex: 1 1 4.2rem;
+  max-inline-size: 5.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Epinglees au mur, pas alignees a l'equerre. */
+.tablee li:nth-child(odd) .affiche {
+  rotate: -1.2deg;
+}
+
+.tablee li:nth-child(even) .affiche {
+  rotate: 1deg;
+}
+
+.tablee .pseudo {
+  color: var(--discret);
+  font-size: 0.82rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.tablee li.moi .pseudo {
+  color: var(--or);
+  font-weight: 600;
+}
+
+/* Celui qui parle se redresse. */
+.tablee li.parle .affiche {
+  rotate: 0deg;
+  outline: 3px solid var(--or);
+  outline-offset: 2px;
+}
+
+/* --- Le tampon de la revelation -------------------------------------- */
+
+/* Encre sur papier, en travers de l'affiche : le mot d'abord, la couleur ensuite. */
+.tampon {
+  position: absolute;
+  inset-block-end: 28%;
+  inset-inline: 3%;
+  rotate: -9deg;
+  padding: 0.12em 0.15em;
+  background: rgb(240 228 198 / 0.9);
+  border: 0.13em solid currentColor;
+  border-radius: 0.12em;
+  font-family: var(--affiche);
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-align: center;
+  text-transform: uppercase;
+  animation: tomber 0.28s cubic-bezier(0.2, 1.4, 0.5, 1) both;
+}
+
+.tampon.gagne {
+  color: #29612f;
+}
+
+.tampon.perdu {
+  color: #8c2818;
+}
+
+@keyframes tomber {
+  from {
+    scale: 2.2;
+    opacity: 0;
+  }
+  to {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+.verdict {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-radius: var(--rayon);
+  font-family: var(--affiche);
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.verdict.gagne {
+  background: var(--gagne);
+  color: #06180a;
+}
+
+.verdict.perdu {
+  background: var(--perdu);
+  color: #220703;
+}
+
+/* --- L'en-tete de manche et le coin de l'hote ------------------------ */
+
+.entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+}
+
+.entete .etiquette {
+  text-align: start;
+}
+
+/* Irreversible et reserve a l'hote : hors zone du pouce, et confirme. */
+button.pastille {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.7rem;
+  background: transparent;
+  border: 1px solid var(--bord);
+  border-radius: 999px;
+  color: var(--discret);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+button.pastille svg {
+  flex: none;
+}
+
+.confirmation {
+  max-inline-size: 20rem;
+  padding: 1.25rem;
+  background: var(--pont);
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon);
+  color: var(--texte);
+}
+
+.confirmation::backdrop {
+  background: rgb(4 8 15 / 0.75);
+}
+
+.confirmation h2 {
+  margin: 0 0 0.4rem;
+  font-family: var(--affiche);
+  font-size: 1.15rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--or);
+}
+
+.confirmation p {
+  margin: 0 0 1rem;
+  color: var(--discret);
+  font-size: 0.92rem;
+}
+
+.confirmation .choix {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* --- Divers ---------------------------------------------------------- */
+
 .refus {
   margin: 0 0 1rem;
   padding: 0.75rem 1rem;
-  background: var(--refus);
-  border-radius: 0.7rem;
-  color: #2a0d0d;
+  background: var(--perdu);
+  border-radius: 0.45rem;
+  color: #220703;
   font-weight: 600;
   text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

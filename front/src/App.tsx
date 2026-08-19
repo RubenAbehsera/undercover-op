@@ -135,6 +135,7 @@ export function App() {
         <Manche
           personnage={etat.personnage}
           tour={etat.phase.tour}
+          moi={moi}
           estOrateur={etat.phase.tour.orateur === moi}
           estHote={estHote}
           meconnaissance={etat.meconnaissance}
@@ -162,6 +163,8 @@ export function App() {
       {vue === "revelation" && etat.phase?.ecran === "revelation" && (
         <Revelation
           revelation={etat.phase.revelation}
+          moi={moi}
+          ordre={etat.ordre}
           retourSalle={() => geste({ type: "retour_salle" })}
         />
       )}

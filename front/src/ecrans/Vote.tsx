@@ -23,7 +23,7 @@ export function Vote({ bulletin, moi, vote, estHote, voter, forcer }: Props) {
             .filter((pseudo) => pseudo !== moi)
             .map((pseudo) => (
               <li key={pseudo}>
-                <button type="button" className="principal" onClick={() => voter(pseudo)}>
+                <button type="button" className="candidat" onClick={() => voter(pseudo)}>
                   {pseudo}
                 </button>
               </li>

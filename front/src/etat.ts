@@ -15,6 +15,8 @@ export type Etat = {
   salle: SalleAttente | null;
   personnage: Fiche | null;
   phase: Phase | null;
+  /** L'ordre de la manche en cours — la révélation le reprend pour la tablée. */
+  ordre: string[];
   /** Le pseudo pour qui l'on a voté cette manche — le serveur, lui, l'a compté. */
   vote: string | null;
   /** Le drapeau « je ne connais pas » : une fois levé, il reste levé. */
@@ -48,6 +50,7 @@ export const INITIAL: Etat = {
   salle: null,
   personnage: null,
   phase: null,
+  ordre: [],
   vote: null,
   meconnaissance: false,
   terminee: false,
@@ -61,7 +64,11 @@ export function reduire(etat: Etat, geste: Geste): Etat {
     case "personnage":
       return { ...etat, personnage: geste.charge, vote: null, meconnaissance: false };
     case "tour":
-      return { ...etat, phase: { ecran: "manche", tour: geste.charge } };
+      return {
+        ...etat,
+        ordre: geste.charge.ordre,
+        phase: { ecran: "manche", tour: geste.charge },
+      };
     case "vote_ouvert":
       return { ...etat, phase: { ecran: "vote", bulletin: geste.charge } };
     case "revelation":

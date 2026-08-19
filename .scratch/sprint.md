@@ -22,6 +22,7 @@ Conventions :
 | Jalon 3 — la validation par le graphe | **clos 2026-08-18** | score 7.2, classement 7.3 relu et validé, poids inchangés                       |
 | Contrat figé                          | **clos 2026-08-18** | `fabrication/paires.json` exporté, relu, committé (ADR 0001)                    |
 | Jeu                                   | **clos 2026-08-19** | serveur + front jouables de bout en bout — Épic 5                               |
+| Retours de table                      | **en cours**        | ce que le premier essai a fait remonter — Épic 6                                |
 
 ---
 
@@ -171,3 +172,38 @@ fermer l'US :
 
 Chaque US qui démarre → ticket dans `.scratch/epic-5/issues/` (commencer
 par 5.1, `01-chargement-contrat.md`).
+
+## Epic 6 — Retours de table (ouverte le 2026-08-19)
+
+Objectif : ce que le premier essai a fait remonter. Rien de neuf côté règles,
+rien de neuf côté contrat socket — de l'affichage, et un artefact de plus
+(les portraits) pour que la table se regarde au lieu de se lire.
+
+- [x] 6.1 L'accueil ne demande le pseudo qu'une fois — il remonte dans son
+      propre bloc, au-dessus des deux cartes ; « rejoindre » ne garde que le
+      code, « créer » que le calibrage. _Acceptance : un seul champ pseudo à
+      l'écran, les deux boutons inertes tant qu'il est vide._
+      (`.scratch/epic-6/issues/01-accueil-pseudo-unique.md`)
+- [x] 6.2 La tablée en cadres, et la révélation qui les retourne — une rangée
+      de cadres au lieu de la liste verticale, masqués tant qu'on n'a pas vu le
+      personnage du joueur ; chacun voit la photo du sien ; à la révélation tous
+      se remplissent et se colorent vert (gagné) ou rouge (perdu), bannière
+      comprise. Les portraits sont un **second artefact figé** fabrication →
+      jeu (`front/public/personnages/<id>.webp`, extraits du cache wiki par
+      `fabrication/portraits_extract.py`) : le contrat socket ne bouge pas, et
+      l'onglet retenu est l'anime d'avant l'ellipse — l'anti-spoil vaut aussi
+      pour une apparence. _Acceptance : rien dans le DOM ne distingue le
+      personnage reçu, et une partie menée en navigateur va jusqu'au verdict._
+      (`.scratch/epic-6/issues/02-tablee-cadres-reveal.md`)
+- [x] 6.3 Hiérarchie des contrôles de manche, et le thème « avis de recherche »
+      — les trois boutons empilés se séparent par nature : rendre la parole
+      (« Je passe la parole ») en primaire dans la zone du pouce et seulement à
+      son tour, ouvrir le vote en pastille d'hôte hors de cette zone avec un
+      `<dialog>` de confirmation, « je ne connais pas » en lien discret sous
+      l'affiche. L'habillage entier passe à l'avis de recherche : coque sombre,
+      parchemin, police **Graduate** auto-hébergée (6 Ko, aucun appel tiers),
+      silhouette de l'inconnu en CSS, tampons « Gagné »/« Perdu » à la
+      révélation. Skill `ui-ux-pro-max` interrogé, sa proposition néon/WebGL
+      écartée. _Acceptance : un seul primaire à l'écran au plus, l'irréversible
+      confirmé, l'anti-fuite intacte, aucune dépendance ajoutée._
+      (`.scratch/epic-6/issues/03-hierarchie-manche-et-theme.md`)

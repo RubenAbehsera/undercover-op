@@ -33,4 +33,7 @@ Degré du nœud personnage dans le graphe. Jamais saisie à la main.
 La chaîne hors ligne (graphe, requêtes, validation) qui produit le fichier de paires.
 
 **Fichier de paires**:
-L'artefact figé (JSON) consommé par le serveur de jeu. Seul point de contact entre la fabrication et le jeu.
+L'artefact figé (JSON) consommé par le serveur de jeu. Le seul que le serveur lise.
+
+**Portraits**:
+Une image par personnage tirable, extraite du cache wiki et posée en statique dans le front. Artefact figé lui aussi, mais servi tel quel : le serveur ne l'ouvre jamais, le front le résout par l'`id` du personnage. L'onglet retenu est l'anime d'avant l'ellipse quand il existe — l'anti-spoil vaut aussi pour une apparence.
