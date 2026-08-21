@@ -657,3 +657,18 @@ magellan:
   equipages: []
   factions: []
   fruit: { nom: "Doku Doku no Mi", type: "Paramecia" }
+
+loki:
+  nom: "Loki"
+  chapitre_premiere_apparition: 1130
+  arc_premiere_apparition: elbaph
+  equipages: []
+  factions: []
+  fruit: { nom: "Ryu Ryu no Mi, Model: Nidhöggr", type: "Mythical Zoan" }
+
+harald:
+  nom: "Harald"
+  chapitre_premiere_apparition: 1136
+  arc_premiere_apparition: elbaph
+  equipages: []
+  factions: []

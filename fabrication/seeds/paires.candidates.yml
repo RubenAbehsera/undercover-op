@@ -155,3 +155,91 @@
   lien: { type: parente, libelle: "Père et fille, la vérité d'Egghead" }
   difficulte: facile
   arc_etablissement: egghead
+
+# Complément des arcs tardifs (dressrosa -> elbaph), arbitrage 2026-08-21.
+- id: law-doflamingo
+  majorite: trafalgar_d_water_law
+  imposteur: donquixote_doflamingo
+  lien: { type: rivalite, libelle: "Le Joker et l'enfant qu'il a marqué" }
+  difficulte: facile
+  arc_etablissement: dressrosa
+- id: kyros-doflamingo
+  majorite: donquixote_doflamingo
+  imposteur: kyros
+  lien:
+    { type: trahison, libelle: "Le soldat de plomb et celui qui lui a tout pris" }
+  difficulte: intermediaire
+  arc_etablissement: dressrosa
+- id: issho-sakazuki
+  majorite: sakazuki
+  imposteur: issho
+  lien: { type: faction, libelle: "Deux justices sous le même drapeau" }
+  difficulte: intermediaire
+  arc_etablissement: dressrosa
+- id: luffy-katakuri
+  majorite: monkey_d_luffy
+  imposteur: charlotte_katakuri
+  lien: { type: rivalite, libelle: "Le combat dans le monde des miroirs" }
+  difficulte: facile
+  arc_etablissement: whole_cake_island
+- id: sanji-pudding
+  majorite: sanji
+  imposteur: charlotte_pudding
+  lien: { type: couple, libelle: "La mariée du mariage arrangé" }
+  difficulte: facile
+  arc_etablissement: whole_cake_island
+- id: sanji-reiju
+  majorite: sanji
+  imposteur: vinsmoke_reiju
+  lien: { type: fraternite, libelle: "La soeur qui l'a laissé s'enfuir" }
+  difficulte: intermediaire
+  arc_etablissement: whole_cake_island
+- id: vivi-shirahoshi
+  majorite: nefertari_vivi
+  imposteur: shirahoshi
+  lien: { type: alliance, libelle: "Les deux princesses du Lévely" }
+  difficulte: intermediaire
+  arc_etablissement: levely
+- id: luffy-kaidou
+  majorite: monkey_d_luffy
+  imposteur: kaidou
+  lien: { type: rivalite, libelle: "Le combat au sommet d'Onigashima" }
+  difficulte: facile
+  arc_etablissement: wano_country
+- id: kaidou-oden
+  majorite: kaidou
+  imposteur: kozuki_oden
+  lien: { type: rivalite, libelle: "Le daimyo qu'il a exécuté" }
+  difficulte: intermediaire
+  arc_etablissement: wano_country
+- id: kaidou-king
+  majorite: kaidou
+  imposteur: king
+  lien: { type: equipage, libelle: "La Calamité qui lui sert de bras droit" }
+  difficulte: intermediaire
+  arc_etablissement: wano_country
+- id: oden-momonosuke
+  majorite: kozuki_oden
+  imposteur: kozuki_momonosuke
+  lien: { type: parente, libelle: "Le fils du daimyo" }
+  difficulte: intermediaire
+  arc_etablissement: wano_country
+- id: vegapunk-caesar
+  majorite: vegapunk
+  imposteur: caesar_clown
+  lien: { type: rivalite, libelle: "Les deux savants du MADS" }
+  difficulte: intermediaire
+  arc_etablissement: egghead
+- id: loki-harald
+  majorite: loki
+  imposteur: harald
+  lien:
+    { type: parente, libelle: "Le prince et le roi qu'on l'accuse d'avoir tué" }
+  difficulte: intermediaire
+  arc_etablissement: elbaph
+- id: luffy-loki
+  majorite: monkey_d_luffy
+  imposteur: loki
+  lien: { type: alliance, libelle: "Le géant enchaîné et le pacte conclu" }
+  difficulte: intermediaire
+  arc_etablissement: elbaph

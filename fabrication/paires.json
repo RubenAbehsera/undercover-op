@@ -45,7 +45,7 @@
       "id": "monkey_d_luffy",
       "nom": "Monkey D. Luffy",
       "arc_premiere_apparition": "romance_dawn",
-      "notoriete": 9
+      "notoriete": 12
     },
     {
       "id": "shanks",
@@ -105,7 +105,7 @@
       "id": "sanji",
       "nom": "Sanji",
       "arc_premiere_apparition": "baratie",
-      "notoriete": 5
+      "notoriete": 7
     },
     {
       "id": "zeff",
@@ -165,7 +165,7 @@
       "id": "nefertari_vivi",
       "nom": "Nefertari Vivi",
       "arc_premiere_apparition": "reverse_mountain",
-      "notoriete": 3
+      "notoriete": 4
     },
     {
       "id": "nico_robin",
@@ -237,7 +237,7 @@
       "id": "donquixote_doflamingo",
       "nom": "Donquixote Doflamingo",
       "arc_premiere_apparition": "jaya",
-      "notoriete": 4
+      "notoriete": 6
     },
     {
       "id": "marco",
@@ -303,7 +303,7 @@
       "id": "sakazuki",
       "nom": "Sakazuki",
       "arc_premiere_apparition": "enies_lobby",
-      "notoriete": 3
+      "notoriete": 4
     },
     {
       "id": "thatch",
@@ -357,7 +357,7 @@
       "id": "trafalgar_d_water_law",
       "nom": "Trafalgar D. Water Law",
       "arc_premiere_apparition": "sabaody_archipelago",
-      "notoriete": 6
+      "notoriete": 7
     },
     {
       "id": "x_drake",
@@ -429,7 +429,7 @@
       "id": "shirahoshi",
       "nom": "Shirahoshi",
       "arc_premiere_apparition": "fish_man_island",
-      "notoriete": 1
+      "notoriete": 2
     },
     {
       "id": "otohime",
@@ -447,7 +447,7 @@
       "id": "charlotte_pudding",
       "nom": "Charlotte Pudding",
       "arc_premiere_apparition": "fish_man_island",
-      "notoriete": 3
+      "notoriete": 4
     },
     {
       "id": "kinemon",
@@ -465,31 +465,31 @@
       "id": "caesar_clown",
       "nom": "Caesar Clown",
       "arc_premiere_apparition": "punk_hazard",
-      "notoriete": 3
+      "notoriete": 4
     },
     {
       "id": "kozuki_momonosuke",
       "nom": "Kouzuki Momonosuke",
       "arc_premiere_apparition": "punk_hazard",
-      "notoriete": 2
+      "notoriete": 3
     },
     {
       "id": "vegapunk",
       "nom": "Vegapunk",
       "arc_premiere_apparition": "punk_hazard",
-      "notoriete": 3
+      "notoriete": 4
     },
     {
       "id": "issho",
       "nom": "Issho",
       "arc_premiere_apparition": "dressrosa",
-      "notoriete": 3
+      "notoriete": 4
     },
     {
       "id": "kyros",
       "nom": "Kyros",
       "arc_premiere_apparition": "dressrosa",
-      "notoriete": 2
+      "notoriete": 3
     },
     {
       "id": "rebecca",
@@ -507,13 +507,13 @@
       "id": "kaidou",
       "nom": "Kaidou",
       "arc_premiere_apparition": "dressrosa",
-      "notoriete": 6
+      "notoriete": 9
     },
     {
       "id": "vinsmoke_reiju",
       "nom": "Vinsmoke Reiju",
       "arc_premiere_apparition": "whole_cake_island",
-      "notoriete": 1
+      "notoriete": 2
     },
     {
       "id": "charlotte_brûlée",
@@ -531,19 +531,19 @@
       "id": "charlotte_katakuri",
       "nom": "Charlotte Katakuri",
       "arc_premiere_apparition": "whole_cake_island",
-      "notoriete": 4
+      "notoriete": 5
     },
     {
       "id": "king",
       "nom": "King",
       "arc_premiere_apparition": "wano_country",
-      "notoriete": 3
+      "notoriete": 4
     },
     {
       "id": "kozuki_oden",
       "nom": "Kouzuki Oden",
       "arc_premiere_apparition": "wano_country",
-      "notoriete": 1
+      "notoriete": 3
     },
     {
       "id": "queen",
@@ -556,6 +556,18 @@
       "nom": "Yamato",
       "arc_premiere_apparition": "wano_country",
       "notoriete": 4
+    },
+    {
+      "id": "loki",
+      "nom": "Loki",
+      "arc_premiere_apparition": "elbaph",
+      "notoriete": 4
+    },
+    {
+      "id": "harald",
+      "nom": "Harald",
+      "arc_premiere_apparition": "elbaph",
+      "notoriete": 2
     }
   ],
   "paires": [
@@ -582,17 +594,6 @@
       "arc_etablissement": "loguetown"
     },
     {
-      "id": "arlong-fisher-tiger",
-      "majorite": "arlong",
-      "imposteur": "fisher_tiger",
-      "lien": {
-        "type": "equipage",
-        "libelle": "L'équipage du Soleil et sa dérive"
-      },
-      "difficulte": "intermediaire",
-      "arc_etablissement": "fish_man_island"
-    },
-    {
       "id": "luffy-shanks",
       "majorite": "monkey_d_luffy",
       "imposteur": "shanks",
@@ -613,6 +614,39 @@
       },
       "difficulte": "facile",
       "arc_etablissement": "punk_hazard"
+    },
+    {
+      "id": "arlong-fisher-tiger",
+      "majorite": "arlong",
+      "imposteur": "fisher_tiger",
+      "lien": {
+        "type": "equipage",
+        "libelle": "L'équipage du Soleil et sa dérive"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "fish_man_island"
+    },
+    {
+      "id": "kaidou-yamato",
+      "majorite": "kaidou",
+      "imposteur": "yamato",
+      "lien": {
+        "type": "parente",
+        "libelle": "Père ogre, enfant rebelle"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "wano_country"
+    },
+    {
+      "id": "kaidou-king",
+      "majorite": "kaidou",
+      "imposteur": "king",
+      "lien": {
+        "type": "equipage",
+        "libelle": "La Calamité qui lui sert de bras droit"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "wano_country"
     },
     {
       "id": "ace-teach",
@@ -637,6 +671,39 @@
       "arc_etablissement": "baratie"
     },
     {
+      "id": "issho-sakazuki",
+      "majorite": "sakazuki",
+      "imposteur": "issho",
+      "lien": {
+        "type": "faction",
+        "libelle": "Deux justices sous le même drapeau"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "dressrosa"
+    },
+    {
+      "id": "law-doflamingo",
+      "majorite": "trafalgar_d_water_law",
+      "imposteur": "donquixote_doflamingo",
+      "lien": {
+        "type": "rivalite",
+        "libelle": "Le Joker et l'enfant qu'il a marqué"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "dressrosa"
+    },
+    {
+      "id": "luffy-ace",
+      "majorite": "monkey_d_luffy",
+      "imposteur": "portgas_d_ace",
+      "lien": {
+        "type": "fraternite",
+        "libelle": "Le grand frère de Luffy"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "arabasta"
+    },
+    {
       "id": "luffy-garp",
       "majorite": "monkey_d_luffy",
       "imposteur": "monkey_d_garp",
@@ -646,6 +713,17 @@
       },
       "difficulte": "facile",
       "arc_etablissement": "post_enies_lobby"
+    },
+    {
+      "id": "sanji-zeff",
+      "majorite": "sanji",
+      "imposteur": "zeff",
+      "lien": {
+        "type": "mentorat",
+        "libelle": "La jambe donnée, la dette du cuisinier"
+      },
+      "difficulte": "facile",
+      "arc_etablissement": "baratie"
     },
     {
       "id": "kuma-dragon",
@@ -670,15 +748,26 @@
       "arc_etablissement": "whole_cake_island"
     },
     {
-      "id": "kaidou-yamato",
-      "majorite": "kaidou",
-      "imposteur": "yamato",
+      "id": "luffy-kaidou",
+      "majorite": "monkey_d_luffy",
+      "imposteur": "kaidou",
       "lien": {
-        "type": "parente",
-        "libelle": "Père ogre, enfant rebelle"
+        "type": "rivalite",
+        "libelle": "Le combat au sommet d'Onigashima"
       },
       "difficulte": "facile",
       "arc_etablissement": "wano_country"
+    },
+    {
+      "id": "vegapunk-caesar",
+      "majorite": "vegapunk",
+      "imposteur": "caesar_clown",
+      "lien": {
+        "type": "rivalite",
+        "libelle": "Les deux savants du MADS"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "egghead"
     },
     {
       "id": "doflamingo-rosinante",
@@ -689,6 +778,17 @@
         "libelle": "Frères ennemis, l'oiseau et la colombe"
       },
       "difficulte": "facile",
+      "arc_etablissement": "dressrosa"
+    },
+    {
+      "id": "kyros-doflamingo",
+      "majorite": "donquixote_doflamingo",
+      "imposteur": "kyros",
+      "lien": {
+        "type": "trahison",
+        "libelle": "Le soldat de plomb et celui qui lui a tout pris"
+      },
+      "difficulte": "intermediaire",
       "arc_etablissement": "dressrosa"
     },
     {
@@ -714,15 +814,37 @@
       "arc_etablissement": "post_enies_lobby"
     },
     {
-      "id": "luffy-ace",
-      "majorite": "monkey_d_luffy",
-      "imposteur": "portgas_d_ace",
+      "id": "kaidou-oden",
+      "majorite": "kaidou",
+      "imposteur": "kozuki_oden",
       "lien": {
-        "type": "fraternite",
-        "libelle": "Le grand frère de Luffy"
+        "type": "rivalite",
+        "libelle": "Le daimyo qu'il a exécuté"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "wano_country"
+    },
+    {
+      "id": "luffy-katakuri",
+      "majorite": "monkey_d_luffy",
+      "imposteur": "charlotte_katakuri",
+      "lien": {
+        "type": "rivalite",
+        "libelle": "Le combat dans le monde des miroirs"
       },
       "difficulte": "facile",
-      "arc_etablissement": "arabasta"
+      "arc_etablissement": "whole_cake_island"
+    },
+    {
+      "id": "luffy-loki",
+      "majorite": "monkey_d_luffy",
+      "imposteur": "loki",
+      "lien": {
+        "type": "alliance",
+        "libelle": "Le géant enchaîné et le pacte conclu"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "elbaph"
     },
     {
       "id": "vivi-crocodile",
@@ -769,15 +891,26 @@
       "arc_etablissement": "baratie"
     },
     {
-      "id": "sanji-zeff",
+      "id": "sanji-judge",
       "majorite": "sanji",
-      "imposteur": "zeff",
+      "imposteur": "vinsmoke_judge",
       "lien": {
-        "type": "mentorat",
-        "libelle": "La jambe donnée, la dette du cuisinier"
+        "type": "parente",
+        "libelle": "Le rejet du père, la cuisine contre la science"
       },
       "difficulte": "facile",
-      "arc_etablissement": "baratie"
+      "arc_etablissement": "whole_cake_island"
+    },
+    {
+      "id": "sanji-reiju",
+      "majorite": "sanji",
+      "imposteur": "vinsmoke_reiju",
+      "lien": {
+        "type": "fraternite",
+        "libelle": "La soeur qui l'a laissé s'enfuir"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "whole_cake_island"
     },
     {
       "id": "rayleigh-shakuyaku",
@@ -813,12 +946,45 @@
       "arc_etablissement": "egghead"
     },
     {
-      "id": "sanji-judge",
-      "majorite": "sanji",
-      "imposteur": "vinsmoke_judge",
+      "id": "oden-momonosuke",
+      "majorite": "kozuki_oden",
+      "imposteur": "kozuki_momonosuke",
       "lien": {
         "type": "parente",
-        "libelle": "Le rejet du père, la cuisine contre la science"
+        "libelle": "Le fils du daimyo"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "wano_country"
+    },
+    {
+      "id": "loki-harald",
+      "majorite": "loki",
+      "imposteur": "harald",
+      "lien": {
+        "type": "parente",
+        "libelle": "Le prince et le roi qu'on l'accuse d'avoir tué"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "elbaph"
+    },
+    {
+      "id": "vivi-shirahoshi",
+      "majorite": "nefertari_vivi",
+      "imposteur": "shirahoshi",
+      "lien": {
+        "type": "alliance",
+        "libelle": "Les deux princesses du Lévely"
+      },
+      "difficulte": "intermediaire",
+      "arc_etablissement": "levely"
+    },
+    {
+      "id": "sanji-pudding",
+      "majorite": "sanji",
+      "imposteur": "charlotte_pudding",
+      "lien": {
+        "type": "couple",
+        "libelle": "La mariée du mariage arrangé"
       },
       "difficulte": "facile",
       "arc_etablissement": "whole_cake_island"

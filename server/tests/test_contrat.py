@@ -5,12 +5,12 @@ import pytest
 from jeu.contrat import ErreurContrat, charger_contrat
 
 
-def test_charge_le_contrat_reel_des_24_paires(chemin_contrat):
+def test_charge_le_contrat_reel_des_38_paires(chemin_contrat):
     contrat = charger_contrat(chemin_contrat)
 
     assert len(contrat.arcs) == 33
-    assert len(contrat.personnages) == 87
-    assert len(contrat.paires) == 24
+    assert len(contrat.personnages) == 89
+    assert len(contrat.paires) == 38
     assert contrat.paires[0].id == "kid-killer"  # tête du classement (sprint 3.2)
 
 

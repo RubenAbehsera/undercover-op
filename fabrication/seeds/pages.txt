@@ -103,3 +103,6 @@ Vinsmoke Judge
 Vinsmoke Reiju
 # Impel Down
 Magellan
+# Elbaph
+Loki
+Harald
