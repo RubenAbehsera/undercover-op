@@ -37,7 +37,7 @@ PREFERENCES = ("anime pre-timeskip", "anime")
 
 
 def portrait_url(id_personnage: str) -> str:
-    """L'URL de l'onglet d'infobox préféré, ramenée à la largeur voulue."""
+    """L'URL de l'onglet d'infobox préféré, prête à rendre un cadre carré."""
     html = (CACHE / f"{id_personnage}.html").read_text(encoding="utf-8")
     collection = COLLECTION_RE.search(html)
     portion = collection.group(0) if collection else html
@@ -49,9 +49,7 @@ def portrait_url(id_personnage: str) -> str:
     if not source:
         raise LookupError(f"figure sans image pour {id_personnage}")
     url = source.group(1).split("?")[0]
-    if ECHELLE_RE.search(url):
-        return ECHELLE_RE.sub(f"/scale-to-width-down/{LARGEUR}", url)
-    return f"{url}/scale-to-width-down/{LARGEUR}"
+    return rendu_url(ECHELLE_RE.sub("", url))
 
 
 def _rang(onglets: list[str], figures: int) -> int:
@@ -64,12 +62,16 @@ def _rang(onglets: list[str], figures: int) -> int:
     return 0
 
 
-def telecharger(url: str) -> bytes:
+def telecharger(url: str, entete_seul: bool = False) -> bytes:
     entetes = {
         "User-Agent": "undercover-op-fabrication/0.1",
         # Le CDN convertit à la volée : une seule extension pour tous.
         "Accept": "image/webp",
     }
+    # Lire la taille de la source coûte trente-deux octets, pas l'image entière.
+    plage = ["-r", "0-31"] if entete_seul else []
+    if entete_seul:
+        entetes["Range"] = "bytes=0-31"
     req = urllib.request.Request(url, headers=entetes)
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
@@ -77,10 +79,46 @@ def telecharger(url: str) -> bytes:
     except urllib.error.URLError:
         # OpenSSL (Python) rejette la chaîne du proxy local ; curl l'accepte.
         return subprocess.run(
-            ["curl", "-s", "--max-time", "30", "-H", "Accept: image/webp", url],
+            ["curl", "-s", "--max-time", "30", "-H", "Accept: image/webp", *plage, url],
             capture_output=True,
             check=True,
         ).stdout
+
+
+def dimensions(entete: bytes) -> tuple[int, int]:
+    """La taille d'un webp, lue dans ses trente-deux premiers octets."""
+    if entete[12:16] == b"VP8X":
+        return (
+            int.from_bytes(entete[24:27], "little") + 1,
+            int.from_bytes(entete[27:30], "little") + 1,
+        )
+    if entete[12:16] == b"VP8L":
+        bits = int.from_bytes(entete[21:25], "little")
+        return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1
+    return (
+        int.from_bytes(entete[26:28], "little") & 0x3FFF,
+        int.from_bytes(entete[28:30], "little") & 0x3FFF,
+    )
+
+
+def rendu_url(source: str) -> str:
+    """La directive de rendu à coller à la source.
+
+    Les cadres du front sont carrés. Une source déjà en portrait se contente
+    d'une mise à l'échelle ; un plan large y serait rogné sur ses seuls
+    cinquante-six pour cent centraux — le cas des géants d'Elbaph, dont
+    l'infobox est une vue de la scène et non un buste. On demande alors au CDN
+    une fenêtre carrée, centrée, prise sur toute la hauteur.
+    """
+    largeur, hauteur = dimensions(telecharger(source, entete_seul=True))
+    if largeur <= hauteur:
+        return f"{source}/scale-to-width-down/{LARGEUR}"
+    cote = hauteur
+    marge = (largeur - cote) // 2
+    return (
+        f"{source}/window-crop/width/{LARGEUR}"
+        f"/x-offset/{marge}/y-offset/0/window-width/{cote}/window-height/{cote}"
+    )
 
 
 def personnages() -> list[str]:
