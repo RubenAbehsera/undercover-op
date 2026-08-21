@@ -10,7 +10,7 @@ l'arc le plus avancé que la table accepte de voir, et rien au-delà ne sortira 
 on ne divulgâche pas la série à celui qui n'en est qu'au quart.
 
 La démarche est racontée en détail dans
-[I Built a Knowledge Graph, But Kept It Out of Production](https://dev.to/rubharbe/i-built-a-knowledge-graph-but-kept-it-out-of-production-1nib).
+[I Built a Knowledge Graph, But Kept It Out of Production](https://dev.to/rubharbe/i-built-a-knowledge-graph-but-kept-it-out-of-production-2bj1).
 Ce README en donne la version courte, plus de quoi faire tourner le projet.
 
 ## L'objectif

@@ -13,6 +13,8 @@ server/scripts/
 fabrication/cache/
 fabrication/neo4j/
 fabrication/seeds/
+# ...sauf la liste de pages : l'étape portraits moissonne le wiki avec.
+!fabrication/seeds/pages.txt
 fabrication/__pycache__/
 **/__pycache__/
 *.pyc
