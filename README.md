@@ -155,6 +155,14 @@ la [fabrication](./fabrication/CONTEXT.md), chacun avec son vocabulaire.
 Décisions de fond : [docs/decisions.md](./docs/decisions.md) et
 [docs/adr/](./docs/adr/).
 
+La démarche est publiée avec le code : [`.scratch/`](./.scratch/) — sprints,
+épiques et tickets tenus au fil de l'eau. Ce projet a été co-construit avec un
+agent de développement : chaque ticket y est écrit pour être exécuté par l'agent,
+puis arbitré par l'humain. Le code montre ce qui a été fait ; `.scratch/` montre
+comment — la doctrine « le LLM drapeaute, l'humain arbitre », appliquée à la
+fabrication du projet lui-même. Conventions du dossier :
+[docs/agents/issue-tracker.md](./docs/agents/issue-tracker.md).
+
 ## Lancer
 
 Image unique, le serveur sert aussi le bundle du front :
