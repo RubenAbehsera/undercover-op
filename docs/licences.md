@@ -210,22 +210,3 @@ rien qui suggère une licence, et afficher une mention de non-affiliation :
 > Projet de fan non officiel, sans lien avec Eiichiro Oda, Shueisha, Toei
 > Animation ou leurs ayants droit. *One Piece* et ses personnages leur
 > appartiennent.
-
-### Avant de partager — la checklist
-
-Objectif visé ici : **dépôt public**, instance de jeu **privée**.
-
-- [x] Licence du code déposée — MIT ([LICENSE](../LICENSE)), les données
-      restant sous CC BY-SA 3.0.
-- [ ] Reprendre le bloc d'attribution CC BY-SA 3.0 (section 2) dans le dépôt.
-- [x] Attribution et non-affiliation affichées **dans le jeu** — pied de
-      l'écran d'accueil (`Mentions`, `front/src/ecrans/Accueil.tsx`).
-- [x] Sortir les portraits du dépôt (`.gitignore`), avec repli sur la silhouette
-      quand le fichier manque.
-- [ ] **Purger les portraits de l'historique git.** Ils ont été committés une
-      fois (`28cbb0a`) : les désindexer aujourd'hui ne les retire pas des
-      commits passés, et ouvrir le dépôt les exposerait tout de même. Cette
-      étape réécrit l'historique.
-- [x] Vérifier que `fabrication/cache/` reste ignoré par git.
-- [ ] Vérifier qu'aucun secret de déploiement ne traîne dans l'historique.
-- [ ] Garder l'instance de jeu fermée (section 3, cercle privé).

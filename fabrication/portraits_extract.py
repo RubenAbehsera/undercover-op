@@ -12,6 +12,7 @@ L'onglet d'infobox retenu est l'anime d'avant l'ellipse quand il existe : une
 apparence d'après trahirait déjà la suite à une table calibrée tôt.
 """
 
+import http.client
 import json
 import re
 import subprocess
@@ -75,9 +76,12 @@ def telecharger(url: str, entete_seul: bool = False) -> bytes:
     req = urllib.request.Request(url, headers=entetes)
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
-            return r.read()
-    except urllib.error.URLError:
+            return r.read(32) if entete_seul else r.read()
+    except (urllib.error.URLError, http.client.HTTPException):
         # OpenSSL (Python) rejette la chaîne du proxy local ; curl l'accepte.
+        # HTTPException couvre aussi les lectures tronquées : sur une centaine
+        # de requêtes d'affilée le CDN en coupe une de temps en temps, et un
+        # hoquet ne doit pas emporter un build entier.
         return subprocess.run(
             ["curl", "-s", "--max-time", "30", "-H", "Accept: image/webp", *plage, url],
             capture_output=True,
