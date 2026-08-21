@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import type { Fiche } from "./contrat";
 import { portrait } from "./libelles";
 
@@ -20,6 +22,11 @@ type ProprietesAffiche = {
 /** Un avis de recherche : le portrait, ou la silhouette de celui qu'on n'a pas vu. */
 export function Affiche({ fiche, gagne, grande }: ProprietesAffiche) {
   const Nom = grande ? "h1" : "p";
+  // Les portraits ne sont pas versionnés (droits d'auteur, cf. README) : sur un
+  // dépôt fraîchement cloné le fichier manque, et la silhouette reprend la main
+  // plutôt qu'une image cassée. On retient l'id, pas un booléen — la manche
+  // suivante amène une autre fiche, qui a droit à sa chance.
+  const [rate, setRate] = useState<string | null>(null);
 
   return (
     <div className={grande ? "affiche grande" : "affiche"}>
@@ -27,7 +34,7 @@ export function Affiche({ fiche, gagne, grande }: ProprietesAffiche) {
         Avis de recherche
       </span>
       <span className="affiche-vue">
-        {fiche ? (
+        {fiche && rate !== fiche.id ? (
           <img
             className="portrait"
             src={portrait(fiche.id)}
@@ -35,6 +42,7 @@ export function Affiche({ fiche, gagne, grande }: ProprietesAffiche) {
             decoding="async"
             loading={grande ? undefined : "lazy"}
             fetchPriority={grande ? "high" : undefined}
+            onError={() => setRate(fiche.id)}
           />
         ) : (
           <span className="silhouette" />

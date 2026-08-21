@@ -126,6 +126,25 @@ main {
   text-align: center;
 }
 
+.mentions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-block-start: 0.5rem;
+}
+
+.mentions p {
+  margin: 0;
+  color: var(--discret);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.mentions a {
+  color: inherit;
+}
+
 .parole {
   margin: 0;
   padding: 0.55rem 0.85rem;

@@ -93,7 +93,32 @@ export function Accueil({ arcs, occupe, creer, rejoindre }: Props) {
           Créer
         </button>
       </form>
+
+      <Mentions />
     </section>
+  );
+}
+
+/** L'attribution doit suivre le jeu là où il se joue, pas seulement le dépôt. */
+function Mentions() {
+  return (
+    <footer className="mentions">
+      <p>
+        Jeu de fan non officiel, sans lien avec Eiichiro Oda, Shueisha ou Toei
+        Animation. <i>One Piece</i> et ses personnages leur appartiennent.
+      </p>
+      <p>
+        Données de personnages et d'arcs dérivées du{" "}
+        <a href="https://onepiece.fandom.com" target="_blank" rel="noreferrer">
+          One Piece Wiki
+        </a>
+        , sous licence{" "}
+        <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noreferrer">
+          CC BY-SA 3.0
+        </a>
+        .
+      </p>
+    </footer>
   );
 }
 

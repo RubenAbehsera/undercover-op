@@ -8,3 +8,6 @@ node_modules/
 jeu.egg-info/
 server/signaux.db
 front/dist/
+# Captures d'anime sous droits (Toei / Shueisha) : jamais redistribuées par ce
+# dépôt. Chacun les régénère avec fabrication/portraits_extract.py. Cf. README.
+front/public/personnages/
