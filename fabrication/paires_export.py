@@ -16,15 +16,27 @@ Usage: python paires_export.py   (le conteneur undercover-neo4j doit tourner)
 import csv
 import io
 import json
+import os
 import subprocess
+import sys
 from pathlib import Path
 
 from neo4j_import import SEEDS, parse_paires
 
 OUT = Path(__file__).resolve().parent / "paires.json"
+MOT_DE_PASSE = os.environ.get("NEO4J_PASSWORD")
+if not MOT_DE_PASSE:
+    # docker compose lit fabrication/.env ; ce script Python, non — on y regarde.
+    env = Path(__file__).resolve().parent / ".env"
+    if env.exists():
+        for ligne in env.read_text(encoding="utf-8").splitlines():
+            if ligne.startswith("NEO4J_PASSWORD="):
+                MOT_DE_PASSE = ligne.split("=", 1)[1].strip()
+if not MOT_DE_PASSE:
+    sys.exit("Mot de passe absent : définis NEO4J_PASSWORD (celui du compose, ex. dans fabrication/.env).")
 CYPHER_SHELL = [
     "docker", "exec", "-i", "undercover-neo4j",
-    "cypher-shell", "-u", "neo4j", "-p", "mot-de-passe-supprime", "--format", "plain",
+    "cypher-shell", "-u", "neo4j", "-p", MOT_DE_PASSE, "--format", "plain",
 ]
 
 

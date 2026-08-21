@@ -2,9 +2,9 @@
 // Corrigés commentés des exercices de guide.md.
 //
 // Méthode : écris TA requête dans le Browser AVANT de lire celle-ci.
-//   Browser : http://localhost:7474 (neo4j / mot-de-passe-supprime)
+//   Browser : http://localhost:7474 (neo4j / $NEO4J_PASSWORD)
 //   Fichier entier :
-//     docker exec -i undercover-neo4j cypher-shell -u neo4j -p mot-de-passe-supprime \
+//     docker exec -i undercover-neo4j cypher-shell -u neo4j -p "$NEO4J_PASSWORD" \
 //       --format plain < queries.cypher
 //
 // Niveaux 6–7 : référence directe (apprentissage clos) — requêtes à exécuter

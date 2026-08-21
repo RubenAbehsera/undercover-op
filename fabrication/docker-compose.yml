@@ -14,7 +14,8 @@ services:
     environment:
       # Mot de passe initial, pris en compte au PREMIER démarrage uniquement —
       # ensuite il vit dans le volume. Dev local only, jamais en prod.
-      NEO4J_AUTH: neo4j/mot-de-passe-supprime
+      # NEO4J_PASSWORD : exporté, ou posé dans fabrication/.env (ignoré par git).
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?Définis NEO4J_PASSWORD, ex. dans fabrication/.env}
       # Les doubles underscores '__' se lisent '.' : server.memory.heap.max_size
       NEO4J_server_memory_heap_max__size: 1G
     volumes:

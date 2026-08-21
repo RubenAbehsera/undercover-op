@@ -11,13 +11,14 @@ peur.
 ## Setup
 
     cd fabrication
+    export NEO4J_PASSWORD=...   # ou pose-le dans fabrication/.env (ignoré par git)
     docker compose up -d        # démarre Neo4j (premier lancement : ~1 min)
-    # Browser : http://localhost:7474 — neo4j / mot-de-passe-supprime
+    # Browser : http://localhost:7474 — neo4j / $NEO4J_PASSWORD
 
 Tout casser et recommencer :
 
     python neo4j_import.py      # régénère neo4j/import.cypher depuis les seeds
-    docker exec -i undercover-neo4j cypher-shell -u neo4j -p mot-de-passe-supprime \
+    docker exec -i undercover-neo4j cypher-shell -u neo4j -p "$NEO4J_PASSWORD" \
       --format plain < neo4j/import.cypher
 
 ## Le modèle en une minute
